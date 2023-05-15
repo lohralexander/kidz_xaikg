@@ -24,4 +24,16 @@ def get_training_data():
 
 
 def save_prediction():
-    uuid.uuid1()
+    unique_identifier = "Pred" + str(uuid.uuid1())
+    print(unique_identifier)
+    sparql = SPARQLWrapper(Config.repository_update)
+    query_string = (
+                """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>INSERT DATA {<http://www.semanticweb.org/kidz/festo#""" + unique_identifier + """>
+    dc:result "Prediction 1" ; dc:Station "Ward 2" .}""")
+    sparql.setQuery(query_string)
+    sparql.method = 'POST'
+    sparql.query()
+
+
+if __name__ == '__main__':
+    save_prediction()
