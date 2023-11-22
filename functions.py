@@ -69,7 +69,7 @@ def save_nodes_to_graph(repository_update, decision_nodes,run_id):
         query_string = query_template % (
             node['node_id'], node['node_id'], node['parent_id'], node['value_true'], node['value_false'],
             node['predicted_class_name'], node['sample_count'], node['accuracy'], node['feature_name'],
-            node['threshold'], node['comparison_operator']
+            node['threshold'],node['comparison_operator']
         )
 
         sparql.setQuery(query_string)
@@ -235,3 +235,40 @@ def create_edge_attributes(repository_update, decision_nodes):
         elif feature_name == 'weight':
             create_meta_edge(repository_update, node_id, "isUsedForSplit", "weight")
 
+# FunktionsID: 11
+# Name: calculate_entropy
+# Beschreibung: Berechnet die Entropie
+def calculate_entropy(probabilities):
+    epsilon = 1e-10  # Vermeide Division durch Null
+    entropy = -np.sum(probabilities * np.log2(probabilities + epsilon))
+    if np.isnan(entropy):
+        entropy = 0
+    return entropy
+
+# FunktionsID: 12
+# Name: calculate_information_gain
+# Beschreibung: Berechnet den Information Gain
+def calculate_information_gain(decision_nodes, run_id):
+
+
+    for i, node1 in enumerate(decision_nodes):
+        if node1['node_id'] == "GINS"+run_id+"Node0":
+            decision_nodes[i]['information_gain'] = 0
+        else:
+            for j, node2 in enumerate(decision_nodes):
+                if node1 == node2:
+                    continue
+
+                 # Überprüfe, ob die Knoten denselben parent_id haben
+                if node1["parent_id"] == node2["parent_id"]:
+                    for node3 in decision_nodes:
+                         if node3['node_id'] == node1['parent_id']:
+                            node1distribution = (node1['sample_count']/node3['sample_count'])
+                            node2distribution = (node2['sample_count'] / node3['sample_count'])
+                            information_gain = node3['entropy_current']-(node1distribution*node1['entropy_current']+node2distribution*node2['entropy_current'])
+
+                            decision_nodes[i]['information_gain'] = information_gain
+                            decision_nodes[j]['information_gain'] = information_gain
+
+                            # print(f"{node1['node_id']}{information_gain:.4f}")
+    return information_gain

@@ -15,7 +15,7 @@ import numpy as np
 from SPARQLWrapper import JSON, SPARQLWrapper, POST
 
 from functions import create_edge, save_model, connect_model_to_training_run, create_global_insight, \
-    save_nodes_to_graph, create_meta_edge, create_global_explanation_run, create_parameter, create_edge_attributes
+    save_nodes_to_graph, create_meta_edge, create_global_explanation_run, create_parameter, create_edge_attributes, calculate_information_gain, calculate_entropy
 
 # Run ID festlegen
 run_id = "07"
@@ -61,6 +61,21 @@ def visitor(node_id, parent_id, dt, decision_nodes, node, depth):
     if parent_id is None:
         comparison_operator ="start_node"
 
+    # Information Gain
+    total_samples = value_true + value_false
+
+    if total_samples == 0:
+        return 0  # Vermeide Division durch Null
+
+    probability_true = value_true / total_samples
+    probability_false = value_false / total_samples
+
+    entropy_current_node = calculate_entropy(np.array([probability_true, probability_false]))
+
+
+    if total_samples == 0:
+        return 0  # Vermeide Division durch Null
+
     decision_node = {
         "node_id": enriched_node_id,
         "parent_id": enriched_parent_id,
@@ -74,6 +89,7 @@ def visitor(node_id, parent_id, dt, decision_nodes, node, depth):
         "feature_name": feature_name,
         "threshold": threshold,
         "comparison_operator": comparison_operator,
+        "entropy_current": entropy_current_node,
     }
 
     decision_nodes.append(decision_node)
@@ -88,21 +104,26 @@ def visitor(node_id, parent_id, dt, decision_nodes, node, depth):
 decision_nodes = []
 visitor(0, None, clf.tree_, decision_nodes, 0, 1)
 
+# information gain
+calculate_information_gain(decision_nodes, run_id)
+
 # Versteckt ist ein Print der Informationen zu den Knoten in Sparql Form
 # Beispielausgabe in Sparql Form
-# for i, node in enumerate(decision_nodes):
-#     print(f"<festo:{node['node_id']}> rdf:type festo:Node ;\n"
-#                  f"     festo:nodeID {node['node_id']};\n"
-#                  f"     festo:parentNodeID {node['parent_id']} ;\n"
-#                  f"     festo:True {node['value_true']:.0f} ;\n"
-#                  f"     festo:False {node['value_false']:.0f} ;\n"
-#                  f"     festo:Class {node['predicted_class_name']} ;\n"
-#                  f"     festo:sampleCount {node['sample_count']:.0f} ;\n"
-#                  f"     festo:accuracy {node['accuracy']*100:.2f}% ;\n"
-#                  f"     festo:feature {node['feature_name']} ;\n"
-#                  f"     festo:threshold {node['threshold']} ;\n"
-#                  f"     festo:splitType {node['comparison_operator']} .\n\n"
-#                  f"<festo:> {node['parent_id']} festo:hasChildNode <festo:{node['node_id']}>\n\n")
+for i, node in enumerate(decision_nodes):
+    print(f"<festo:{node['node_id']}> rdf:type festo:Node ;\n"
+                 f"     festo:nodeID {node['node_id']};\n"
+                 f"     festo:parentNodeID {node['parent_id']} ;\n"
+                 f"     festo:True {node['value_true']:.0f} ;\n"
+                 f"     festo:False {node['value_false']:.0f} ;\n"
+                 f"     festo:Class {node['predicted_class_name']} ;\n"
+                 f"     festo:sampleCount {node['sample_count']:.0f} ;\n"
+                 f"     festo:accuracy {node['accuracy']*100:.2f}% ;\n"
+                 f"     festo:feature {node['feature_name']} ;\n"
+                 f"     festo:threshold {node['threshold']} ;\n"
+                 f"     festo:entropy current {node['entropy_current']} ;\n"
+                 f"     festo:information_gain {node['information_gain']} ;\n"
+                 f"     festo:splitType {node['comparison_operator']} .\n\n"
+                 f"<festo:> {node['parent_id']} festo:hasChildNode <festo:{node['node_id']}>\n\n")
 
 
 # Ab hier werden die Nodes in den KG geladen ________________________________________________________________________
@@ -130,14 +151,13 @@ print("Erfolgreich GER und GINS erstellt und verbunden")
 print("Erfolgreich Parameter erstellt und verbunden")
 
 # Verbindung zwischen Nodes und weight und pressure
-create_edge_attributes(repository_update, decision_nodes)
+#create_edge_attributes(repository_update, decision_nodes)
 print('Erfolgreich Nodes mit Features verbunden')
-#http://www.semanticweb.org/kidz/festo#weight
-#http://www.semanticweb.org/kidz/festo#pressure
-
 
 
 #Parameter müssen noch gefüllt werden
-#Die Verbindung zwischen den einzelnen Knoten und den Attributen muss noch gemacht werden
+
 #Global Insights vervollstädnigen
+
+#  left und right split durch assumption ersetzen, oder halt assumption hinzufügen und left und right split sagen mir welcher split gemacht wurde
 
