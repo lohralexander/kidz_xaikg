@@ -61,7 +61,8 @@ def save_nodes_to_graph(repository_update, decision_nodes,run_id):
              festo:accuracy "%s" ;
              festo:feature "%s" ;
              festo:threshold "%s" ;
-             festo:splitType "%s" .
+             festo:information_gain "%s" ;
+             festo:assumption "%s" .
     }"""
 
     for node in decision_nodes:
@@ -69,7 +70,7 @@ def save_nodes_to_graph(repository_update, decision_nodes,run_id):
         query_string = query_template % (
             node['node_id'], node['node_id'], node['parent_id'], node['value_true'], node['value_false'],
             node['predicted_class_name'], node['sample_count'], node['accuracy'], node['feature_name'],
-            node['threshold'],node['comparison_operator']
+            node['threshold'],node['information_gain'], node['assumption']
         )
 
         sparql.setQuery(query_string)
@@ -180,16 +181,21 @@ def create_global_explanation_run(repository_update, extended_run_id, run_id, un
 # Name: create_global_insight
 # Beschreibung: Erstellt den Knoten Global Insight
 
-def create_global_insight(repository_update, unique_identifier, run_id):
+def create_global_insight(repository_update, unique_identifier, run_id, accuracy, kappa, most_important_feature_name, tree_depth, tree_num_nodes):
     sparql = SPARQLWrapper(repository_update)
 
     query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>
     INSERT DATA {
         <http://www.semanticweb.org/kidz/festo#%s> rdf:type festo:GlobalInsight ;
-                                                    rdf:type owl:NamedIndividual .
+                                                    rdf:type owl:NamedIndividual ;
+                                                    festo:accuracy "%s";
+                                                    festo:kappa "%s" ;
+                                                    festo:most_important_feature "%s" ;
+                                                    festo:tree_depth "%s" ;
+                                                    festo:tree_nodes "%s" .
     }"""
 
-    query_string = query_template % (unique_identifier)
+    query_string = query_template % (unique_identifier, accuracy, kappa, most_important_feature_name, tree_depth, tree_num_nodes)
     sparql.setQuery(query_string)
     sparql.method = "POST"
     sparql.query()
@@ -208,10 +214,33 @@ def create_parameter(repository_update, clf, run_id, unique_identifier):
 
             INSERT DATA {
                 <http://www.semanticweb.org/kidz/festo#%s> rdf:type ont:Parameter ;
-                 festo:max_depth "%s" .
+                 festo:max_depth "%s" ;
+                 festo:class_weight "%s";
+                 festo:criterion "%s";
+                 festo:max_features "%s";
+                 festo:max_leaf_nodes "%s";
+                 festo:min_impurity_decrease "%s";
+                 festo:min_samples_leaf "%s";
+                 festo:min_samples_split "%s";
+                 festo:min_weight_fraction_leaf "%s";
+                 festo:random_state "%s";
+                 festo:splitter "%s";
+                 .
             }"""
 
-    query_string = query_template % ("Parameter"+run_id, clf.get_params()['max_depth'],)
+    query_string = query_template % ("Parameter"+run_id,
+                                     clf.get_params()['max_depth'],
+                                     clf.get_params()['class_weight'],
+                                     clf.get_params()['criterion'],
+                                     clf.get_params()['max_features'],
+                                     clf.get_params()['max_leaf_nodes'],
+                                     clf.get_params()['min_impurity_decrease'],
+                                     clf.get_params()['min_samples_leaf'],
+                                     clf.get_params()['min_samples_split'],
+                                     clf.get_params()['min_weight_fraction_leaf'],
+                                     clf.get_params()['random_state'],
+                                     clf.get_params()['splitter'],
+                                     )
 
     sparql.setQuery(query_string)
     sparql.method = "POST"
@@ -247,9 +276,8 @@ def calculate_entropy(probabilities):
 
 # FunktionsID: 12
 # Name: calculate_information_gain
-# Beschreibung: Berechnet den Information Gain
+# Beschreibung: Berechnet den Information Gain und fügt ihm dem dictionary hinzu
 def calculate_information_gain(decision_nodes, run_id):
-
 
     for i, node1 in enumerate(decision_nodes):
         if node1['node_id'] == "GINS"+run_id+"Node0":
@@ -272,3 +300,18 @@ def calculate_information_gain(decision_nodes, run_id):
 
                             # print(f"{node1['node_id']}{information_gain:.4f}")
     return information_gain
+
+# FunktionsID: 13
+# Name: create_assumption
+# Beschreibung: Fügt die assumption zu dem Dictionary
+
+def create_assumption(decision_nodes, run_id):
+    for i, node1 in enumerate(decision_nodes):
+        parent_id = node1['parent_id']
+        if node1['node_id'] == f"GINS{run_id}Node0":
+            decision_nodes[i]['assumption'] = None
+        else:
+            for j, node2 in enumerate(decision_nodes):
+                if parent_id == node2['node_id']:
+                        decision_nodes[i]['assumption'] = node2['feature_name'] + node1['comparison_operator'] + str(node2['threshold'])
+
