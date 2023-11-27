@@ -1,38 +1,81 @@
+import logging
 import pickle
+import time
+import uuid
 
 import pandas as pd
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.model_selection import train_test_split
+import pymongo
+import sklearn
 
-import kgconnector
-import processing as pr
+import dbconnector
+from config import Config
+from dbconnector import save_model_to_db, execute_sparql_query
 
-if __name__ == '__main__':
-    training_data = kgconnector.get_training_data()
-    df = pd.DataFrame.from_dict(training_data['results']['bindings'], orient='columns')
-    df = df.applymap(pr.get_values_from_json)
-    # https://stackoverflow.com/questions/51306491/applying-a-method-to-a-few-selected-columns-in-a-pandas-dataframe
-    columns_to_clean = ['experiment', 'cylinder', 'material', 'bottom']
-    df[columns_to_clean] = df[columns_to_clean].applymap(pr.remove_owl_uri)
 
-    df.drop('experiment', axis='columns', inplace=True)
-    df.drop('cylinder', axis='columns', inplace=True)
-    X = df.drop('result', axis=1)
-    y = df['result']
-    one_hot = pd.get_dummies(df['bottom'])
-    dfjoin = df.join(one_hot)
-    df1 = dfjoin.drop('bottom', axis=1)
-    df = df1.drop('material', axis=1)
-    df.rename(columns={'http://www.semanticweb.org/kidz/festo#concave025': 'concave025',
-                       'http://www.semanticweb.org/kidz/festo#concave05': 'concave05',
-                       'http://www.semanticweb.org/kidz/festo#concave075': 'concave075',
-                       'http://www.semanticweb.org/kidz/festo#even': 'even'}, inplace=True)
-    X = df.drop('result', axis=1)
-    y = df['result']
-    X_train, X_test, y_train, y_test = train_test_split(X,
-                                                        y,
-                                                        test_size=0.3,
-                                                        stratify=y)
-    gbc = GradientBoostingClassifier(n_estimators=50, min_samples_split=10, max_depth=None, learning_rate=0.1,
-                                     random_state=41).fit(X_train, y_train)
-    pickle.dump(gbc, open('test.pickle', 'wb'))
+def save_training_data_to_db(training_data: pd.DataFrame, client, db, dbconnection, training_data_uuid):
+    # pickling the model
+    pickled_data = pickle.dumps(training_data)
+
+    # saving model to mongoDB
+    # creating connection
+    myclient = pymongo.MongoClient(client)
+
+    # creating database in mongodb
+    mydb = myclient[db]
+
+    # creating collection
+    connection = mydb[dbconnection]
+    info = connection.insert_one({training_data_uuid: pickled_data, 'name': training_data_uuid, 'created_time': time.time()})
+    logging.info(str(info.inserted_id) + ' saved successfully!')
+
+    details = {
+        'inserted_id': info.inserted_id,
+        'data_name': training_data_uuid,
+        'created_time': time.time()
+    }
+
+    return details
+
+
+# Auslagern des Trainings und aufteilen in Abspeichern. Nutzer sollten selbst trainieren
+def train_model(model: sklearn.base.ClassifierMixin, training_data: pd.DataFrame, label: str):
+    X = training_data.drop(label, axis=1)
+    y = training_data[label]
+    model = model.fit(X, y)
+    training_data_uuid = "TrainingData-" + str(uuid.uuid1())
+    save_training_data_to_db(
+        training_data=training_data,
+        client=Config.mongodb_client,
+        db=Config.mongodb_database,
+        dbconnection="data",
+        training_data_uuid=training_data_uuid,
+    )
+    model_uuid = save_model(model)
+    query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#> INSERT DATA {
+        <http://www.semanticweb.org/kidz/festo#%s> festo:type 
+        <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#TrainingData>;
+        festo:trained <http://www.semanticweb.org/kidz/festo#%s> .}"""
+    execute_sparql_query(query_template % (training_data_uuid, model_uuid))
+    return model_uuid, training_data_uuid
+
+
+def save_model(model: sklearn.base.ClassifierMixin):
+    algorithm_type = type(model).__name__
+    model_uuid = "Model-" + algorithm_type + "-" + str(uuid.uuid1())
+    logging.info(model_uuid + " created!")
+
+    save_model_to_db(
+        model=model,
+        client=Config.mongodb_client,
+        db=Config.mongodb_database,
+        dbconnection="models",
+        model_name=model_uuid,
+    )
+
+    query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#> INSERT DATA {
+    <http://www.semanticweb.org/kidz/festo#%s> festo:type 
+    <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#Model>.}"""
+    execute_sparql_query(query_template % model_uuid)
+    #Todo Magic String entfernen
+    dbconnector.connect_model_to_training_run(model_uuid, "TR1")
+    return model_uuid
