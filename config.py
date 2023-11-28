@@ -5,4 +5,4 @@ class Config:
     model_name = 'test.pickle'
 
     mongodb_client = 'mongodb://localhost:27017/'
-    mongodb_database = 'mydatabase'
+    mongodb_database = 'datalake'
