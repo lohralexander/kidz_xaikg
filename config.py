@@ -1,6 +1,6 @@
 class Config:
     # Path to GraphML repository
-    repository = "http://localhost:7200/repositories/test"
+    repository = "http://localhost:7200/repositories/KIDZ"
     repository_update = repository + "/statements"
     model_name = 'test.pickle'
 

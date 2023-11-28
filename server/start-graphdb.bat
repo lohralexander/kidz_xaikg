@@ -13,5 +13,5 @@ if %count% gtr 0 (
   docker start %containerName%
 ) else (
   echo %containerName% container does not exist. Pulling image and starting container.
-  docker run --name %containerName% -p 7200:7200 -p 7300:7300 ontotext/graphdb:10.4.2
+  docker run --name %containerName% -p 7200:7200 -p 7300:7300 alexanderlohr91/kidz:latest
 )
