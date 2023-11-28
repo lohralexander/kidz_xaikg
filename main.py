@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import dbconnector
 
 import training
+from explanation import create_explanation
 from prediction import make_prediction
 
 if __name__ == '__main__':
@@ -21,3 +22,4 @@ if __name__ == '__main__':
 
     row = pd.DataFrame([(0.5, 50.5)], columns=["pressure", "weight"])
     result, prediction_id = make_prediction(row, model_uuid)
+    create_explanation(prediction_id)

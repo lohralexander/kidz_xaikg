@@ -9,16 +9,10 @@ def remove_owl_uri(x):
     return re.search("#(.*)", x).group(1)
 
 def extract_id_from_uri(full_uri:str):
-    # Regex, um alles nach dem letzten Slash zu extrahieren
-    pattern = re.compile(r'[^/]+(?=#|$)')
+    pattern = r'.*#(.*)$'
 
-    # Suche nach dem Muster in der URL
-    match = re.search(pattern, str(full_uri))
+    match = re.search(pattern, full_uri)
 
-    # Extrahiere das Ergebnis, wenn ein Treffer vorhanden ist
     if match:
-        result = match.group(0)
-        print(result)
+        result = match.group(1)
         return result
-    else:
-        print("Kein Treffer gefunden.")

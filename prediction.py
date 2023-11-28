@@ -1,7 +1,10 @@
 import logging
+import pickle
+import time
 import uuid
 
 import pandas as pd
+import pymongo
 
 import dbconnector
 from config import Config
@@ -13,6 +16,9 @@ def make_prediction(feature_values: pd.DataFrame, model_uuid: str):
     prediction_uuid = "Prediction-" + str(uuid.uuid1())
     logging.info(prediction_uuid)
     result = model.predict(feature_values)
+
+    save_prediction_data_to_db(prediction_uuid, feature_values, Config.mongodb_client, Config.mongodb_database,
+                               dbconnection='predictions')
 
     query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>INSERT DATA {
     <http://www.semanticweb.org/kidz/festo#%s> festo:hasInput <http://www.semanticweb.org/kidz/festo#%s>;
@@ -37,3 +43,29 @@ def make_prediction(feature_values: pd.DataFrame, model_uuid: str):
     logging.info("Created Nodes in Knowledge Graph")
 
     return result, prediction_uuid
+
+
+def save_prediction_data_to_db(prediction_uuid: str, feature_values: pd.DataFrame, client, db, dbconnection):
+    # pickling the model
+    pickled_data = pickle.dumps(feature_values)
+
+    # saving model to mongoDB
+    # creating connection
+    myclient = pymongo.MongoClient(client)
+
+    # creating database in mongodb
+    mydb = myclient[db]
+
+    # creating collection
+    connection = mydb[dbconnection]
+    info = connection.insert_one(
+        {prediction_uuid: pickled_data, 'name': prediction_uuid, 'created_time': time.time()})
+    logging.info(str(info.inserted_id) + ' saved successfully!')
+
+    details = {
+        'inserted_id': info.inserted_id,
+        'data_name': prediction_uuid,
+        'created_time': time.time()
+    }
+
+    return details
