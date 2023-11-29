@@ -4,6 +4,8 @@ import pandas as pd
 repository = "http://LAB-Thinkpad:7200/repositories/KidzDecisionTreeV3"
 repository_update = "http://LAB-Thinkpad:7200/repositories/KidzDecisionTreeV3/statements"
 
+# Abfrage bisher nur für 09!!! keine generalisierte Abfrage
+
 # Deine SPARQL-Abfrage
 sparql_query = """
 PREFIX festo: <http://www.semanticweb.org/kidz/festo#>

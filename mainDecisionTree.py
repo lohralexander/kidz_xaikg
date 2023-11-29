@@ -1,31 +1,32 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.metrics import cohen_kappa_score
-from sklearn.tree import export_text
-import matplotlib.pyplot as plt
-from sklearn.tree import _tree
-
-
 import os
 import pickle
 import uuid
-from urllib.parse import quote
 import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree, export_text, _tree
+from sklearn.metrics import cohen_kappa_score
+from urllib.parse import quote
 from SPARQLWrapper import JSON, SPARQLWrapper, POST
+from functions import (
+    create_edge, save_model, connect_model_to_training_run,
+    create_global_insight, save_nodes_to_graph, create_meta_edge,
+    create_global_explanation_run, create_parameter,
+    create_edge_attributes, calculate_information_gain,
+    calculate_entropy, create_assumption
+)
 
-from functions import create_edge, save_model, connect_model_to_training_run, create_global_insight, \
-    save_nodes_to_graph, create_meta_edge, create_global_explanation_run, create_parameter, create_edge_attributes, calculate_information_gain, calculate_entropy, create_assumption
-
-# Run ID festlegen
+# Run ID
 run_id = "09"
 
 # Daten einlesen
 df = pd.read_csv("sparqlResult.csv")
 
 # Datenbereinigung
-df.drop('experiment',axis='columns', inplace=True)
-df.drop('cylinder',axis='columns', inplace=True)
+df.drop('experiment', axis='columns', inplace=True)
+df.drop('cylinder', axis='columns', inplace=True)
 
 # Aufteilung der Daten
 X = df.drop('result', axis=1)
@@ -52,15 +53,14 @@ tree_num_nodes = clf.tree_.node_count
 tree_depth = clf.tree_.max_depth
 
 def visitor(node_id, parent_id, dt, decision_nodes, node, depth, parent_split_type=None):
-
     # ID
     global_insight_run = run_id
     enriched_node_id = f"GINS{global_insight_run}Node{node_id}"
     enriched_parent_id = f"GINS{global_insight_run}Node{parent_id}"
 
+    # Benötigte Attribute
     feature_name = X.columns[dt.feature[node]] if dt.feature[node] != _tree.TREE_UNDEFINED else None
     threshold = round(dt.threshold[node], 2) if dt.feature[node] != _tree.TREE_UNDEFINED else None
-
     value = dt.value[node][0]
     predicted_class = value.argmax()
     predicted_class_name = y.unique()[predicted_class]
@@ -69,7 +69,7 @@ def visitor(node_id, parent_id, dt, decision_nodes, node, depth, parent_split_ty
     value_false = value[1]
     accuracy = value[predicted_class] / sample_count if sample_count > 0 else 0
 
-    # NEU
+    # Zuweisung des Splits
     if parent_split_type == "left":
         comparison_operator = "<="
     else:
@@ -79,7 +79,7 @@ def visitor(node_id, parent_id, dt, decision_nodes, node, depth, parent_split_ty
     if parent_id is None:
         comparison_operator ="start_node"
 
-    # Information Gain
+    # Berechnung Information Gain
     total_samples = value_true + value_false
 
     if total_samples == 0:
@@ -89,10 +89,6 @@ def visitor(node_id, parent_id, dt, decision_nodes, node, depth, parent_split_ty
     probability_false = value_false / total_samples
 
     entropy_current_node = calculate_entropy(np.array([probability_true, probability_false]))
-
-
-    if total_samples == 0:
-        return 0  # Vermeide Division durch Null
 
     decision_node = {
         "node_id": enriched_node_id,
