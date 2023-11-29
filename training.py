@@ -13,17 +13,9 @@ from dbconnector import save_model_to_db, execute_sparql_query
 
 
 def save_training_data_to_db(training_data: pd.DataFrame, client, db, dbconnection, training_data_uuid):
-    # pickling the model
     pickled_data = pickle.dumps(training_data)
-
-    # saving model to mongoDB
-    # creating connection
     myclient = pymongo.MongoClient(client)
-
-    # creating database in mongodb
     mydb = myclient[db]
-
-    # creating collection
     connection = mydb[dbconnection]
     info = connection.insert_one({training_data_uuid: pickled_data, 'name': training_data_uuid, 'created_time': time.time()})
     logging.info(str(info.inserted_id) + ' saved successfully!')
@@ -37,7 +29,7 @@ def save_training_data_to_db(training_data: pd.DataFrame, client, db, dbconnecti
     return details
 
 
-# Auslagern des Trainings und aufteilen in Abspeichern. Nutzer sollten selbst trainieren
+# TODO Auslagern des Trainings und aufteilen in Abspeichern. Nutzer sollten selbst trainieren
 def train_model(model: sklearn.base.ClassifierMixin, training_data: pd.DataFrame, label: str):
     X = training_data.drop(label, axis=1)
     y = training_data[label]

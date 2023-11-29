@@ -10,7 +10,7 @@ from prediction import make_prediction
 
 if __name__ == '__main__':
     logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.INFO)
     df = pd.read_csv("data/sparqlResult.csv")
     df.drop("experiment", axis="columns", inplace=True)
     df.drop("cylinder", axis="columns", inplace=True)
