@@ -3,7 +3,6 @@ import uuid
 
 import pandas as pd
 import shap
-import sklearn
 from SPARQLWrapper import JSON, SPARQLWrapper
 
 import dbconnector
@@ -12,6 +11,7 @@ from processing import extract_id_from_uri
 
 
 def create_explanation(prediction_uuid: str):
+    global training_iri
     local_explanation_run_uuid = "LocalExplanationRun-" + str(uuid.uuid1())
     global_explanation_run_unique_identifier = "GlobalExplanationRun-" + str(uuid.uuid1())
     logging.info(local_explanation_run_uuid)
@@ -27,13 +27,9 @@ def create_explanation(prediction_uuid: str):
     sparql = SPARQLWrapper(Config.repository)
     sparql.setQuery(query_template
                     % (prediction_uuid))
-    # Setze das gewünschte Rückgabefomat (json, xml, etc.)
     sparql.setReturnFormat(JSON)
-
-    # Führe die SPARQL-Abfrage aus und erhalte das Ergebnis
     results = sparql.query().convert()
 
-    # Verarbeite das Ergebnis (z.B., Ausgabe der Ergebnisse)
     for result in results["results"]["bindings"]:
         print(result["usedmodel"]["value"])
         model_iri = result["usedmodel"]["value"]
@@ -51,13 +47,8 @@ def create_explanation(prediction_uuid: str):
     sparql = SPARQLWrapper(Config.repository)
     sparql.setQuery(query_template
                     % (model_uuid))
-    # Setze das gewünschte Rückgabefomat (json, xml, etc.)
     sparql.setReturnFormat(JSON)
-
-    # Führe die SPARQL-Abfrage aus und erhalte das Ergebnis
     results = sparql.query().convert()
-
-    # Verarbeite das Ergebnis (z.B., Ausgabe der Ergebnisse)
     for result in results["results"]["bindings"]:
         print(result["useddata"]["value"])
         training_iri = result["useddata"]["value"]
@@ -68,10 +59,10 @@ def create_explanation(prediction_uuid: str):
     training_data = training_data.drop("result", axis=1)
 
     prediction_data = dbconnector.load_saved_object_from_db(prediction_uuid, client=Config.mongodb_client,
-                                                          db=Config.mongodb_database, dbconnection='predictions')
+                                                            db=Config.mongodb_database, dbconnection='predictions')
 
     model = dbconnector.load_saved_object_from_db(model_uuid, client=Config.mongodb_client,
-                                                          db=Config.mongodb_database, dbconnection='models')
+                                                  db=Config.mongodb_database, dbconnection='models')
 
     combinedFrame = pd.concat([training_data, pd.DataFrame(prediction_data)], ignore_index=True)
     explainer = shap.Explainer(model.predict, combinedFrame)
