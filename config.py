@@ -1,5 +1,8 @@
 class Config:
     # Path to GraphML repository
-    repository = "http://DESKTOP-18V8399:7200/repositories/Festo"
-    repository_update = "http://DESKTOP-18V8399:7200/repositories/Festo/statements"
+    repository = "http://localhost:7200/repositories/KIDZ"
+    repository_update = repository + "/statements"
     model_name = 'test.pickle'
+
+    mongodb_client = 'mongodb://localhost:27017/'
+    mongodb_database = 'datalake'
