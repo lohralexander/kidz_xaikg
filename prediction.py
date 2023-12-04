@@ -11,19 +11,17 @@ from config import Config
 
 
 def make_prediction(feature_values: pd.DataFrame, model_uuid: str):
-    model = dbconnector.load_saved_object_from_db(model_uuid, client=Config.mongodb_client, db=Config.mongodb_database,
-                                                  dbconnection='models')
+    model = dbconnector.load_saved_object_from_db(model_uuid, connection_id='models')
     prediction_uuid = "Prediction-" + str(uuid.uuid1())
     logging.info(prediction_uuid)
     result = model.predict(feature_values)
 
-    save_prediction_data_to_db(prediction_uuid, feature_values, Config.mongodb_client, Config.mongodb_database,
-                               dbconnection='predictions')
+    save_prediction_data_to_db(prediction_uuid, feature_values, dbconnection='predictions')
 
     query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>INSERT DATA {
     <http://www.semanticweb.org/kidz/festo#%s> festo:hasInput <http://www.semanticweb.org/kidz/festo#%s>;
     festo:type <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#ApplicationRun>.}"""
-    dbconnector.execute_sparql_query(query_template % (prediction_uuid, str(model_uuid)))
+    dbconnector.execute_sparql_query_write(query_template % (prediction_uuid, str(model_uuid)))
     logging.info("Connected Nodes in Knowledge Graph")
 
     query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#> INSERT DATA 
@@ -39,26 +37,17 @@ def make_prediction(feature_values: pd.DataFrame, model_uuid: str):
             feature_name,
             feature_value,
         )
-        dbconnector.execute_sparql_query(query_string)
+        dbconnector.execute_sparql_query_write(query_string)
     logging.info("Created Nodes in Knowledge Graph")
 
     return result, prediction_uuid
 
 
-def save_prediction_data_to_db(prediction_uuid: str, feature_values: pd.DataFrame, client, db, dbconnection):
-    # pickling the model
+def save_prediction_data_to_db(prediction_uuid: str, feature_values: pd.DataFrame, dbconnection):
     pickled_data = pickle.dumps(feature_values)
+    collection = dbconnector.get_mongo_collection(dbconnection)
 
-    # saving model to mongoDB
-    # creating connection
-    myclient = pymongo.MongoClient(client)
-
-    # creating database in mongodb
-    mydb = myclient[db]
-
-    # creating collection
-    connection = mydb[dbconnection]
-    info = connection.insert_one(
+    info = collection.insert_one(
         {prediction_uuid: pickled_data, 'name': prediction_uuid, 'created_time': time.time()})
     logging.info(str(info.inserted_id) + ' saved successfully!')
 
