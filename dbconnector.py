@@ -1,10 +1,41 @@
+import logging
 import pickle
+import time
 import uuid
 
+import pandas as pd
 import pymongo
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 from config import Config
+
+mongo_client = pymongo.MongoClient(Config.mongodb_client)
+mongo_database = mongo_client[Config.mongodb_database]
+
+
+def store_model_kg(model_uuid: str, training_data_uuid: str):
+    query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#> INSERT DATA {
+        <http://www.semanticweb.org/kidz/festo#%s> festo:type 
+        <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#TrainingData>;
+        festo:trained <http://www.semanticweb.org/kidz/festo#%s> .}"""
+    return execute_sparql_query(query_template % (training_data_uuid, model_uuid))
+
+
+def save_training_data_to_db(training_data: pd.DataFrame):
+    training_data_uuid = "TrainingData-" + str(uuid.uuid1())
+    pickled_data = pickle.dumps(training_data)
+    connection = mongo_database['data']
+    info = connection.insert_one(
+        {training_data_uuid: pickled_data, 'name': training_data_uuid, 'created_time': time.time()})
+    logging.info(str(info.inserted_id) + ' saved successfully!')
+
+    details = {
+        'inserted_id': info.inserted_id,
+        'data_name': training_data_uuid,
+        'created_time': time.time()
+    }
+
+    return training_data_uuid
 
 
 def get_training_data():
@@ -38,21 +69,9 @@ def save_prediction():
 
 
 def save_model_to_db(model, client, db, dbconnection, model_name):
-    import pickle
-    import time
-    import pymongo
     # pickling the model
     pickled_model = pickle.dumps(model)
-
-    # saving model to mongoDB
-    # creating connection
-    mongo_client = pymongo.MongoClient(client)
-
-    # creating database in mongodb
-    mydb = mongo_client[db]
-
-    # creating collection
-    connection = mydb[dbconnection]
+    connection = mongo_database[dbconnection]
     info = connection.insert_one({model_name: pickled_model, 'name': model_name, 'created_time': time.time()})
     print(info.inserted_id, ' saved with this id successfully!')
 
@@ -132,12 +151,10 @@ def execute_sparql_query(query_string: str):
     sparql = SPARQLWrapper(Config.repository_update)
     sparql.setQuery(query_string)
     sparql.method = "POST"
-    sparql.query()
+    return sparql.query()
 
 
 def connect_model_to_training_run(model_uii, training_run):
     query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#> INSERT DATA 
     {<http://www.semanticweb.org/kidz/festo#%s> festo:hasOutput <http://www.semanticweb.org/kidz/festo#%s>.}"""
     execute_sparql_query(query_template % (training_run, model_uii))
-
-
