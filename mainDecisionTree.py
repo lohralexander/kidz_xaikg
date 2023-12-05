@@ -1,25 +1,22 @@
-import pandas as pd
-import os
-import pickle
 import uuid
-import numpy as np
-import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree, export_text, _tree
+import numpy as np
+import pandas as pd
 from sklearn.metrics import cohen_kappa_score
-from urllib.parse import quote
-from SPARQLWrapper import JSON, SPARQLWrapper, POST
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, _tree
+
+from config import Config
 from functions import (
-    create_edge, save_model, connect_model_to_training_run,
-    create_global_insight, save_nodes_to_graph, create_meta_edge,
-    create_global_explanation_run, create_parameter,
+    save_model, connect_model_to_training_run,
+    create_global_insight, save_nodes_to_graph, create_global_explanation_run, create_parameter,
     create_edge_attributes, calculate_information_gain,
     calculate_entropy, create_assumption
 )
 
 # Run ID
-run_id = "09"
+# Prefix
+run_id = str(uuid.uuid1())
 
 # Daten einlesen
 df = pd.read_csv("sparqlResult.csv")
@@ -41,7 +38,7 @@ clf = clf.fit(X_train, y_train)
 
 # Accuracy und Kappa ausrechnen
 y_pred = clf.predict(X_test)
-accuracy = (y_pred ==y_test).mean()
+accuracy = (y_pred == y_test).mean()
 kappa = cohen_kappa_score(y_test, y_pred)
 
 # Weitere Statistiken für Global Insight
@@ -51,6 +48,7 @@ most_important_feature_name = X.columns[most_important_feature_index]
 
 tree_num_nodes = clf.tree_.node_count
 tree_depth = clf.tree_.max_depth
+
 
 def visitor(node_id, parent_id, dt, decision_nodes, node, depth, parent_split_type=None):
     # ID
@@ -77,7 +75,7 @@ def visitor(node_id, parent_id, dt, decision_nodes, node, depth, parent_split_ty
             comparison_operator = ">"
 
     if parent_id is None:
-        comparison_operator ="start_node"
+        comparison_operator = "start_node"
 
     # Berechnung Information Gain
     total_samples = value_true + value_false
@@ -112,7 +110,9 @@ def visitor(node_id, parent_id, dt, decision_nodes, node, depth, parent_split_ty
         left_child_id = len(decision_nodes)
         visitor(left_child_id, node_id, dt, decision_nodes, dt.children_left[node], depth + 1, parent_split_type="left")
         right_child_id = len(decision_nodes)
-        visitor(right_child_id, node_id, dt, decision_nodes, dt.children_right[node], depth + 1, parent_split_type="right")
+        visitor(right_child_id, node_id, dt, decision_nodes, dt.children_right[node], depth + 1,
+                parent_split_type="right")
+
 
 # Speichern der wichtigen Informationen durch die Visitor Funktion:
 decision_nodes = []
@@ -150,27 +150,25 @@ repository = "http://LAB-Thinkpad:7200/repositories/KidzDecisionTreeV3"
 repository_update = "http://LAB-Thinkpad:7200/repositories/KidzDecisionTreeV3/statements"
 
 # Speichern der Knoten und Erstellen der Kanten:
-save_nodes_to_graph(repository_update, decision_nodes, run_id)
+save_nodes_to_graph(Config.repository_update, decision_nodes, run_id)
 print("Erfolgreich die Knoten geladen")
 
 # Modell wird gespeichert
-model_id = save_model(repository_update, clf, run_id)
-connect_model_to_training_run(repository_update, model_id, "TR"+run_id)
+model_id = save_model(Config.repository_update, clf, run_id)
+connect_model_to_training_run(Config.repository_update, model_id, "TR" + run_id)
 print("Erfolgreich das Modell gespeichert")
 
-
 # Global Explanation Run und Global Insight einfügen
-create_global_explanation_run(repository_update, "GER"+run_id, run_id, "Model-DecisionTreeClassifier-"+run_id)
-create_global_insight(repository_update, "GINS"+run_id, run_id, accuracy, kappa, most_important_feature_name, tree_depth, tree_num_nodes)
+create_global_explanation_run(Config.repository_update, "GER" + run_id, run_id,
+                              "Model-DecisionTreeClassifier-" + run_id)
+create_global_insight(Config.repository_update, "GINS" + run_id, run_id, accuracy, kappa, most_important_feature_name,
+                      tree_depth, tree_num_nodes)
 print("Erfolgreich GER und GINS erstellt und verbunden")
 
 # Parameter einfügen
-create_parameter(repository_update, clf, run_id, "Model-DecisionTreeClassifier-"+run_id)
+create_parameter(Config.repository_update, clf, run_id, "Model-DecisionTreeClassifier-" + run_id)
 print("Erfolgreich Parameter erstellt und verbunden")
 
 # Verbindung zwischen Nodes und weight und pressure
-create_edge_attributes(repository_update, decision_nodes)
+create_edge_attributes(Config.repository_update, decision_nodes)
 print('Erfolgreich Nodes mit Features verbunden')
-
-
-
