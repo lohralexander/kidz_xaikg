@@ -32,9 +32,9 @@ results = sparql.query().convert()
 # Ergebnisse in einen Pandas DataFrame umwandeln
 data = []
 for result in results['results']['bindings']:
-    node = result['node']['value'].replace('http://www.semanticweb.org/kidz/festo#', '')
-    property = result['property']['value'].replace('http://www.semanticweb.org/kidz/festo#', '')
-    value = result['value']['value'].replace('http://www.semanticweb.org/kidz/festo#', '')
+    node = result['node']['value'].replace('http://www.semanticweb.org/kidz/festo#GINS43988de9-8e9d-11ee-a864-3003c86b7bf0', '')
+    property = result['property']['value'].replace('http://www.semanticweb.org/kidz/festo#', '').replace('http://www.w3.org/1999/02/22-rdf-syntax-ns#', '')
+    value = result['value']['value'].replace('http://www.semanticweb.org/kidz/festo#', '').replace('http://www.semanticweb.org/kidz/festo#', '').replace('GINS43988de9-8e9d-11ee-a864-3003c86b7bf0', '')
     data.append({'node': node, 'property': property, 'value': value})
 
 df = pd.DataFrame(data)
