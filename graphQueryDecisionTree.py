@@ -64,3 +64,5 @@ df_sorted = df_sorted.drop_duplicates()
 # df_cleaned.to_csv('DecTreeTripleResult.txt', sep='\t', index=False)
 df_sorted.to_csv('DecTreeTripleResult.csv', index=False)
 
+# TODO Code refactoren
+
