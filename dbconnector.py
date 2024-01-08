@@ -19,6 +19,14 @@ def store_model_kg(model_uuid: str, training_data_uuid: str):
     return execute_sparql_query_write(query_template % (training_data_uuid, model_uuid))
 
 
+def extract_features(data_uuid: str):
+    dataframe = load_saved_objects_from_db(data_uuid, 'data')
+    for feature in [*dataframe]:
+        query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>INSERT DATA {
+         <http://www.semanticweb.org/kidz/festo#%s> festo:belongsTo <http://www.semanticweb.org/kidz/festo#%s>.}"""
+        execute_sparql_query_write(query_template % (data_uuid, feature))
+
+
 def save_training_data_to_db(training_data: pd.DataFrame):
     training_data_uuid = "TrainingData-" + str(uuid.uuid1())
     pickled_data = pickle.dumps(training_data)
@@ -26,9 +34,7 @@ def save_training_data_to_db(training_data: pd.DataFrame):
     info = connection.insert_one(
         {training_data_uuid: pickled_data, 'name': training_data_uuid, 'created_time': time.time()})
     logging.info(str(info.inserted_id) + ' saved successfully!')
-
-    #for feature in [*training_data]:
-
+    extract_features(training_data_uuid)
     return training_data_uuid
 
 
@@ -119,7 +125,7 @@ def load_saved_objects_from_db(object_name, connection_id: str):
     return data
 
 
-def get_used_model_for_prediction(prediction_uuid: str):
+def get_model_used_for_prediction(prediction_uuid: str):
     query_template = """ PREFIX festo: <http://www.semanticweb.org/kidz/festo#>
      PREFIX owl: <http://www.w3.org/2002/07/owl#>
      PREFIX kidzarchitecture: <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#>
@@ -128,8 +134,7 @@ def get_used_model_for_prediction(prediction_uuid: str):
             ?usedmodel rdf:type <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#Model>.}"""
 
     sparql = SPARQLWrapper(Config.repository)
-    sparql.setQuery(query_template
-                    % (prediction_uuid))
+    sparql.setQuery(query_template % prediction_uuid)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
 
