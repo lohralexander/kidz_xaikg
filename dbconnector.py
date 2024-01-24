@@ -27,7 +27,7 @@ def save_training_data_to_db(training_data: pd.DataFrame):
         {training_data_uuid: pickled_data, 'name': training_data_uuid, 'created_time': time.time()})
     logging.info(str(info.inserted_id) + ' saved successfully!')
 
-    #for feature in [*training_data]:
+    # for feature in [*training_data]:
 
     return training_data_uuid
 
@@ -117,6 +117,33 @@ def load_saved_objects_from_db(object_name, connection_id: str):
 
     print(str(docs) + " Items found!")
     return data
+
+
+def write_gini_importance_to_kg(prediction_uuid, features, feature_importances):
+    local_explanation_run_uuid = "GlobalExplanationRun-" + str(uuid.uuid1())
+    logging.info(local_explanation_run_uuid)
+
+    for feature_name, feature_importance in zip(features, feature_importances):
+        local_insight_uuid = "GlobalInsight-" + str(uuid.uuid1())
+        query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>INSERT DATA {
+        <http://www.semanticweb.org/kidz/festo#%s> festo:%s "%s".}"""
+        execute_sparql_query_write(
+            query_template
+            % (
+                local_insight_uuid,
+                feature_name,
+                str(feature_importance),
+            )
+        )
+
+        query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>INSERT DATA {
+        <http://www.semanticweb.org/kidz/festo#%s> festo:hasInput <http://www.semanticweb.org/kidz/festo#%s>;
+        festo:hasOutput <http://www.semanticweb.org/kidz/festo#%s>;
+        festo:type <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#LocalExplanationRun>.}"""
+        execute_sparql_query_write(
+            query_template
+            % (local_explanation_run_uuid, prediction_uuid, local_insight_uuid)
+        )
 
 
 def get_used_model_for_prediction(prediction_uuid: str):
