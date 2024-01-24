@@ -119,32 +119,30 @@ def load_saved_objects_from_db(object_name, connection_id: str):
     return data
 
 
-def write_gini_importance_to_kg(model_uuid, gini_importance):
-    local_explanation_run_uuid = "LocalExplanationRun-" + str(uuid.uuid1())
+def write_gini_importance_to_kg(prediction_uuid, features, feature_importances):
+    local_explanation_run_uuid = "GlobalExplanationRun-" + str(uuid.uuid1())
     logging.info(local_explanation_run_uuid)
 
-    for feature_name, gini_value in zip(
-            gini_importance.feature_names, gini_importance.feature_importances_
-    ):
-        gini_importance_uuid = "GiniImportance-" + str(uuid.uuid1())
+    for feature_name, feature_importance in zip(features, feature_importances):
+        local_insight_uuid = "GlobalInsight-" + str(uuid.uuid1())
         query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>INSERT DATA {
         <http://www.semanticweb.org/kidz/festo#%s> festo:%s "%s".}"""
         execute_sparql_query_write(
             query_template
             % (
-                gini_importance_uuid,
+                local_insight_uuid,
                 feature_name,
-                str(gini_value),
+                str(feature_importance),
             )
         )
 
         query_template = """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>INSERT DATA {
         <http://www.semanticweb.org/kidz/festo#%s> festo:hasInput <http://www.semanticweb.org/kidz/festo#%s>;
         festo:hasOutput <http://www.semanticweb.org/kidz/festo#%s>;
-        festo:type <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#GiniImportanceRun>.}"""
+        festo:type <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#LocalExplanationRun>.}"""
         execute_sparql_query_write(
             query_template
-            % (gini_importance_uuid, model_uuid, gini_importance_uuid)
+            % (local_explanation_run_uuid, prediction_uuid, local_insight_uuid)
         )
 
 

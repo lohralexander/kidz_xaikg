@@ -21,4 +21,5 @@ def create_explanation(prediction_uuid: str):
     dbconnector.write_shap_to_kg(prediction_uuid, shap_values)
 
     dbconnector.write_gini_importance_to_kg(prediction_uuid, model.feature_names_in_, model.feature_importances_)
+
     return shap_values, shap_values[-1]
