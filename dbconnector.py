@@ -33,7 +33,7 @@ def save_training_data_to_db(training_data: pd.DataFrame):
 
 
 def get_training_data():
-    sparql = SPARQLWrapper(Config.repository)
+    sparql = SPARQLWrapper(Config.graphdb_repository)
     sparql.setQuery("""
                 PREFIX festo: <http://www.semanticweb.org/kidz/festo#>
             SELECT * { 
@@ -53,7 +53,7 @@ def get_training_data():
 def save_prediction():
     unique_identifier = "Pred" + str(uuid.uuid1())
     print(unique_identifier)
-    sparql = SPARQLWrapper(Config.repository_update)
+    sparql = SPARQLWrapper(Config.graphddb_repository_update)
     query_string = (
             """PREFIX festo: <http://www.semanticweb.org/kidz/festo#>INSERT DATA {<http://www.semanticweb.org/kidz/festo#""" + unique_identifier + """>
     dc:result "Prediction 1" ; dc:Station "Ward 2" .}""")
@@ -154,7 +154,7 @@ def get_used_model_for_prediction(prediction_uuid: str):
         SELECT ?usedmodel WHERE {<http://www.semanticweb.org/kidz/%s> kidzarchitecture:hasInput ?usedmodel .
             ?usedmodel rdf:type <http://www.semanticweb.org/alexa/ontologies/2023/6/kidzarchitecture#Model>.}"""
 
-    sparql = SPARQLWrapper(Config.repository)
+    sparql = SPARQLWrapper(Config.graphdb_repository)
     sparql.setQuery(query_template
                     % (prediction_uuid))
     sparql.setReturnFormat(JSON)
@@ -166,7 +166,7 @@ def get_used_model_for_prediction(prediction_uuid: str):
 
 
 def execute_sparql_query_write(query_string: str):
-    sparql = SPARQLWrapper(Config.repository_update)
+    sparql = SPARQLWrapper(Config.graphddb_repository_update)
     sparql.setQuery(query_string)
     sparql.method = "POST"
     query = sparql.query()
@@ -174,7 +174,7 @@ def execute_sparql_query_write(query_string: str):
 
 
 def execute_sparql_query_read(query_string: str):
-    sparql = SPARQLWrapper(Config.repository)
+    sparql = SPARQLWrapper(Config.graphdb_repository)
     sparql.setQuery(query_string)
     sparql.method = "POST"
     sparql.setReturnFormat(JSON)

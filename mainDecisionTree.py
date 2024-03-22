@@ -150,25 +150,25 @@ repository = "http://LAB-Thinkpad:7200/repositories/KidzDecisionTreeV3"
 repository_update = "http://LAB-Thinkpad:7200/repositories/KidzDecisionTreeV3/statements"
 
 # Speichern der Knoten und Erstellen der Kanten:
-save_nodes_to_graph(Config.repository_update, decision_nodes, run_id)
+save_nodes_to_graph(Config.graphddb_repository_update, decision_nodes, run_id)
 print("Erfolgreich die Knoten geladen")
 
 # Modell wird gespeichert
-model_id = save_model(Config.repository_update, clf, run_id)
-connect_model_to_training_run(Config.repository_update, model_id, "TR" + run_id)
+model_id = save_model(Config.graphddb_repository_update, clf, run_id)
+connect_model_to_training_run(Config.graphddb_repository_update, model_id, "TR" + run_id)
 print("Erfolgreich das Modell gespeichert")
 
 # Global Explanation Run und Global Insight einfügen
-create_global_explanation_run(Config.repository_update, "GER" + run_id, run_id,
+create_global_explanation_run(Config.graphddb_repository_update, "GER" + run_id, run_id,
                               "Model-DecisionTreeClassifier-" + run_id)
-create_global_insight(Config.repository_update, "GINS" + run_id, run_id, accuracy, kappa, most_important_feature_name,
+create_global_insight(Config.graphddb_repository_update, "GINS" + run_id, run_id, accuracy, kappa, most_important_feature_name,
                       tree_depth, tree_num_nodes)
 print("Erfolgreich GER und GINS erstellt und verbunden")
 
 # Parameter einfügen
-create_parameter(Config.repository_update, clf, run_id, "Model-DecisionTreeClassifier-" + run_id)
+create_parameter(Config.graphddb_repository_update, clf, run_id, "Model-DecisionTreeClassifier-" + run_id)
 print("Erfolgreich Parameter erstellt und verbunden")
 
 # Verbindung zwischen Nodes und weight und pressure
-create_edge_attributes(Config.repository_update, decision_nodes)
+create_edge_attributes(Config.graphddb_repository_update, decision_nodes)
 print('Erfolgreich Nodes mit Features verbunden')

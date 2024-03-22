@@ -24,7 +24,7 @@ query_template = """
 query_string = query_template % ("GINS43988de9-8e9d-11ee-a864-3003c86b7bf0"+"Node")
 
 # SPARQL-Abfrage ausführen
-sparql = SPARQLWrapper(Config.repository)
+sparql = SPARQLWrapper(Config.graphdb_repository)
 sparql.setQuery(query_string)
 sparql.setReturnFormat(JSON)
 results = sparql.query().convert()
