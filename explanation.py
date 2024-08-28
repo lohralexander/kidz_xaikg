@@ -1,7 +1,7 @@
 import pandas as pd
 import shap
 
-import dbconnector
+from connectors import dbconnector
 
 
 def create_explanation(prediction_uuid: str):

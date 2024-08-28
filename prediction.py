@@ -4,10 +4,8 @@ import time
 import uuid
 
 import pandas as pd
-import pymongo
 
-import dbconnector
-from config import Config
+from connectors import dbconnector
 
 
 def make_prediction(feature_values: pd.DataFrame, model_uuid: str):
