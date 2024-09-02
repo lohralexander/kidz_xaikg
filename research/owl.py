@@ -18,7 +18,9 @@ class Ontology:
         attributes = Attribute.generate_multiple_nodes(model_count)
         preprocessings = Preprocessing.generate_multiple_nodes(model_count)
 
-        for model, dataset, training_run, feature, attribute, preprocessing in zip(models, datasets, training_runs, features, attributes, preprocessings):
+        for model, dataset, training_run, feature, attribute, preprocessing in zip(models, datasets, training_runs,
+                                                                                   features, attributes,
+                                                                                   preprocessings):
             self.node_dict.update({model.node_id: model, dataset.node_id: dataset, training_run.node_id: training_run,
                                    feature.node_id: feature, attribute.node_id: attribute,
                                    preprocessing.node_id: preprocessing})
@@ -44,38 +46,34 @@ class Ontology:
         self.node_dict.update(nodes)
 
     def get_node(self, node_id):
-        if node_id not in self.node_dict:
+        if node_id.lower() not in self.node_dict:
             return None
         return self.node_dict[node_id]
 
-    # Todo: Every class only one time
+
     def get_ontology_structure(self):
         node_list = []
+        node_structure = {}
         for node in self.node_dict.values():
-            connection_classes_list = []
-            for connection in node.connections:
-                found_connection = self.get_node(connection)
-                if found_connection is not None:
-                    connection_classes_list.append(found_connection.get_class())
-            node_dict = {"Node": node.node_class, "Explanation": node.explanation,
-                         "Connections": connection_classes_list}
-
+            if node not in node_list:
+                node_structure = {"Node": node.node_class, "Explanation": node.explanation,
+                                  "Connections": [cls.__name__ for cls in node.get_class_connections()]}
             annotation_list = []
             for key, value in node.__dict__.items():
                 annotation_list.append(key)
-            node_dict.update({"Annotations": annotation_list})
-            node_list.append(node_dict)
+            node_structure.update({"Annotations": annotation_list})
+            node_list.append(node_structure)
         return str(node_list)
 
     def get_ontology_node_overview(self):
         return list(self.node_dict.keys())
 
-    def create_graph(self):
+    def create_class_graph(self):
         # Define the nodes and their connections
         nodes = [{'Node': 'DataSet', 'Connections': ['TrainingRun', 'Feature']},
-            {'Node': 'Model', 'Connections': ['DataSet', 'TrainingRun']},
-            {'Node': 'TrainingRun', 'Connections': ['DataSet', 'Model']}, {'Node': 'Feature', 'Connections': []},
-            {'Node': 'Attribute', 'Connections': ['DataSet']}, {'Node': 'Preprocessing', 'Connections': []}, ]
+                 {'Node': 'Model', 'Connections': ['DataSet', 'TrainingRun']},
+                 {'Node': 'TrainingRun', 'Connections': ['DataSet', 'Model']}, {'Node': 'Feature', 'Connections': []},
+                 {'Node': 'Attribute', 'Connections': ['DataSet']}, {'Node': 'Preprocessing', 'Connections': []}, ]
 
         # Create a directed graph
         G = nx.DiGraph()
@@ -96,12 +94,20 @@ class Ontology:
         plt.title("Graphical Representation of Nodes and Connections")
         plt.show()
 
+    def create_instance_graph(self):
+        pass
+
 
 class Node:
-    def __init__(self, node_id, node_class, connections, explanation=""):
+    def __init__(self, node_id, node_class, connections):
+        self.class_connections = None
         self.node_id = node_id
         self.node_class = node_class
         self.connections = connections
+
+    @classmethod
+    def get_class_name(cls):
+        return cls.__name__
 
     def get_class(self):
         return self.node_class
@@ -129,6 +135,9 @@ class Node:
     def get_premade_node(cls):
         pass
 
+    def get_class_connections(self):
+        return self.class_connections
+
 
 class Model(Node):
     def __init__(self, node_id, node_class, connections, algorithm, accuracy, giniIndex, precision, recall, f1Score,
@@ -153,16 +162,18 @@ class Model(Node):
         self.trainedWith = trainedWith
         self.trainedBy = trainedBy
         self.explanation = "A model is an algorithm trained on data."
+        self.class_connections = [Dataset, TrainingRun]
 
     def get_data(self):
         return {'id': self.node_id, 'algorithm': self.algorithm, 'accuracy': self.accuracy, 'giniIndex': self.giniIndex,
-            'precision': self.precision, 'recall': self.recall, 'f1Score': self.f1Score,
-            'confusionMatrix': self.confusionMatrix, 'truePositivesClass1': self.truePositivesClass1,
-            'trueNegativesClass0': self.trueNegativesClass0, 'falsePositivesClass0': self.falsePositivesClass0,
-            'falseNegativesClass1': self.falseNegativesClass1, 'rocAucScore': self.rocAucScore,
-            'crossValidationScores': self.crossValidationScores, 'mean': self.mean,
-            'standardDeviation': self.standardDeviation, 'trainedWith': self.trainedWith, 'trainedBy': self.trainedBy,
-            'connections': self.connections}
+                'precision': self.precision, 'recall': self.recall, 'f1Score': self.f1Score,
+                'confusionMatrix': self.confusionMatrix, 'truePositivesClass1': self.truePositivesClass1,
+                'trueNegativesClass0': self.trueNegativesClass0, 'falsePositivesClass0': self.falsePositivesClass0,
+                'falseNegativesClass1': self.falseNegativesClass1, 'rocAucScore': self.rocAucScore,
+                'crossValidationScores': self.crossValidationScores, 'mean': self.mean,
+                'standardDeviation': self.standardDeviation, 'trainedWith': self.trainedWith,
+                'trainedBy': self.trainedBy,
+                'connections': self.connections}
 
     @classmethod
     def get_premade_node(cls):
@@ -217,10 +228,11 @@ class TrainingRun(Node):
         self.hasInput = hasInput
         self.hasOutput = hasOutput
         self.explanation = "A training run is a group of jointly trained models that are all based on a specific data set."
+        self.class_connections = [Dataset, Model]
 
     def get_data(self):
         return {'id': self.id, 'date': self.date, 'purpose': self.purpose, 'hasInput': self.hasInput,
-            'hasOutput': self.hasOutput, 'connections': self.connections}
+                'hasOutput': self.hasOutput, 'connections': self.connections}
 
     @classmethod
     def get_premade_node(cls):
@@ -245,8 +257,8 @@ class TrainingRun(Node):
         # Random purpose from a predefined list
         purpose = random.choice(
             ['Train models to predict if a cylinder slides down a slide', 'Evaluate model performance on test data',
-                'Optimize hyperparameters for model training', 'Run cross-validation experiments',
-                'Preprocess data for training'])
+             'Optimize hyperparameters for model training', 'Run cross-validation experiments',
+             'Preprocess data for training'])
 
         # Random IDs for inputs and outputs
         hasInput = f"DataSet_{random.randint(10000000, 99999999)}"
@@ -256,7 +268,7 @@ class TrainingRun(Node):
         connections = [hasInput, hasOutput]
 
         return TrainingRun(node_id=node_id, node_class=node_class, date=date, purpose=purpose, hasInput=hasInput,
-            hasOutput=hasOutput, connections=connections)
+                           hasOutput=hasOutput, connections=connections)
 
 
 class Dataset(Node):
@@ -276,13 +288,15 @@ class Dataset(Node):
         self.createdBy = createdBy
         self.hasLabel = hasLabel
         self.explanation = "A Dataset consisting of multiple Rows."
+        self.class_connections = [TrainingRun, DataRow, Feature]
 
     def get_data(self):
         return {'id': self.id, 'amountOfRows': self.amountOfRows, 'amountOfAttributes': self.amountOfAttributes,
-            'usedBy': self.usedBy, 'hasFeature': self.hasFeature, 'contains': self.contains, 'dataType': self.dataType,
-            'domain': self.domain, 'locationOfDataRecording': self.locationOfDataRecording,
-            'dateOfRecording': self.dateOfRecording, 'createdBy': self.createdBy, 'hasLabel': self.hasLabel,
-            'connections': self.connections}
+                'usedBy': self.usedBy, 'hasFeature': self.hasFeature, 'contains': self.contains,
+                'dataType': self.dataType,
+                'domain': self.domain, 'locationOfDataRecording': self.locationOfDataRecording,
+                'dateOfRecording': self.dateOfRecording, 'createdBy': self.createdBy, 'hasLabel': self.hasLabel,
+                'connections': self.connections}
 
     @classmethod
     def get_premade_node(cls):
@@ -310,9 +324,14 @@ class Dataset(Node):
         connections = [usedBy, contains, hasFeature]
 
         return cls(node_id=node_id, node_class=node_class, amountOfRows=amountOfRows,
-            amountOfAttributes=amountOfAttributes, usedBy=usedBy, hasFeature=hasFeature, contains=contains,
-            dataType=dataType, domain=domain, locationOfDataRecording=locationOfDataRecording,
-            dateOfRecording=dateOfRecording, createdBy=createdBy, hasLabel=hasLabel, connections=connections)
+                   amountOfAttributes=amountOfAttributes, usedBy=usedBy, hasFeature=hasFeature, contains=contains,
+                   dataType=dataType, domain=domain, locationOfDataRecording=locationOfDataRecording,
+                   dateOfRecording=dateOfRecording, createdBy=createdBy, hasLabel=hasLabel, connections=connections)
+
+
+# Todo Fill out
+class DataRow(Node):
+    pass
 
 
 class Attribute(Node):
@@ -322,6 +341,7 @@ class Attribute(Node):
         self.usedBy = usedBy
         self.partOf = partOf
         self.explanation = "An attribute is a characteristic of a dataset."
+        self.class_connections = [Preprocessing, Dataset]
 
     def get_data(self):
         return {'attributeName': self.attributeName}
@@ -342,7 +362,7 @@ class Attribute(Node):
         connections = [used_by, part_of]
 
         return cls(node_id=node_id, node_class=node_class, attributeName=attribute_name, usedBy=used_by, partOf=part_of,
-            connections=connections)
+                   connections=connections)
 
 
 class Preprocessing(Node):
@@ -351,6 +371,7 @@ class Preprocessing(Node):
         self.hasInput = hasInput
         self.pythonFile = pythonFile
         self.explanation = "Preprocessing is the process of preparing data for machine learning algorithms. It involves cleaning, transforming, and encoding data to make it suitable for training models."
+        self.class_connections = [Attribute]
 
     def get_data(self):
         return {'id': self.id, 'hasInput': self.hasInput, 'pythonFile': self.pythonFile}
@@ -428,7 +449,7 @@ y_pred
         connections = has_input[:]
 
         return cls(node_id=node_id, node_class=node_class, hasInput=has_input, pythonFile=python_file,
-            connections=connections)
+                   connections=connections)
 
 
 class Feature(Node):
@@ -442,11 +463,12 @@ class Feature(Node):
         self.minimum = minimum
         self.maximum = maximum
         self.explanation = "A feature is based on an attribute and is part of a dataset."
+        self.class_connections = [DataRow]
 
     def get_data(self):
         return {'id': self.node_id, 'featureName': self.featureName, 'datatype': self.datatype, 'mean': self.mean,
-            'standardDeviation': self.standardDeviation, 'minimum': self.minimum, 'maximum': self.maximum,
-            'connections': self.connections}
+                'standardDeviation': self.standardDeviation, 'minimum': self.minimum, 'maximum': self.maximum,
+                'connections': self.connections}
 
     @classmethod
     def get_premade_node(cls):
@@ -470,4 +492,4 @@ class Feature(Node):
         connections = [f"data_row_{random.randint(10000000, 99999999)}"]
 
         return cls(node_id=node_id, node_class=node_class, feature_name=feature_name, datatype=datatype, mean=mean,
-            standard_deviation=standard_deviation, minimum=minimum, maximum=maximum, connections=connections)
+                   standard_deviation=standard_deviation, minimum=minimum, maximum=maximum, connections=connections)

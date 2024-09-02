@@ -1,0 +1,2 @@
+Data set DataSet_58ddb600 contains 300 entries.
+The data set DataSet_58ddb600 has 4 attributes.
