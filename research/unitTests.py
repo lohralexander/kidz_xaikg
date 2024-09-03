@@ -20,13 +20,13 @@ class TestOntology(unittest.TestCase):
     def test_create_demo_ontology(self):
         # Test creating a demo ontology with default model count
         self.ontology.create_demo_ontology()
-        self.assertEqual(len(self.ontology.node_dict),
+        self.assertEqual(len(self.ontology._node_dict),
                          24)  # 3 * 6 (Model, Dataset, TrainingRun, Feature, Attribute, Preprocessing) + 6 predefined
 
     def test_get_connected_nodes(self):
         # Test retrieving connected nodes with depth
         owl = self.ontology.create_demo_ontology()
-        model = next(node for node in owl.ontology.node_dict.values() if isinstance(node, Model))
+        model = next(node for node in owl.ontology._node_dict.values() if isinstance(node, Model))
         connected_nodes = owl.ontology.get_connected_nodes(model, depth=1)
         self.assertGreater(len(connected_nodes), 0)
 
@@ -34,7 +34,7 @@ class TestOntology(unittest.TestCase):
         # Test adding nodes to the ontology
         node = Model.get_premade_node()
         self.ontology.add_nodes({node.node_id: node})
-        self.assertIn(node.node_id, self.ontology.node_dict)
+        self.assertIn(node.node_id, self.ontology._node_dict)
 
     def test_get_node(self):
         # Test retrieving a node by ID

@@ -8,7 +8,7 @@ import networkx as nx
 class Ontology:
 
     def __init__(self):
-        self.node_dict = {}
+        self._node_dict = {}
 
     def create_demo_ontology(self, model_count=3):
         datasets = Dataset.generate_multiple_nodes(model_count)
@@ -21,9 +21,9 @@ class Ontology:
         for model, dataset, training_run, feature, attribute, preprocessing in zip(models, datasets, training_runs,
                                                                                    features, attributes,
                                                                                    preprocessings):
-            self.node_dict.update({model.node_id: model, dataset.node_id: dataset, training_run.node_id: training_run,
-                                   feature.node_id: feature, attribute.node_id: attribute,
-                                   preprocessing.node_id: preprocessing})
+            self._node_dict.update({model.node_id: model, dataset.node_id: dataset, training_run.node_id: training_run,
+                                    feature.node_id: feature, attribute.node_id: attribute,
+                                    preprocessing.node_id: preprocessing})
         return self
 
     def get_connected_nodes(self, node, depth=1):
@@ -33,28 +33,37 @@ class Ontology:
             depth -= 1
             temporary_search_list = []
             for connection in search_list:
-                if connection not in connected_nodes and connection is not node.node_id and connection in self.node_dict:
-                    connected_nodes.update({self.node_dict[connection].node_id: self.node_dict[connection]})
-                    for following_connection in self.node_dict[connection].connections:
+                if connection not in connected_nodes and connection is not node.node_id and connection in self._node_dict:
+                    connected_nodes.update({self._node_dict[connection].node_id: self._node_dict[connection]})
+                    for following_connection in self._node_dict[connection].connections:
                         if following_connection not in connected_nodes:
                             temporary_search_list.append(following_connection)
-                    temporary_search_list.extend(self.node_dict[connection].connections)
+                    temporary_search_list.extend(self._node_dict[connection].connections)
             search_list = temporary_search_list
         return connected_nodes
 
     def add_nodes(self, nodes):
-        self.node_dict.update(nodes)
+        self._node_dict.update(nodes)
 
     def get_node(self, node_id):
-        if node_id.lower() not in self.node_dict:
+        if node_id.lower() not in self._node_dict:
             return None
-        return self.node_dict[node_id]
+        return self._node_dict[node_id]
 
+    def get_nodes(self, node_id_list):
+        node_dict = {}
+        for node_id in node_id_list:
+            if self.check_if_node_exists(node_id):
+                node_dict.update({node_id: self.get_node(node_id)})
+        return node_dict
+
+    def check_if_node_exists(self, node_id):
+        return node_id in self._node_dict
 
     def get_ontology_structure(self):
         node_list = []
         node_structure = {}
-        for node in self.node_dict.values():
+        for node in self._node_dict.values():
             if node not in node_list:
                 node_structure = {"Node": node.node_class, "Explanation": node.explanation,
                                   "Connections": [cls.__name__ for cls in node.get_class_connections()]}
@@ -66,7 +75,7 @@ class Ontology:
         return str(node_list)
 
     def get_ontology_node_overview(self):
-        return list(self.node_dict.keys())
+        return list(self._node_dict.keys())
 
     def create_class_graph(self):
         # Define the nodes and their connections
