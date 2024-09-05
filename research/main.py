@@ -8,10 +8,12 @@ if __name__ == '__main__':
     connections = owl.get_connected_nodes(owl._node_dict['model_a2f6fb37'], 3)
     #print(connections)
     #print(owl.get_ontology_structure())
-    #owl.create_graph()
+
+    owl.create_dynamic_class_graph()
+
     #print(rag(owl, "How many entries does data set DataSet_58ddb600?"))
     #print(rag(owl, "Which Dataset did model_a2f6fb37 used and how many entries does it have?"))
     questionnaire = Questionnaire()
     #print(work_through_the_questionnaire(owl, questionnaire))
 
-    print(start_research_run(owl, questionnaire, search_depth=1, alternation_cycles=1))
+    #print(start_research_run(owl, questionnaire, search_depth=1, alternation_cycles=1))

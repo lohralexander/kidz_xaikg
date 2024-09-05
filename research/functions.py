@@ -84,7 +84,7 @@ def calculate_quality_measures(score_list):
     }
 
 
-def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list):
+def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, quality_measures):
     file_path = f"results_{uuid.uuid1()}.txt"
 
     with open(file_path, 'w') as file:
@@ -94,23 +94,46 @@ def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list):
                        f"Correct Answer {key}: {questionnaire.get_answer(key)}\n"
                        f"GPT Answer {key}: {cleaned_gpt_answer}\n"
                        f"Score: {score_list[key - 1]}\n\n")
+        file.write("List of Measurements: \n")
+        for key, value in quality_measures.items():
+            file.write(f"{key}: {value}\n")
+
+    return file_path
+
+
+def create_overview_file(path_list,quality_measures):
+    file_path = f"overview_measurements_{uuid.uuid1()}.txt"
+    with open(file_path, 'w') as file:
+        file.write("List of Measurements: \n")
+        for index, path in enumerate(path_list, start=1):
+            file.write(f"{index}. : {path}\n")
+        for key, value in quality_measures.items():
+            file.write(f"{key}: {value}\n")
 
 
 def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, search_depth: int,
                        alternation_cycles: int = 0):
     correct_answers = questionnaire.get_answers()
-    score_list = []
 
-    while alternation_cycles >= 0:
-        if score_list:
+    result_path_list = []
+    overview_scores_list = []
+
+    while alternation_cycles != 0:
+        if result_path_list:
             questionnaire.alternate_questions()
+            alternation_cycles -= 1
+
+        score_list = []
         gpt_answers = work_through_the_questionnaire(ontology, questionnaire, search_depth=search_depth)
 
         for gpt_answer, correct_answer in zip(gpt_answers.values(), correct_answers.values()):
             logger.info(f"Comparing answers: /n Correct: {correct_answer} /n GPT: {gpt_answer}")
             score_list.append(compare_question_answer_pair(gpt_answer, correct_answer))
-        alternation_cycles -= 1
-        create_result_file(questionnaire, gpt_answers, score_list)
 
-    measures = calculate_quality_measures(score_list)
-    return measures
+        overview_scores_list.extend(score_list)
+        quality_measures = calculate_quality_measures(score_list)
+        result_path_list.append(create_result_file(questionnaire, gpt_answers, score_list, quality_measures))
+
+    aggregated_quality_measures = calculate_quality_measures(overview_scores_list)
+    create_overview_file(result_path_list, aggregated_quality_measures)
+    return aggregated_quality_measures

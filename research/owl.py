@@ -1,8 +1,24 @@
 import datetime
 import random
+import webbrowser
 
 import matplotlib.pyplot as plt
 import networkx as nx
+from pyvis.network import Network
+
+
+def _insert_headline(headline, output_file):
+    # Read the generated HTML file
+    with open(output_file, 'r') as file:
+        html_content = file.read()
+
+    # Insert the headline after the <body> tag
+    headline_html = f"<h1 style='text-align:center;color:black;font:arial;margin-top:20px;'>{headline}</h1>"
+    html_content = html_content.replace('<body>', f'<body>\n{headline_html}', 1)
+
+    # Write the modified HTML back to the file
+    with open(output_file, 'w') as file:
+        file.write(html_content)
 
 
 class Ontology:
@@ -78,33 +94,76 @@ class Ontology:
         return list(self._node_dict.keys())
 
     def create_class_graph(self):
-        # Define the nodes and their connections
-        nodes = [{'Node': 'DataSet', 'Connections': ['TrainingRun', 'Feature']},
-                 {'Node': 'Model', 'Connections': ['DataSet', 'TrainingRun']},
-                 {'Node': 'TrainingRun', 'Connections': ['DataSet', 'Model']}, {'Node': 'Feature', 'Connections': []},
-                 {'Node': 'Attribute', 'Connections': ['DataSet']}, {'Node': 'Preprocessing', 'Connections': []}, ]
+        g = nx.DiGraph()
 
-        # Create a directed graph
-        G = nx.DiGraph()
+        for node in self._node_dict.values():
+            g.add_node(node.get_node_class())
+            for connection in node.get_class_connections():
+                g.add_edge(node.get_node_class(), connection.get_class_name())
 
-        # Add nodes and edges to the graph
-        for node in nodes:
-            G.add_node(node['Node'])
-            for connection in node['Connections']:
-                G.add_edge(node['Node'], connection)
-
-        # Draw the graph
         plt.figure(figsize=(10, 8))
-        pos = nx.spring_layout(G)
-        nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=3000, font_size=10, font_weight='bold',
+        pos = nx.spring_layout(g)
+        nx.draw(g, pos, with_labels=True, node_color='lightblue', node_size=3000, font_size=10, font_weight='bold',
                 edge_color='gray', arrowsize=20)
 
-        # Display the graph
         plt.title("Graphical Representation of Nodes and Connections")
         plt.show()
 
     def create_instance_graph(self):
-        pass
+        g = nx.DiGraph()
+
+        for node_id, node in self._node_dict.items():
+            g.add_node(node_id)
+            for connection in node.get_node_connections():
+                g.add_edge(node_id, connection)
+
+        plt.figure(figsize=(10, 8))
+        pos = nx.spring_layout(g)
+        nx.draw(g, pos, with_labels=True, node_color='lightblue', node_size=3000, font_size=10, font_weight='bold',
+                edge_color='gray', arrowsize=20)
+
+        plt.title("Graphical Representation of Nodes and Connections")
+        plt.show()
+
+    def create_dynamic_class_graph(self):
+        net = Network(height="100vh", width="100vw")
+
+        for node in self._node_dict.values():
+            net.add_node(node.get_node_class(), title=node.get_internal_structure())
+
+        for node in self._node_dict.values():
+            for connection in node.get_class_connections():
+                net.add_edge(node.get_node_class(), connection.get_class_name())
+
+        output_file = "class_graph.html"
+        net.save_graph(output_file)
+        _insert_headline(headline="Ontology Node Class Diagram", output_file=output_file)
+
+        webbrowser.open(output_file)
+
+    def create_dynamic_instance_graph(self):
+        net = Network(height="100vh", width="100vw")
+
+        g = nx.DiGraph()
+
+        for node_id in self._node_dict.keys():
+            g.add_node(node_id)
+
+        for node_id, node in self._node_dict.items():
+            for connection in node.get_node_connections():
+                g.add_edge(node_id, connection)
+
+        for node in g.nodes():
+            net.add_node(node)
+
+        for edge in g.edges():
+            net.add_edge(edge[0], edge[1])
+
+        output_file = "instance_graph.html"
+        net.save_graph(output_file)
+        _insert_headline(headline="Ontology Node Instance Diagram", output_file=output_file)
+
+        webbrowser.open(output_file)
 
 
 class Node:
@@ -118,11 +177,18 @@ class Node:
     def get_class_name(cls):
         return cls.__name__
 
-    def get_class(self):
+    def get_node_class(self):
         return self.node_class
 
+    def get_node_connections(self):
+        return self.connections
+
+
+    def get_internal_structure(self):
+        return list(self.__dict__.keys())
+
     def get_data(self):
-        return {'node_id': self.node_id, 'node_class': self.node_class, 'connections': self.connections, }
+        return self.__dict__
 
     def __str__(self):
         attributes = ', '.join(f'{key}={value}' for key, value in self.__dict__.items())
@@ -172,17 +238,6 @@ class Model(Node):
         self.trainedBy = trainedBy
         self.explanation = "A model is an algorithm trained on data."
         self.class_connections = [Dataset, TrainingRun]
-
-    def get_data(self):
-        return {'id': self.node_id, 'algorithm': self.algorithm, 'accuracy': self.accuracy, 'giniIndex': self.giniIndex,
-                'precision': self.precision, 'recall': self.recall, 'f1Score': self.f1Score,
-                'confusionMatrix': self.confusionMatrix, 'truePositivesClass1': self.truePositivesClass1,
-                'trueNegativesClass0': self.trueNegativesClass0, 'falsePositivesClass0': self.falsePositivesClass0,
-                'falseNegativesClass1': self.falseNegativesClass1, 'rocAucScore': self.rocAucScore,
-                'crossValidationScores': self.crossValidationScores, 'mean': self.mean,
-                'standardDeviation': self.standardDeviation, 'trainedWith': self.trainedWith,
-                'trainedBy': self.trainedBy,
-                'connections': self.connections}
 
     @classmethod
     def get_premade_node(cls):
@@ -239,15 +294,11 @@ class TrainingRun(Node):
         self.explanation = "A training run is a group of jointly trained models that are all based on a specific data set."
         self.class_connections = [Dataset, Model]
 
-    def get_data(self):
-        return {'id': self.id, 'date': self.date, 'purpose': self.purpose, 'hasInput': self.hasInput,
-                'hasOutput': self.hasOutput, 'connections': self.connections}
-
     @classmethod
     def get_premade_node(cls):
         return TrainingRun(node_id='training_run_76d864c9', node_class='TrainingRun', date='01.01.2024',
                            purpose='Train models to predict if a cylinder slides down a slide',
-                           hasInput='DataSet_58ddb600', hasOutput='Model_a2f6fb37',
+                           hasInput='Dataset_58ddb600', hasOutput='Model_a2f6fb37',
                            connections=['dataset_58ddb600', 'model_a2f6fb37'])
 
     @classmethod
@@ -270,7 +321,7 @@ class TrainingRun(Node):
              'Preprocess data for training'])
 
         # Random IDs for inputs and outputs
-        hasInput = f"DataSet_{random.randint(10000000, 99999999)}"
+        hasInput = f"Dataset_{random.randint(10000000, 99999999)}"
         hasOutput = f"Model_{random.randint(10000000, 99999999)}"
 
         # Connections based on hasInput and hasOutput
@@ -297,34 +348,26 @@ class Dataset(Node):
         self.createdBy = createdBy
         self.hasLabel = hasLabel
         self.explanation = "A Dataset consisting of multiple Rows."
-        self.class_connections = [TrainingRun, DataRow, Feature]
-
-    def get_data(self):
-        return {'id': self.id, 'amountOfRows': self.amountOfRows, 'amountOfAttributes': self.amountOfAttributes,
-                'usedBy': self.usedBy, 'hasFeature': self.hasFeature, 'contains': self.contains,
-                'dataType': self.dataType,
-                'domain': self.domain, 'locationOfDataRecording': self.locationOfDataRecording,
-                'dateOfRecording': self.dateOfRecording, 'createdBy': self.createdBy, 'hasLabel': self.hasLabel,
-                'connections': self.connections}
+        self.class_connections = [TrainingRun,  Feature]
 
     @classmethod
     def get_premade_node(cls):
-        return Dataset(node_id='dataset_58ddb600', node_class='DataSet', amountOfRows=300, amountOfAttributes=4,
+        return Dataset(node_id='dataset_58ddb600', node_class='Dataset', amountOfRows=300, amountOfAttributes=4,
                        usedBy='training_run_76d864c9', hasFeature='Feature_87176016', contains='DataRow_fc9f70a3',
-                       dataType='DataSet', domain='FestoSystem', locationOfDataRecording='RWU',
+                       dataType='Dataset', domain='FestoSystem', locationOfDataRecording='RWU',
                        dateOfRecording='Q4 2023', createdBy='Preprocessing_b9875fe0', hasLabel='Label_fa5649f9',
                        connections=['training_run_76d864c9', 'data_row_fc9f70a3', 'feature_87176016'])
 
     @classmethod
     def generate_random_node(cls):
         node_id = f"dataset_{random.randint(10000000, 99999999)}"
-        node_class = 'DataSet'
+        node_class = 'Dataset'
         amountOfRows = random.randint(100, 1000)
         amountOfAttributes = random.randint(1, 10)
         usedBy = f"training_run_{random.randint(10000000, 99999999)}"
         hasFeature = f"feature_{random.randint(10000000, 99999999)}"
         contains = f"data_row_{random.randint(10000000, 99999999)}"
-        dataType = 'DataSet'
+        dataType = 'Dataset'
         domain = random.choice(['FestoSystem', 'OtherDomain'])
         locationOfDataRecording = random.choice(['RWU', 'OtherLocation'])
         dateOfRecording = random.choice(['Q1 2023', 'Q2 2023', 'Q3 2023', 'Q4 2023'])
@@ -352,13 +395,10 @@ class Attribute(Node):
         self.explanation = "An attribute is a characteristic of a dataset."
         self.class_connections = [Preprocessing, Dataset]
 
-    def get_data(self):
-        return {'attributeName': self.attributeName}
-
     @classmethod
     def get_premade_node(cls):
         return Attribute(node_id='attribute_a11be75b', node_class='Attribute', attributeName='Result',
-                         usedBy='Preprocessing_b9875fe0', partOf='DataSet_58ddb600',
+                         usedBy='Preprocessing_b9875fe0', partOf='Dataset_58ddb600',
                          connections=['preprocessing_b9875fe0', 'dataset_58ddb600'])
 
     @classmethod
@@ -381,9 +421,6 @@ class Preprocessing(Node):
         self.pythonFile = pythonFile
         self.explanation = "Preprocessing is the process of preparing data for machine learning algorithms. It involves cleaning, transforming, and encoding data to make it suitable for training models."
         self.class_connections = [Attribute]
-
-    def get_data(self):
-        return {'id': self.id, 'hasInput': self.hasInput, 'pythonFile': self.pythonFile}
 
     @classmethod
     def get_premade_node(cls):
@@ -472,12 +509,7 @@ class Feature(Node):
         self.minimum = minimum
         self.maximum = maximum
         self.explanation = "A feature is based on an attribute and is part of a dataset."
-        self.class_connections = [DataRow]
-
-    def get_data(self):
-        return {'id': self.node_id, 'featureName': self.featureName, 'datatype': self.datatype, 'mean': self.mean,
-                'standardDeviation': self.standardDeviation, 'minimum': self.minimum, 'maximum': self.maximum,
-                'connections': self.connections}
+        self.class_connections = []
 
     @classmethod
     def get_premade_node(cls):

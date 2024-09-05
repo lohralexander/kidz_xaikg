@@ -2,13 +2,18 @@ import gptConnector
 
 
 class Questionnaire:
+    demo_mode = True
 
     def __init__(self):
         self.question_dict = {}
         self.answers_dict = {}
 
-        questions_link = '../data/questions.txt'
-        answers_link = '../data/answers.txt'
+        if self.demo_mode:
+            questions_link = '../data/questions_demo.txt'
+            answers_link = '../data/answers_demo.txt'
+        else:
+            questions_link = '../data/questions.txt'
+            answers_link = '../data/answers.txt'
 
         with open(questions_link, 'r') as file:
             for index, line in enumerate(file, start=1):

@@ -11,11 +11,17 @@ class Gui:
         self.root.title("RAG Research Toolkit")
 
         # Create dropdowns for parameters
-        self.param1_label = ttk.Label(root, text="Search Depth:")
+        self.param1_label = ttk.Label(root, text="Demo Mode:")
         self.param1_label.pack(pady=5)
-        self.param1 = ttk.Combobox(root, values=[1, 2, 3])
+        self.param1 = ttk.Combobox(root, values=[True, False])
         self.param1.pack(pady=5)
         self.param1.current(0)
+
+        self.param2_label = ttk.Label(root, text="Search Depth:")
+        self.param2_label.pack(pady=5)
+        self.param2 = ttk.Combobox(root, values=[1, 2, 3])
+        self.param2.pack(pady=5)
+        self.param2.current(0)
 
         self.param2_label = ttk.Label(root, text="Alternating Questions:")
         self.param2_label.pack(pady=5)
