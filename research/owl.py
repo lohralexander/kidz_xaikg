@@ -8,15 +8,12 @@ from pyvis.network import Network
 
 
 def _insert_headline(headline, output_file):
-    # Read the generated HTML file
     with open(output_file, 'r') as file:
         html_content = file.read()
 
-    # Insert the headline after the <body> tag
     headline_html = f"<h1 style='text-align:center;color:black;font:arial;margin-top:20px;'>{headline}</h1>"
     html_content = html_content.replace('<body>', f'<body>\n{headline_html}', 1)
 
-    # Write the modified HTML back to the file
     with open(output_file, 'w') as file:
         file.write(html_content)
 
@@ -144,20 +141,18 @@ class Ontology:
     def create_dynamic_instance_graph(self):
         net = Network(height="100vh", width="100vw")
 
-        g = nx.DiGraph()
-
+        used_nodes_list = []
         for node_id in self._node_dict.keys():
-            g.add_node(node_id)
+            used_nodes_list.append(node_id)
+            for connection in self.get_node(node_id).connections:
+                used_nodes_list.append(connection)
+        unique_used_nodes_list = list(set(used_nodes_list))
+        for unique_node_id in unique_used_nodes_list:
+            net.add_node(unique_node_id)
 
         for node_id, node in self._node_dict.items():
             for connection in node.get_node_connections():
-                g.add_edge(node_id, connection)
-
-        for node in g.nodes():
-            net.add_node(node)
-
-        for edge in g.edges():
-            net.add_edge(edge[0], edge[1])
+                net.add_edge(node_id, connection)
 
         output_file = "instance_graph.html"
         net.save_graph(output_file)
@@ -182,7 +177,6 @@ class Node:
 
     def get_node_connections(self):
         return self.connections
-
 
     def get_internal_structure(self):
         return list(self.__dict__.keys())
@@ -248,7 +242,7 @@ class Model(Node):
                      falsePositivesClass0=30, falseNegativesClass1=50, rocAucScore=0.65,
                      crossValidationScores={'fold 1': 0.58, 'fold 2': 0.62, 'fold 3': 0.59, 'fold 4': 0.61,
                                             'fold 5': 0.60}, mean=0.60, standardDeviation=0.015,
-                     trainedWith='Dataset_58ddb600', trainedBy='TrainingRun_76d864c9',
+                     trainedWith='dataset_58ddb600', trainedBy='trainingRun_76d864c9',
                      connections=['dataset_58ddb600', 'training_run_76d864c9'])
 
     @classmethod
@@ -271,8 +265,8 @@ class Model(Node):
         crossValidationScores = {f'fold {i}': round(random.uniform(0.55, 0.65), 2) for i in range(1, 6)}
         mean = round(random.uniform(0.55, 0.65), 2)
         standardDeviation = round(random.uniform(0.01, 0.03), 3)
-        trainedWith = f'Dataset_{random.randint(10000000, 99999999)}'
-        trainedBy = f'TrainingRun_{random.randint(10000000, 99999999)}'
+        trainedWith = f'dataset_{random.randint(10000000, 99999999)}'
+        trainedBy = f'trainingRun_{random.randint(10000000, 99999999)}'
         connections = [trainedWith, trainedBy]
 
         return Model(node_id=node_id, node_class=node_class, algorithm=algorithm, accuracy=accuracy,
@@ -321,8 +315,8 @@ class TrainingRun(Node):
              'Preprocess data for training'])
 
         # Random IDs for inputs and outputs
-        hasInput = f"Dataset_{random.randint(10000000, 99999999)}"
-        hasOutput = f"Model_{random.randint(10000000, 99999999)}"
+        hasInput = f"dataset_{random.randint(10000000, 99999999)}"
+        hasOutput = f"model_{random.randint(10000000, 99999999)}"
 
         # Connections based on hasInput and hasOutput
         connections = [hasInput, hasOutput]
@@ -348,7 +342,7 @@ class Dataset(Node):
         self.createdBy = createdBy
         self.hasLabel = hasLabel
         self.explanation = "A Dataset consisting of multiple Rows."
-        self.class_connections = [TrainingRun,  Feature]
+        self.class_connections = [TrainingRun, Feature]
 
     @classmethod
     def get_premade_node(cls):

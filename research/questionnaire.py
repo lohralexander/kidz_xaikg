@@ -2,13 +2,12 @@ import gptConnector
 
 
 class Questionnaire:
-    demo_mode = True
 
-    def __init__(self):
+    def __init__(self, demo_mode=True):
         self.question_dict = {}
         self.answers_dict = {}
 
-        if self.demo_mode:
+        if demo_mode:
             questions_link = '../data/questions_demo.txt'
             answers_link = '../data/answers_demo.txt'
         else:

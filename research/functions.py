@@ -48,7 +48,7 @@ def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0):
 def work_through_the_questionnaire(ontology: owl.Ontology, questionnaire: Questionnaire, search_depth=0):
     gpt_answers = {}
     for index, question in enumerate(questionnaire.get_questions().values(), start=1):
-        gpt_answers.update({index: rag(ontology, question, search_depth=search_depth, sleep_time=10)})
+        gpt_answers.update({index: rag(ontology, question, search_depth=search_depth, sleep_time=5)})
     return gpt_answers
 
 
@@ -101,14 +101,51 @@ def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, qu
     return file_path
 
 
-def create_overview_file(path_list,quality_measures):
-    file_path = f"overview_measurements_{uuid.uuid1()}.txt"
+def create_overview_file(path_list, quality_measures, search_depth, alternate_cycles):
+    run_id = uuid.uuid1()
+    file_path = f"overview_measurements_{run_id}.txt"
     with open(file_path, 'w') as file:
-        file.write("List of Measurements: \n")
+        file.write(f"Run: {run_id}\n"
+                   f"Parameters\n"
+                   f"Search Depth: {search_depth}\n"
+                   f"Question Alternation Cycles: {alternate_cycles}\n \n")
         for index, path in enumerate(path_list, start=1):
             file.write(f"{index}. : {path}\n")
+        file.write("List of Measurements: \n")
         for key, value in quality_measures.items():
             file.write(f"{key}: {value}\n")
+
+    run_id = uuid.uuid1()
+
+    file_path = f"overview_measurements_{run_id}.html"
+    with open(file_path, 'w') as file:
+        # Write the HTML header
+        file.write(f"<html>\n<head>\n<title>Run Overview {run_id}</title>\n</head>\n<body>\n")
+
+        # Add a heading for the Run ID
+        file.write(f"<h1>Run: {run_id}</h1>\n")
+
+        # Add parameters as a subsection
+        file.write(f"<h2>Parameters</h2>\n")
+        file.write(f"<p><strong>Search Depth:</strong> {search_depth}</p>\n")
+        file.write(f"<p><strong>Question Alternation Cycles:</strong> {alternate_cycles}</p>\n")
+
+        # Add a list for paths
+        file.write(f"<h2>Paths</h2>\n")
+        file.write(f"<ol>\n")  # Ordered list for enumerating paths
+        for index, path in enumerate(path_list, start=1):
+            file.write(f"<li>{path}</li>\n")
+        file.write(f"</ol>\n")
+
+        # Add measurements as a subsection
+        file.write(f"<h2>List of Measurements</h2>\n")
+        file.write(f"<ul>\n")  # Unordered list for measurements
+        for key, value in quality_measures.items():
+            file.write(f"<li><strong>{key}:</strong> {value}</li>\n")
+        file.write(f"</ul>\n")
+
+        # Close the HTML tags
+        file.write(f"</body>\n</html>")
 
 
 def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, search_depth: int,
@@ -118,10 +155,10 @@ def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, sea
     result_path_list = []
     overview_scores_list = []
 
-    while alternation_cycles != 0:
+    while alternation_cycles >= 0:
+        alternation_cycles -= 1
         if result_path_list:
             questionnaire.alternate_questions()
-            alternation_cycles -= 1
 
         score_list = []
         gpt_answers = work_through_the_questionnaire(ontology, questionnaire, search_depth=search_depth)
@@ -135,5 +172,5 @@ def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, sea
         result_path_list.append(create_result_file(questionnaire, gpt_answers, score_list, quality_measures))
 
     aggregated_quality_measures = calculate_quality_measures(overview_scores_list)
-    create_overview_file(result_path_list, aggregated_quality_measures)
+    create_overview_file(result_path_list, aggregated_quality_measures, search_depth, alternation_cycles)
     return aggregated_quality_measures

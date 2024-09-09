@@ -3,63 +3,64 @@ from tkinter import ttk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from functions import *
+from research.research_config import Initialization
+import tkinter as tk
+from tkinter import messagebox
 
 
-class Gui:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("RAG Research Toolkit")
+# Function to be called when the button is pressed
+def on_start():
+    param1 = entry1.get()
+    param2 = entry2.get()
+    param3 = entry3.get()
 
-        # Create dropdowns for parameters
-        self.param1_label = ttk.Label(root, text="Demo Mode:")
-        self.param1_label.pack(pady=5)
-        self.param1 = ttk.Combobox(root, values=[True, False])
-        self.param1.pack(pady=5)
-        self.param1.current(0)
+    # Convert input to appropriate types if needed (e.g., int, float)
+    try:
+        param1 = int(param1)
+        param2 = int(param2)
+        param3 = int(param3)
+    except ValueError:
+        messagebox.showerror("Input Error", "Please enter valid numbers.")
+        return
+    init_values = Initialization()
+    # Call your function with the parameters
+    result = start_research_run(init_values.get_ontology(),init_values.get_questionnaire(), param2, param3)
 
-        self.param2_label = ttk.Label(root, text="Search Depth:")
-        self.param2_label.pack(pady=5)
-        self.param2 = ttk.Combobox(root, values=[1, 2, 3])
-        self.param2.pack(pady=5)
-        self.param2.current(0)
-
-        self.param2_label = ttk.Label(root, text="Alternating Questions:")
-        self.param2_label.pack(pady=5)
-        self.param2 = ttk.Combobox(root, values=[0, 1, 2])
-        self.param2.pack(pady=5)
-        self.param2.current(0)
-
-        # Create a button to generate the graph
-        self.generate_button = ttk.Button(root, text="Start", command=start_research_run())
-        self.generate_button.pack(pady=20)
-
-        # Create a placeholder for the graph
-        self.canvas = None
-
-    def generate_graph(self):
-        # Generate some example data based on the selected parameters
-        x = [1, 2, 3, 4, 5]
-        y = [10, 20, 15, 25, 30] if self.param1.get() == "Option 1" else [30, 25, 20, 15, 10]
-
-        # Clear the previous graph if it exists
-        if self.canvas:
-            self.canvas.get_tk_widget().pack_forget()
-
-        # Create a new figure and plot the data
-        fig, ax = plt.subplots()
-        ax.plot(x, y, label=f"{self.param1.get()} vs {self.param2.get()}")
-        ax.set_xlabel("X-axis")
-        ax.set_ylabel("Y-axis")
-        ax.set_title("Performance Graph")
-        ax.legend()
-
-        # Display the graph in the GUI
-        self.canvas = FigureCanvasTkAgg(fig, master=self.root)
-        self.canvas.draw()
-        self.canvas.get_tk_widget().pack()
+    # Display result in a messagebox or update the GUI with the result
+    messagebox.showinfo("Result", f"Function Result: {result}")
 
 
-if __name__ == "__main__":
+def main():
+
+    # Create the main window
     root = tk.Tk()
-    app = Gui(root)
+    root.title("Parameter Input GUI")
+
+    # Create labels and entry widgets for parameters
+    label1 = tk.Label(root, text="Parameter 1 (integer):")
+    label1.grid(row=0, column=0, padx=10, pady=10)
+
+    entry1 = tk.Entry(root)
+    entry1.grid(row=0, column=1, padx=10, pady=10)
+
+    label2 = tk.Label(root, text="Parameter 2 (integer):")
+    label2.grid(row=1, column=0, padx=10, pady=10)
+
+    entry2 = tk.Entry(root)
+    entry2.grid(row=1, column=1, padx=10, pady=10)
+
+    label3 = tk.Label(root, text="Parameter 3 (integer):")
+    label3.grid(row=1, column=0, padx=10, pady=10)
+
+    entry3 = tk.Entry(root)
+    entry3.grid(row=1, column=1, padx=10, pady=10)
+
+    # Create a button that calls the on_start function when pressed
+    start_button = tk.Button(root, text="Start", command=on_start)
+    start_button.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+
+    # Start the Tkinter main loop
     root.mainloop()
+
+if __name__ == '__main__':
+    main()
