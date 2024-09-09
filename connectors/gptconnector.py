@@ -30,6 +30,28 @@ def get_gpt_response(input: str):
     chain = prompt | llm | output_parser
     return chain.invoke({"input": input})
 
+def get_gpt_response_with_csv_input(input: str, csv_path: str):
+    csv_file_path = r'C:\Users\Alex\bwSyncShare\KIDZ\AP3 eXplainable AI\use_cases\Viergelenk\run_0_rangePM20.csv'
+    df = pd.read_csv(csv_file_path)
+
+    # CSV-Daten in einen string konvertieren
+    csv_data = df.to_csv(index=False)
+
+    # Funktion zur Kommunikation mit der OpenAI ChatGPT-API
+    def query_chatgpt(prompt):
+        response = openai.Completion.create(
+            engine="davinci-codex",
+            prompt=prompt,
+            max_tokens=150
+        )
+        return response.choices[0].text.strip()
+
+    # Beispielhafte Anfrage an die API, die die CSV-Daten verwendet
+    prompt = f"Hier sind die Daten aus meiner CSV-Datei:\n{csv_data}\n\nWas kann ich mit diesen Daten machen?"
+
+    # API-Aufruf
+    response_text = query_chatgpt(prompt)
+    print(response_text)
 
 def get_retrieval_gpt_response(repository_id:str, question: str, top_k: int = 10):
     url = Config.graphdb_connector + "?repositoryID=" + repository_id
@@ -53,7 +75,9 @@ def get_retrieval_gpt_response(repository_id:str, question: str, top_k: int = 10
 
 
 if __name__ == '__main__':
-    get_retrieval_gpt_response("starwars","What is the name of the character that is the father of Luke Skywalker?", top_k=10)
+    get_gpt_response_with_csv_input()
+
+    #get_retrieval_gpt_response("starwars","What is the name of the character that is the father of Luke Skywalker?", top_k=10)
 
     # openai.api_key = os.getenv("gptkidz")
     #

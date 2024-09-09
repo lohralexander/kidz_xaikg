@@ -1,0 +1,22 @@
+How many entries does data set DataSet_58ddb600 have?
+How many attributes does data set DataSet_58ddb600 have?
+What are the datatypes of the features of DataSet_58ddb600?
+What are the value distributions of Feature_87176016
+In which environment (location, company, system, etc.) was the data set DataSet_58ddb600 collected?
+When was the DataSet_58ddb600 collected?
+How was the label filled in the training data by TrainingRun_76d864c9?
+Which algorithm was used for model_a2f6fb37?
+Which parameters were used (value per parameter) for model_a2f6fb37?
+Which algorithm was used for normalization for model_a2f6fb37?
+How precise and reliable is Model_ a2f6fb37 (value for quality measure x)?
+Is the performance of the model model_a2f6fb37 sufficient for predicting the sliding behaviour of a cylinder in a industrial domain?
+What restrictions does the model model_a2f6fb37 have?
+What type of data was used to train Model_a2f6fb37?
+My Model Model_a2f6fb37 predicted Class 0. With what certainty can this element be assigned to a class?
+Which algorithm achieves the best results for predicting sliding behaviour of cylinders?
+What quality can usually/at best be achieved for a task of predicting sliding behaviour of cylinders?
+Whats the meaning of festoDataSet?
+With which other entities is the festoDataRow attribute related (superclasses/subclasses, etc.)?
+How can the model Model_a2f6fb37 be improved?
+How and why will the model change/drift over time?
+What does Information gain mean?

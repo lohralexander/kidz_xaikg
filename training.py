@@ -1,7 +1,8 @@
 import pandas as pd
 import sklearn
 
-import dbconnector
+import connectors.mongoConnector
+from connectors import dbconnector
 
 
 # TODO Auslagern des Trainings und aufteilen in Abspeichern. Nutzer sollten selbst trainieren
@@ -10,8 +11,8 @@ def train_model(model: sklearn.base, training_data: pd.DataFrame, label: str):
     y = training_data[label]
     model = model.fit(X, y)
 
-    training_data_uuid = dbconnector.save_training_data_to_db(training_data=training_data)
-    model_uuid = dbconnector.save_model_to_db(model, training_data_uuid)
+    training_data_uuid = connectors.mongoConnector.save_training_data_to_db(training_data=training_data)
+    model_uuid = connectors.mongoConnector.save_model_to_db(model, training_data_uuid)
     return model_uuid, training_data_uuid
 
 
