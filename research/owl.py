@@ -23,7 +23,7 @@ class Ontology:
     def __init__(self):
         self._node_dict = {}
 
-    def create_demo_ontology(self, model_count=3):
+    def create_demo_ontology(self, model_count=0):
         datasets = Dataset.generate_multiple_nodes(model_count)
         training_runs = TrainingRun.generate_multiple_nodes(model_count)
         models = Model.generate_multiple_nodes(model_count)
@@ -58,8 +58,11 @@ class Ontology:
     def add_nodes(self, nodes):
         self._node_dict.update(nodes)
 
+    def add_node(self, node):
+        self._node_dict.update({node.get_node_id(): node})
+
     def get_node(self, node_id):
-        if node_id.lower() not in self._node_dict:
+        if node_id not in self._node_dict:
             return None
         return self._node_dict[node_id]
 
@@ -78,8 +81,8 @@ class Ontology:
         node_structure = {}
         for node in self._node_dict.values():
             if node not in node_list:
-                node_structure = {"Node": node.node_class, "Explanation": node.explanation,
-                                  "Connections": [cls.__name__ for cls in node.get_class_connections()]}
+                node_structure = {"Node": node.node_class_id, "Explanation": node.explanation,
+                                  "Connections": node.get_class_connections()}
             annotation_list = []
             for key, value in node.__dict__.items():
                 annotation_list.append(key)
@@ -96,7 +99,7 @@ class Ontology:
         for node in self._node_dict.values():
             g.add_node(node.get_node_class())
             for connection in node.get_class_connections():
-                g.add_edge(node.get_node_class(), connection.get_class_name())
+                g.add_edge(node.get_node_class(), connection)
 
         plt.figure(figsize=(10, 8))
         pos = nx.spring_layout(g)
@@ -130,7 +133,7 @@ class Ontology:
 
         for node in self._node_dict.values():
             for connection in node.get_class_connections():
-                net.add_edge(node.get_node_class(), connection.get_class_name())
+                net.add_edge(node.get_node_class(), connection)
 
         output_file = "class_graph.html"
         net.save_graph(output_file)
@@ -162,18 +165,21 @@ class Ontology:
 
 
 class Node:
-    def __init__(self, node_id, node_class, connections):
+    def __init__(self, node_id, node_class_id, connections):
         self.class_connections = None
         self.node_id = node_id
-        self.node_class = node_class
+        self.node_class_id = node_class_id
         self.connections = connections
+
+    def get_node_id(self):
+        return self.node_id
 
     @classmethod
     def get_class_name(cls):
         return cls.__name__
 
     def get_node_class(self):
-        return self.node_class
+        return self.node_class_id
 
     def get_node_connections(self):
         return self.connections
@@ -208,11 +214,41 @@ class Node:
         return self.class_connections
 
 
+class GenericNode(Node):
+    def __init__(self, node_id, node_class, connections, **kwargs):
+        super().__init__(node_id, node_class.get_class_name(), connections)
+        self.class_connections = node_class.get_class_connections()
+        self.explanation = node_class.get_explanation()
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
+class GenericClass:
+    def __init__(self, node_class_id, class_connections, explanation):
+        self.node_class_id = node_class_id
+        self.class_connections = class_connections
+        self.explanation = explanation
+
+    def get_class_connections(self):
+        return self.class_connections
+
+    def get_definition(self):
+        return self.explanation
+
+    def get_class_name(self):
+        return self.node_class_id
+
+    def get_explanation(self):
+        return self.explanation
+
+    def update_class_connections(self, class_connections):
+        self.class_connections = class_connections
+
+
 class Model(Node):
-    def __init__(self, node_id, node_class, connections, algorithm, accuracy, giniIndex, precision, recall, f1Score,
-                 confusionMatrix, truePositivesClass1, trueNegativesClass0, falsePositivesClass0, falseNegativesClass1,
-                 rocAucScore, crossValidationScores, mean, standardDeviation, trainedWith, trainedBy):
-        super().__init__(node_id, node_class, connections)
+    def __init__(self, node_id, node_class_id, connections, algorithm, accuracy, giniIndex, precision, recall, f1Score,
+                 confusionMatrix, rocAucScore, trainedWith, trainedBy):
+        super().__init__(node_id, node_class_id, connections)
         self.algorithm = algorithm
         self.accuracy = accuracy
         self.giniIndex = giniIndex
@@ -220,28 +256,18 @@ class Model(Node):
         self.recall = recall
         self.f1Score = f1Score
         self.confusionMatrix = confusionMatrix
-        self.truePositivesClass1 = truePositivesClass1
-        self.trueNegativesClass0 = trueNegativesClass0
-        self.falsePositivesClass0 = falsePositivesClass0
-        self.falseNegativesClass1 = falseNegativesClass1
         self.rocAucScore = rocAucScore
-        self.crossValidationScores = crossValidationScores
-        self.mean = mean
-        self.standardDeviation = standardDeviation
         self.trainedWith = trainedWith
         self.trainedBy = trainedBy
         self.explanation = "A model is an algorithm trained on data."
-        self.class_connections = [Dataset, TrainingRun]
+        self.class_connections = ["Dataset", "TrainingRun"]
 
     @classmethod
     def get_premade_node(cls):
-        return Model(node_id='model_a2f6fb37', node_class='Model', algorithm='randomForest', accuracy=0.6,
-                     giniIndex=0.2, precision={'Class 0': 0.65, 'Class 1': 0.55},
-                     recall={'Class 0': 0.70, 'Class 1': 0.50}, f1Score={'Class 0': 0.67, 'Class 1': 0.52},
-                     confusionMatrix=[[70, 30], [50, 50]], truePositivesClass1=50, trueNegativesClass0=70,
-                     falsePositivesClass0=30, falseNegativesClass1=50, rocAucScore=0.65,
-                     crossValidationScores={'fold 1': 0.58, 'fold 2': 0.62, 'fold 3': 0.59, 'fold 4': 0.61,
-                                            'fold 5': 0.60}, mean=0.60, standardDeviation=0.015,
+        return Model(node_id='model_1', node_class_id='Model', algorithm='DecisionTree', accuracy=0.95768,
+                     giniIndex=0.042319749216300995, precision={'Class 0': 0.95, 'Class 1': 0.96},
+                     recall={'Class 0': 0.94, 'Class 1': 0.97}, f1Score={'Class 0': 0.95, 'Class 1': 0.96},
+                     confusionMatrix=[[239, 14], [13, 372]], rocAucScore=0.9587,
                      trainedWith='dataset_58ddb600', trainedBy='trainingRun_76d864c9',
                      connections=['dataset_58ddb600', 'training_run_76d864c9'])
 
@@ -257,43 +283,33 @@ class Model(Node):
         f1Score = {'Class 0': round(random.uniform(0.6, 0.8), 2), 'Class 1': round(random.uniform(0.5, 0.7), 2)}
         confusionMatrix = [[random.randint(50, 100), random.randint(10, 50)],
                            [random.randint(30, 70), random.randint(30, 70)]]
-        truePositivesClass1 = confusionMatrix[1][1]
-        trueNegativesClass0 = confusionMatrix[0][0]
-        falsePositivesClass0 = confusionMatrix[0][1]
-        falseNegativesClass1 = confusionMatrix[1][0]
         rocAucScore = round(random.uniform(0.6, 0.8), 2)
-        crossValidationScores = {f'fold {i}': round(random.uniform(0.55, 0.65), 2) for i in range(1, 6)}
-        mean = round(random.uniform(0.55, 0.65), 2)
-        standardDeviation = round(random.uniform(0.01, 0.03), 3)
         trainedWith = f'dataset_{random.randint(10000000, 99999999)}'
         trainedBy = f'trainingRun_{random.randint(10000000, 99999999)}'
         connections = [trainedWith, trainedBy]
 
-        return Model(node_id=node_id, node_class=node_class, algorithm=algorithm, accuracy=accuracy,
+        return Model(node_id=node_id, node_class_id=node_class, algorithm=algorithm, accuracy=accuracy,
                      giniIndex=giniIndex, precision=precision, recall=recall, f1Score=f1Score,
-                     confusionMatrix=confusionMatrix, truePositivesClass1=truePositivesClass1,
-                     trueNegativesClass0=trueNegativesClass0, falsePositivesClass0=falsePositivesClass0,
-                     falseNegativesClass1=falseNegativesClass1, rocAucScore=rocAucScore,
-                     crossValidationScores=crossValidationScores, mean=mean, standardDeviation=standardDeviation,
+                     confusionMatrix=confusionMatrix,  rocAucScore=rocAucScore,
                      trainedWith=trainedWith, trainedBy=trainedBy, connections=connections)
 
 
 class TrainingRun(Node):
-    def __init__(self, node_id, node_class, date, purpose, hasInput, hasOutput, connections):
-        super().__init__(node_id, node_class, connections)
+    def __init__(self, node_id, node_class_id, date, purpose, hasInput, hasOutput, connections):
+        super().__init__(node_id, node_class_id, connections)
         self.date = date
         self.purpose = purpose
         self.hasInput = hasInput
         self.hasOutput = hasOutput
         self.explanation = "A training run is a group of jointly trained models that are all based on a specific data set."
-        self.class_connections = [Dataset, Model]
+        self.class_connections = ["Dataset", "Model"]
 
     @classmethod
     def get_premade_node(cls):
-        return TrainingRun(node_id='training_run_76d864c9', node_class='TrainingRun', date='01.01.2024',
-                           purpose='Train models to predict if a cylinder slides down a slide',
-                           hasInput='Dataset_58ddb600', hasOutput='Model_a2f6fb37',
-                           connections=['dataset_58ddb600', 'model_a2f6fb37'])
+        return TrainingRun(node_id='training_run_76d864c9', node_class_id='TrainingRun', date='10.10.2024',
+                           purpose='Train models to predict if a screw can be lifted to a specific position by a roboter arm',
+                           hasInput='niryo_dataset_september_2024', hasOutput='model_1',
+                           connections=['niryo_dataset_september_2024', 'model_1'])
 
     @classmethod
     def generate_random_node(cls):
@@ -321,36 +337,33 @@ class TrainingRun(Node):
         # Connections based on hasInput and hasOutput
         connections = [hasInput, hasOutput]
 
-        return TrainingRun(node_id=node_id, node_class=node_class, date=date, purpose=purpose, hasInput=hasInput,
+        return TrainingRun(node_id=node_id, node_class_id=node_class, date=date, purpose=purpose, hasInput=hasInput,
                            hasOutput=hasOutput, connections=connections)
 
 
 class Dataset(Node):
 
-    def __init__(self, node_id, node_class, connections, amountOfRows, amountOfAttributes, usedBy, hasFeature, contains,
-                 dataType, domain, locationOfDataRecording, dateOfRecording, createdBy, hasLabel):
-        super().__init__(node_id, node_class, connections)
+    def __init__(self, node_id, node_class_id, connections, amountOfRows, amountOfAttributes, usedBy,
+                 dataType, domain, locationOfDataRecording, dateOfRecording, createdBy):
+        super().__init__(node_id, node_class_id, connections)
         self.amountOfRows = amountOfRows
         self.amountOfAttributes = amountOfAttributes
         self.usedBy = usedBy
-        self.hasFeature = hasFeature
-        self.contains = contains
         self.dataType = dataType
         self.domain = domain
         self.locationOfDataRecording = locationOfDataRecording
         self.dateOfRecording = dateOfRecording
         self.createdBy = createdBy
-        self.hasLabel = hasLabel
         self.explanation = "A Dataset consisting of multiple Rows."
-        self.class_connections = [TrainingRun, Feature]
+        self.class_connections = ["TrainingRun", "Feature"]
 
     @classmethod
     def get_premade_node(cls):
-        return Dataset(node_id='dataset_58ddb600', node_class='Dataset', amountOfRows=300, amountOfAttributes=4,
-                       usedBy='training_run_76d864c9', hasFeature='Feature_87176016', contains='DataRow_fc9f70a3',
-                       dataType='Dataset', domain='FestoSystem', locationOfDataRecording='RWU',
-                       dateOfRecording='Q4 2023', createdBy='Preprocessing_b9875fe0', hasLabel='Label_fa5649f9',
-                       connections=['training_run_76d864c9', 'data_row_fc9f70a3', 'feature_87176016'])
+        return Dataset(node_id='niryo_dataset_september_2024', node_class_id='Dataset', amountOfRows=2126, amountOfAttributes=12,
+                       usedBy='training_run_76d864c9',
+                       dataType='Dataset', domain='Niryo Robot', locationOfDataRecording='RWU',
+                       dateOfRecording='Q4 2024', createdBy='',
+                       connections=['training_run_76d864c9'])
 
     @classmethod
     def generate_random_node(cls):
@@ -369,7 +382,7 @@ class Dataset(Node):
         hasLabel = f"label_{random.randint(10000000, 99999999)}"
         connections = [usedBy, contains, hasFeature]
 
-        return cls(node_id=node_id, node_class=node_class, amountOfRows=amountOfRows,
+        return cls(node_id=node_id, node_class_id=node_class, amountOfRows=amountOfRows,
                    amountOfAttributes=amountOfAttributes, usedBy=usedBy, hasFeature=hasFeature, contains=contains,
                    dataType=dataType, domain=domain, locationOfDataRecording=locationOfDataRecording,
                    dateOfRecording=dateOfRecording, createdBy=createdBy, hasLabel=hasLabel, connections=connections)
@@ -381,17 +394,17 @@ class DataRow(Node):
 
 
 class Attribute(Node):
-    def __init__(self, node_id, node_class, connections, attributeName, usedBy, partOf):
-        super().__init__(node_id, node_class, connections)
+    def __init__(self, node_id, node_class_id, connections, attributeName, usedBy, partOf):
+        super().__init__(node_id, node_class_id, connections)
         self.attributeName = attributeName
         self.usedBy = usedBy
         self.partOf = partOf
         self.explanation = "An attribute is a characteristic of a dataset."
-        self.class_connections = [Preprocessing, Dataset]
+        self.class_connections = ["Preprocessing", "Dataset"]
 
     @classmethod
     def get_premade_node(cls):
-        return Attribute(node_id='attribute_a11be75b', node_class='Attribute', attributeName='Result',
+        return Attribute(node_id='attribute_a11be75b', node_class_id='Attribute', attributeName='Result',
                          usedBy='Preprocessing_b9875fe0', partOf='Dataset_58ddb600',
                          connections=['preprocessing_b9875fe0', 'dataset_58ddb600'])
 
@@ -404,21 +417,22 @@ class Attribute(Node):
         part_of = f"dataset_{random.randint(10000000, 99999999)}"
         connections = [used_by, part_of]
 
-        return cls(node_id=node_id, node_class=node_class, attributeName=attribute_name, usedBy=used_by, partOf=part_of,
+        return cls(node_id=node_id, node_class_id=node_class, attributeName=attribute_name, usedBy=used_by,
+                   partOf=part_of,
                    connections=connections)
 
 
 class Preprocessing(Node):
-    def __init__(self, node_id, node_class, connections, hasInput, pythonFile):
-        super().__init__(node_id, node_class, connections)
+    def __init__(self, node_id, node_class_id, connections, hasInput, pythonFile):
+        super().__init__(node_id, node_class_id, connections)
         self.hasInput = hasInput
         self.pythonFile = pythonFile
         self.explanation = "Preprocessing is the process of preparing data for machine learning algorithms. It involves cleaning, transforming, and encoding data to make it suitable for training models."
-        self.class_connections = [Attribute]
+        self.class_connections = ["Attribute"]
 
     @classmethod
     def get_premade_node(cls):
-        return Preprocessing(node_id='b9875fe0', node_class='Preprocessing',
+        return Preprocessing(node_id='b9875fe0', node_class_id='Preprocessing',
                              hasInput=['attribute_a11be75b', 'attribute_4987a624'], pythonFile="""
 import numpy as np
 import pandas as pd
@@ -488,14 +502,14 @@ y_pred
         # Connections can be derived from inputs or other logic
         connections = has_input[:]
 
-        return cls(node_id=node_id, node_class=node_class, hasInput=has_input, pythonFile=python_file,
+        return cls(node_id=node_id, node_class_id=node_class, hasInput=has_input, pythonFile=python_file,
                    connections=connections)
 
 
 class Feature(Node):
-    def __init__(self, node_id, node_class, connections, feature_name, datatype, mean, standard_deviation, minimum,
+    def __init__(self, node_id, node_class_id, connections, feature_name, datatype, mean, standard_deviation, minimum,
                  maximum):
-        super().__init__(node_id, node_class, connections)
+        super().__init__(node_id, node_class_id, connections)
         self.featureName = feature_name
         self.datatype = datatype
         self.mean = mean
@@ -507,7 +521,8 @@ class Feature(Node):
 
     @classmethod
     def get_premade_node(cls):
-        return Feature(node_id='feature_87176016', node_class='Feature', feature_name='Pressure', datatype='numerical',
+        return Feature(node_id='feature_87176016', node_class_id='Feature', feature_name='Pressure',
+                       datatype='numerical',
                        mean=3.003, standard_deviation=0.310, minimum=2.45, maximum=4.91,
                        connections=['data_row_fc9f70a3'])
 
@@ -526,5 +541,5 @@ class Feature(Node):
 
         connections = [f"data_row_{random.randint(10000000, 99999999)}"]
 
-        return cls(node_id=node_id, node_class=node_class, feature_name=feature_name, datatype=datatype, mean=mean,
+        return cls(node_id=node_id, node_class_id=node_class, feature_name=feature_name, datatype=datatype, mean=mean,
                    standard_deviation=standard_deviation, minimum=minimum, maximum=maximum, connections=connections)

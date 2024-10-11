@@ -1,1 +1,2 @@
-How many entries does data set DataSet_58ddb600 have?
+Was Test Case 1 successfully?
+Which robot was used for Test Case 1?

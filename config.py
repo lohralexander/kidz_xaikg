@@ -1,5 +1,6 @@
 import logging
 import os
+from datetime import datetime
 
 
 class Config:
@@ -41,4 +42,10 @@ class Logger:
         logger.addHandler(file_handler)
         logger.addHandler(console_handler)
 
+        logging.basicConfig(filename=f'research_log_{datetime.now().strftime("%Y_%m_%d_%H_%M")}.txt',
+                            level=logging.INFO)
+
         return logger
+
+
+logger = Logger.setup_logging()

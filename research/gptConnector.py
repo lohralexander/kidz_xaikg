@@ -3,9 +3,10 @@ import time
 from openai import OpenAI
 
 from config import Config
+from config import logger
 
 
-def gpt_request(system, user, model="gpt-4o", sleep_time=20):
+def gpt_request(system, user, model="gpt-4o", sleep_time=5):
     client = OpenAI(
         api_key=Config.openai_api_key,
     )
@@ -23,5 +24,9 @@ def gpt_request(system, user, model="gpt-4o", sleep_time=20):
         ],
         model="gpt-4o",
     )
+    response_message = response.choices[0].message.content
+    logger.info(f"System: {system}")
+    logger.info(f"User: {user}")
+    logger.info(f"Assistant: {response_message}")
     time.sleep(sleep_time)
-    return response.choices[0].message.content
+    return response_message

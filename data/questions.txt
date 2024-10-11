@@ -13,7 +13,7 @@ Is the performance of the model model_a2f6fb37 sufficient for predicting the sli
 What restrictions does the model model_a2f6fb37 have?
 What type of data was used to train Model_a2f6fb37?
 My Model Model_a2f6fb37 predicted Class 0. With what certainty can this element be assigned to a class?
-Which algorithm achieves the best results for predicting sliding behaviour of cylinders?
+Which algorithm achieves the best results for predicting sliding behaviour of cylinders? (Streichen)
 What quality can usually/at best be achieved for a task of predicting sliding behaviour of cylinders?
 Whats the meaning of festoDataSet?
 With which other entities is the festoDataRow attribute related (superclasses/subclasses, etc.)?

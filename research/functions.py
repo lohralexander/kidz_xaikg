@@ -3,11 +3,9 @@ import statistics
 import uuid
 
 import owl
-from config import Logger
+from config import logger
 from research.gptConnector import gpt_request
 from research.questionnaire import Questionnaire
-
-logger = Logger.setup_logging()
 
 
 def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0):
@@ -17,7 +15,7 @@ def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0):
     ontology_node_overview = ontology.get_ontology_node_overview()
     system = f"Here is an Ontology:{ontology_structure}. Here is an overview of the nodes:{ontology_node_overview}"
     user = (
-        f"Use the given Ontology and the List of Nodes. Whith which node informations could you answer the following "
+        f"Use the given Ontology and the List of Nodes. With which node information could you answer the following "
         f"question? {question}. Look if you find matching Node IDs in the question and use them. Look for usable "
         f"links to other nodes. Give a list of the nodes you found, no explanation.")
 
@@ -56,7 +54,7 @@ def compare_question_answer_pair(gpt_answer, correct_answer):
     system = ("Compare the given answer with the gold standard answer. Rate them with a score between 0 (No factual "
               "match) and 5 with 5 is a perfect match. Only the facts are relevant, not the wording. Answer only with "
               "the score, nothing else.")
-    user = f"The gold standard answer is {correct_answer}. The answer to score is {gpt_answer}"
+    user = f"The gold standard answer is '{correct_answer}'. The answer to score is {gpt_answer}"
     return gpt_request(system, user, sleep_time=0)
 
 
@@ -75,7 +73,10 @@ def calculate_quality_measures(score_list):
     min_value = min(score_numeric_list)
     max_value = max(score_numeric_list)
     median_value = statistics.median(score_numeric_list)
-
+    logger.info(f"Mean: {mean_value}")
+    logger.info(f"Median: {median_value}")
+    logger.info(f"Min: {min_value}")
+    logger.info(f"Max: {max_value}")
     return {
         "mean": mean_value,
         "min": min_value,
@@ -102,19 +103,6 @@ def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, qu
 
 
 def create_overview_file(path_list, quality_measures, search_depth, alternate_cycles):
-    run_id = uuid.uuid1()
-    file_path = f"overview_measurements_{run_id}.txt"
-    with open(file_path, 'w') as file:
-        file.write(f"Run: {run_id}\n"
-                   f"Parameters\n"
-                   f"Search Depth: {search_depth}\n"
-                   f"Question Alternation Cycles: {alternate_cycles}\n \n")
-        for index, path in enumerate(path_list, start=1):
-            file.write(f"{index}. : {path}\n")
-        file.write("List of Measurements: \n")
-        for key, value in quality_measures.items():
-            file.write(f"{key}: {value}\n")
-
     run_id = uuid.uuid1()
 
     file_path = f"overview_measurements_{run_id}.html"
@@ -173,4 +161,5 @@ def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, sea
 
     aggregated_quality_measures = calculate_quality_measures(overview_scores_list)
     create_overview_file(result_path_list, aggregated_quality_measures, search_depth, alternation_cycles)
+    logger.info("Research run finished.")
     return aggregated_quality_measures
