@@ -12,15 +12,21 @@ def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0):
     if not isinstance(ontology, owl.Ontology):
         Exception(TypeError, "The given ontology is not an instance of the Ontology class.")
     ontology_structure = ontology.get_ontology_structure()
-    ontology_node_overview = ontology.get_ontology_node_overview()
-    system = f"Here is an Ontology:{ontology_structure}. Here is an overview of the nodes:{ontology_node_overview}"
-    user = (
-        f"Use the given Ontology and the List of Nodes. With which node information could you answer the following "
-        f"question? {question}. Look if you find matching Node IDs in the question and use them. Look for usable "
-        f"links to other nodes. Give a list of the nodes you found, no explanation.")
 
-    found_node_id_list = re.findall(r'\w+', gpt_request(system, user, sleep_time))
-    found_nodes_dict = ontology.get_nodes(found_node_id_list)
+    # RAG Step 1
+    system = (f"Use the following Ontology:{ontology_structure}. Only give as an answer a List of Nodes which could be "
+              f"usefull in answering the given question. Use a python usable list structure.")
+    user = f"{question}"
+    found_node_class_list = re.findall(r'\w+', gpt_request(system, user, sleep_time))
+
+    # RAG Step 2
+    instances = ontology.get_instances_by_class(found_node_class_list)
+    instance_structure = ontology.get_node_structure(instances)
+    system = (
+        f"Use the following list of instances: {instance_structure}. Only give as an answer a list of instances which could be usefull in answering the given question. Use a python usable list structure.")
+    user = f"{question}"
+    found_node_instances_list = re.findall(r'\w+', gpt_request(system, user, sleep_time))
+    found_nodes_dict = ontology.get_nodes(found_node_instances_list)
 
     logger.info(f"Found nodes: {found_nodes_dict}")
 
