@@ -1,22 +1,36 @@
-How many entries does data set DataSet_58ddb600 have?
-How many attributes does data set DataSet_58ddb600 have?
-What are the datatypes of the features of DataSet_58ddb600?
-What are the value distributions of Feature_87176016
-In which environment (location, company, system, etc.) was the data set DataSet_58ddb600 collected?
-When was the DataSet_58ddb600 collected?
-How was the label filled in the training data by TrainingRun_76d864c9?
-Which algorithm was used for model_a2f6fb37?
-Which parameters were used (value per parameter) for model_a2f6fb37?
-Which algorithm was used for normalization for model_a2f6fb37?
-How precise and reliable is Model_ a2f6fb37 (value for quality measure x)?
-Is the performance of the model model_a2f6fb37 sufficient for predicting the sliding behaviour of a cylinder in a industrial domain?
-What restrictions does the model model_a2f6fb37 have?
-What type of data was used to train Model_a2f6fb37?
-My Model Model_a2f6fb37 predicted Class 0. With what certainty can this element be assigned to a class?
-Which algorithm achieves the best results for predicting sliding behaviour of cylinders? (Streichen)
-What quality can usually/at best be achieved for a task of predicting sliding behaviour of cylinders?
-Whats the meaning of festoDataSet?
-With which other entities is the festoDataRow attribute related (superclasses/subclasses, etc.)?
-How can the model Model_a2f6fb37 be improved?
-How and why will the model change/drift over time?
-What does Information gain mean?
+Wie viele Einträge hat der verwendete Datensatz?
+Wie viele Attribute hat der verwendete Datensatz?
+Welche Datentypen haben die Attribute?
+Wie sind die Werteverteilungen des Attributs Kopfbreite?
+In welcher Umgebung (Ort, Unternehmen, System, etc.) wurde der Datensatz erhoben?
+Wann / über welchen Zeitraum wurde der Datensatz erhoben?
+Welchen Einschränkungen oder potenziellen Verfälschungen unterliegen die Daten?
+Wie wurde die Zielvariable in den Trainingsdaten befüllt?
+Welcher Algorithmus wurde verwendet?
+Welche Parameter wurden verwendet (Wert pro Parameter)?
+Welcher Algorithmus wurde zur Normalisierung verwendet?
+Welcher Algorithmus für die Ausreißererkennung verwendet?
+Wie präzise und verlässlich ist das Modell?
+Ist die Performanz des Modells ausreichend für Anwendungsfall A?
+Welchen Einschränkungen unterliegt das Modell?
+Auf welcher Menge an Daten wurde das Modell trainiert?
+Auf welcher Art von Daten wurde das Modell trainiert?
+Welche Daten wurden nicht zum Trainieren verwendet?
+Welche(s) Attribut(e) haben den größten Einfluss?
+Welche Attribute werden im Modell berücksichtigt?
+Wie ist die Gesamtlogik des Modells?
+Wie trifft das Modell Entscheidungen?
+Wie kann ich das Modell optimal nutzen?
+Was bedeuten die Ergebnisse des Modells?
+Was ist der Einsatzbereich des Modells?
+Welche Art von Ergebnis liefert das Modell?
+Mit welchem Algorithmus werden die besten Ergebnisse für diesen Datensatz erreicht?
+Welcher Algorithmus wird am häufigsten (wie häufig) für diese Aufgabenstellung eingesetzt?
+Welche Güte kann für diese Aufgabenstellung üblicherweise/bestenfalls erreicht werden?
+Hat Attribut Klamer-Typ in anderen Modellen (überwiegend) einen Einfluss auf das Ergebnis?
+Bestätigen andere Modelle den Einfluss von Attribut Klammer-Typ auf das Ergebnis?
+Was ist die Bedeutung des Attributs Kammer-Typ?
+Mit welchen anderen Entitäten steht das Attribut Klammer-Typ in Beziehung (Ober/Unterklassen, usw.)
+Wie kann das Modell verbessert werden?
+Wie und warum wird sich das Modell im Laufe der Zeit verändern/driften?
+Warum wurden diese Attribute nicht verwendet: Test Durchgang, Schrauben ID?

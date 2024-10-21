@@ -268,8 +268,8 @@ class Model(Node):
                      giniIndex=0.042319749216300995, precision={'Class 0': 0.95, 'Class 1': 0.96},
                      recall={'Class 0': 0.94, 'Class 1': 0.97}, f1Score={'Class 0': 0.95, 'Class 1': 0.96},
                      confusionMatrix=[[239, 14], [13, 372]], rocAucScore=0.9587,
-                     trainedWith='dataset_58ddb600', trainedBy='trainingRun_76d864c9',
-                     connections=['dataset_58ddb600', 'training_run_76d864c9'])
+                     trainedWith='niryo_dataset_september_2024', trainedBy='trainingRun_76d864c9',
+                     connections=['niryo_dataset_september_2024', 'training_run_76d864c9'])
 
     @classmethod
     def generate_random_node(cls):
@@ -363,7 +363,7 @@ class Dataset(Node):
                        usedBy='training_run_76d864c9',
                        dataType='Dataset', domain='Niryo Robot', locationOfDataRecording='RWU',
                        dateOfRecording='Q4 2024', createdBy='',
-                       connections=['training_run_76d864c9'])
+                       connections=['training_run_76d864c9', "Test Durchgang", "Schrauben ID", "Schraubentyp"])
 
     @classmethod
     def generate_random_node(cls):

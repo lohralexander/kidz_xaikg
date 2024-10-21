@@ -1,2 +1,1 @@
-Was Test Case 1 successfully?
-Which robot was used for Test Case 1?
+Welche Datentypen haben die Attribute des Datensatzes der für Model 1 genutzt wurde?
