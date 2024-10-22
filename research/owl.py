@@ -97,9 +97,9 @@ class Ontology:
                 node_list.append(node_structure)
         return str(node_list)
 
-    def get_node_structure(self, node_id_list):
+    def get_node_structure(self, node_list):
         node_structure_list = []
-        for node in node_id_list:
+        for node in node_list:
             node_structure = {"Node": node.get_node_id(), "Explanation": node.get_explanation(),
                               "Connections": ", ".join([f"{edge} {connection}" for connection, edge in
                                                         zip(node.get_class_connections()[0],

@@ -21,9 +21,11 @@ def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0):
 
     # RAG Step 2
     instances = ontology.get_instances_by_class(found_node_class_list)
-    instance_structure = ontology.get_node_structure(instances)
+    instance_ids = []
+    for node in instances:
+        instance_ids.append(node.get_node_id())
     system = (
-        f"Use the following list of instances: {instance_structure}. Only give as an answer a list of instances which could be usefull in answering the given question. Use a python usable list structure.")
+        f"Use the following list of instances: {instance_ids}. Only give as an answer a list of instances which could be usefull in answering the given question. Use a python usable list structure.")
     user = f"{question}"
     found_node_instances_list = re.findall(r'\w+', gpt_request(system, user, sleep_time))
     found_nodes_dict = ontology.get_nodes(found_node_instances_list)
@@ -43,6 +45,7 @@ def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0):
         found_nodes_dict.update(extended_depth_search_dict)
         extended_depth_search_dict.clear()
 
+    instance_structure = ontology.get_node_structure(instances)
     retrieved_relevant_information = [str(obj) for obj in found_nodes_dict.values()]
     logger.info(retrieved_relevant_information)
     return gpt_request(f"Here is information relevant for the Question: {retrieved_relevant_information}",
