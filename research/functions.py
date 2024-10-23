@@ -8,7 +8,7 @@ from research.gptConnector import gpt_request
 from research.questionnaire import Questionnaire
 
 
-def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0):
+def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0, advanced_search=True):
     if not isinstance(ontology, owl.Ontology):
         Exception(TypeError, "The given ontology is not an instance of the Ontology class.")
     ontology_structure = ontology.get_ontology_structure()
@@ -25,7 +25,7 @@ def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0):
     for node in instances:
         instance_ids.append(node.get_node_id())
     system = (
-        f"Use the following list of instances: {instance_ids}. Only give as an answer a list of instances which could be usefull in answering the given question. Use a python usable list structure.")
+        f"Use the following list of instances: {instance_ids}. Which of these instances is named in the question. Use a python usable list structure.")
     user = f"{question}"
     found_node_instances_list = re.findall(r'\w+', gpt_request(system, user, sleep_time))
     found_nodes_dict = ontology.get_nodes(found_node_instances_list)
@@ -33,23 +33,30 @@ def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0):
     logger.info(f"Found nodes: {found_nodes_dict}")
 
     if search_depth != 0:
-        extended_depth_search_dict = found_nodes_dict.copy()
-
-        for node in found_nodes_dict.values():
-            connected_nodes_dict = ontology.get_connected_nodes(node, search_depth)
-            extended_depth_search_dict.update({
-                key: value for key, value in connected_nodes_dict.items()
-                if key not in extended_depth_search_dict
-            })
-        found_nodes_dict.clear()
-        found_nodes_dict.update(extended_depth_search_dict)
-        extended_depth_search_dict.clear()
+        graph_search(found_nodes_dict, ontology, search_depth, advanced_search,found_node_class_list)
 
     instance_structure = ontology.get_node_structure(instances)
     retrieved_relevant_information = [str(obj) for obj in found_nodes_dict.values()]
     logger.info(retrieved_relevant_information)
     return gpt_request(f"Here is information relevant for the Question: {retrieved_relevant_information}",
                        question, sleep_time)
+
+
+def graph_search(found_nodes_dict, ontology, search_depth, advanced_search, found_node_class_list):
+    extended_depth_search_dict = found_nodes_dict.copy()
+    for node in found_nodes_dict.values():
+        connected_nodes_dict = ontology.get_connected_nodes(node, search_depth)
+        if advanced_search:
+            for key, value in list(connected_nodes_dict.items()):
+                if value.get_node_class_id() not in found_node_class_list:
+                    connected_nodes_dict.pop(key)
+        extended_depth_search_dict.update({
+            key: value for key, value in connected_nodes_dict.items()
+            if key not in extended_depth_search_dict
+        })
+    found_nodes_dict.clear()
+    found_nodes_dict.update(extended_depth_search_dict)
+    extended_depth_search_dict.clear()
 
 
 def work_through_the_questionnaire(ontology: owl.Ontology, questionnaire: Questionnaire, search_depth=0):

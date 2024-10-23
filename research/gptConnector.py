@@ -11,19 +11,19 @@ def gpt_request(system, user, model="gpt-4o", sleep_time=5):
         api_key=Config.openai_api_key,
     )
 
-    response = client.chat.completions.create(
-        messages=[
-            {
-                "role": "system",
-                "content": f"{system}"
-            },
-            {
-                "role": "user",
-                "content": f"{user}"
-            }
-        ],
-        model="gpt-4o",
-    )
+    response = client.chat.completions.create(temperature=0,
+                                              messages=[
+                                                  {
+                                                      "role": "system",
+                                                      "content": f"{system}"
+                                                  },
+                                                  {
+                                                      "role": "user",
+                                                      "content": f"{user}"
+                                                  }
+                                              ],
+                                              model="gpt-4o",
+                                              )
     response_message = response.choices[0].message.content
     logger.info(f"System: {system}")
     logger.info(f"User: {user}")

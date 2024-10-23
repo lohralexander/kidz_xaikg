@@ -9,6 +9,6 @@ if __name__ == '__main__':
 
     owl.create_dynamic_instance_graph()
     owl.create_dynamic_class_graph()
-    questionnaire = Questionnaire(demo_mode=True)
+    questionnaire = Questionnaire(demo_mode=False)
 
-    start_research_run(owl, questionnaire, search_depth=0, alternation_cycles=0)
+    start_research_run(owl, questionnaire, search_depth=4, alternation_cycles=0)
