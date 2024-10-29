@@ -1,36 +1,36 @@
-Wie viele Einträge hat der verwendete Datensatz?
-Wie viele Attribute hat der verwendete Datensatz?
-Welche Datentypen haben die Attribute?
-Wie sind die Werteverteilungen des Attributs Kopfbreite?
-In welcher Umgebung (Ort, Unternehmen, System, etc.) wurde der Datensatz erhoben?
-Wann / über welchen Zeitraum wurde der Datensatz erhoben?
-Welchen Einschränkungen oder potenziellen Verfälschungen unterliegen die Daten?
-Wie wurde die Zielvariable in den Trainingsdaten befüllt?
-Welcher Algorithmus wurde verwendet?
-Welche Parameter wurden verwendet (Wert pro Parameter)?
-Welcher Algorithmus wurde zur Normalisierung verwendet?
-Welcher Algorithmus für die Ausreißererkennung verwendet?
-Wie präzise und verlässlich ist das Modell?
-Ist die Performanz des Modells ausreichend für Anwendungsfall A?
-Welchen Einschränkungen unterliegt das Modell?
-Auf welcher Menge an Daten wurde das Modell trainiert?
-Auf welcher Art von Daten wurde das Modell trainiert?
-Welche Daten wurden nicht zum Trainieren verwendet?
-Welche(s) Attribut(e) haben den größten Einfluss?
-Welche Attribute werden im Modell berücksichtigt?
-Wie ist die Gesamtlogik des Modells?
-Wie trifft das Modell Entscheidungen?
-Wie kann ich das Modell optimal nutzen?
-Was bedeuten die Ergebnisse des Modells?
-Was ist der Einsatzbereich des Modells?
-Welche Art von Ergebnis liefert das Modell?
-Mit welchem Algorithmus werden die besten Ergebnisse für diesen Datensatz erreicht?
-Welcher Algorithmus wird am häufigsten (wie häufig) für diese Aufgabenstellung eingesetzt?
-Welche Güte kann für diese Aufgabenstellung üblicherweise/bestenfalls erreicht werden?
-Hat Attribut Klamer-Typ in anderen Modellen (überwiegend) einen Einfluss auf das Ergebnis?
+Wie viele Einträge hat der für das Training von Model 1 verwendete Datensatz?
+Wie viele Attribute hat der für das Training von Model 1 verwendete Datensatz?
+Welche Datentypen haben die Attribute vom Datensatz aus September 2024 ?
+Wie sind die Werteverteilungen des Attributs Kopfbreite des Datzensatzes aus September 2024?
+In welcher Umgebung (Ort, Unternehmen, System, etc.) wurde der Datensatz niryo_dataset_september_2024 erhoben?
+Wann / über welchen Zeitraum wurde der Datensatz niryo_dataset_september_2024 erhoben?
+Welchen Einschränkungen oder potenziellen Verfälschungen unterliegen die Daten aus niryo_dataset_september_2024?
+Wie wurde die Zielvariable in den Trainingsdaten des Datensatzes niryo_dataset_september_2024 befüllt?
+Welcher Algorithmus wurde für das Trainging von Model 1 verwendet?
+Welche Parameter wurden für das Trainging von Model 1 verwendet (Wert pro Parameter)?
+Welcher Algorithmus wurde zur Normalisierung für das Trainging von Model 1 verwendet?
+Welcher Algorithmus für die Ausreißererkennung für das Trainging von Model 1 verwendet?
+Wie präzise und verlässlich ist Model 1?
+Ist die Performanz von Model 1 ausreichend für die Anwendung in einem industriellen Produktivbetrieb?
+Welchen Einschränkungen unterliegt Model 1?
+Auf welcher Menge an Daten wurde Model 1 trainiert?
+Auf welcher Art von Daten wurde Model 1 trainiert?
+Welche Daten wurden nicht zum Trainieren von Model 1 verwendet?
+Welche(s) Attribut(e) haben den größten Einfluss in Model 1?
+Welche Attribute werden in Model 1 berücksichtigt?
+Wie ist die Gesamtlogik von Model 1?
+Wie trifft Model 1 Entscheidungen?
+Wie kann ich Model 1 optimal nutzen?
+Was bedeuten die Ergebnisse von Model 1?
+Was ist der Einsatzbereich von Model 1?
+Welche Art von Ergebnis liefert Model 1?
+Mit welchem Algorithmus werden die besten Ergebnisse für Datensatz niryo_dataset_september_2024 erreicht?
+Welcher Algorithmus wird am häufigsten (wie häufig) für die Aufgabenstellung von Model 1 eingesetzt?
+Welche Güte kann für die Aufgabenstellung von Model 1 üblicherweise/bestenfalls erreicht werden?
+Hat Attribut Klammer-Typ in anderen Modellen (überwiegend) einen Einfluss auf das Ergebnis?
 Bestätigen andere Modelle den Einfluss von Attribut Klammer-Typ auf das Ergebnis?
-Was ist die Bedeutung des Attributs Kammer-Typ?
+Was ist die Bedeutung des Attributs Klammer-Typ?
 Mit welchen anderen Entitäten steht das Attribut Klammer-Typ in Beziehung (Ober/Unterklassen, usw.)
-Wie kann das Modell verbessert werden?
-Wie und warum wird sich das Modell im Laufe der Zeit verändern/driften?
-Warum wurden diese Attribute nicht verwendet: Test Durchgang, Schrauben ID?
+Wie kann Model 1 verbessert werden?
+Wie und warum wird sich Model 1 im Laufe der Zeit verändern/driften?
+Warum wurden diese Attribute nicht in Model 1 verwendet: Test Durchgang, Schrauben ID?

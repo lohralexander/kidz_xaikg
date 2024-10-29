@@ -12,18 +12,23 @@ class Initialization():
         screw_class_node = GenericClass("Screw", class_connections=[[], []], explanation="A metal Screw")
         test_case_class_node = GenericClass("TestCase", class_connections=[[], []],
                                             explanation="A screw is given to a roboter arm. The roboter arm has to "
-                                                        "lift the screw and place it in a given place on a given angle.")
+                                                        "lift the screw and place it in a given place on a given angle. It is saved in the form of rows")
         robot_arm_class_node = GenericClass("Robotarm", class_connections=[["Gripper"], ["has"]],
                                             explanation="A robot arm with different modules.")
         gripper_class_node = GenericClass("Gripper", class_connections=[["Robotarm"], ["partOf"]], explanation="")
         feature_class_node = GenericClass("Feature", class_connections=[["Dataset"], ["belongsTo"]],
                                           explanation="Feature of a Dataset with statistics.")
 
-        self.owl.add_node(GenericNode("Niryo", robot_arm_class_node, connections=["training_run_1"]))
-        self.owl.add_node(GenericNode('Silicone_gripper', gripper_class_node, connections=["Niryo"], typ="silicone"))
-        self.owl.add_node(GenericNode('Notch_gripper', gripper_class_node, connections=["Niryo"], typ="silicone"))
+        self.owl.add_node(GenericNode("Niryo", robot_arm_class_node, connections=[["training_run_1"], ["usedIn"]]))
         self.owl.add_node(
-            GenericNode('screw_530', screw_class_node, ["training_run_1"], length=30,
+            GenericNode('Silicon_gripper', gripper_class_node, connections=[["Niryo"], ["belongsTo"]], typ="silicone"))
+        self.owl.add_node(
+            GenericNode('Notch_gripper', gripper_class_node, connections=[["Niryo"], ["belongsTo"]], typ="notch"))
+        self.owl.add_node(
+            GenericNode('Einkerbung_gripper', gripper_class_node, connections=[["Niryo"], ["belongsTo"]],
+                        typ="einkerbung"))
+        self.owl.add_node(
+            GenericNode('screw_530', screw_class_node, [["training_run_1"], ["usedIn"]], length=30,
                         width=8,
                         thickness=3.5,
                         weight=5.1,
@@ -31,7 +36,7 @@ class Initialization():
                         type="Sechskant",
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_540', screw_class_node, ["training_run_1"], length=40,
+            GenericNode('screw_540', screw_class_node, [["training_run_1"], ["usedIn"]], length=40,
                         width=8,
                         thickness=3.5,
                         weight=6.4,
@@ -39,7 +44,7 @@ class Initialization():
                         type="Sechskant",
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_550', screw_class_node, ["training_run_1"], length=50,
+            GenericNode('screw_550', screw_class_node, [["training_run_1"], ["usedIn"]], length=50,
                         width=8,
                         thickness=3.5,
                         weight=7.6,
@@ -47,7 +52,7 @@ class Initialization():
                         type="Sechskant",
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_560', screw_class_node, ["training_run_1"], length=60,
+            GenericNode('screw_560', screw_class_node, [["training_run_1"], ["usedIn"]], length=60,
                         width=8,
                         thickness=3.5,
                         weight=8.8,
@@ -55,7 +60,7 @@ class Initialization():
                         type="Sechskant",
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_570', screw_class_node, ["training_run_1"], length=70,
+            GenericNode('screw_570', screw_class_node, [["training_run_1"], ["usedIn"]], length=70,
                         width=8,
                         thickness=3.5,
                         weight=10.2,
@@ -63,7 +68,7 @@ class Initialization():
                         type="Sechskant",
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_630', screw_class_node, ["training_run_1"], length=30,
+            GenericNode('screw_630', screw_class_node, [["training_run_1"], ["usedIn"]], length=30,
                         width=10,
                         thickness=4.0,
                         weight=7.5,
@@ -71,7 +76,7 @@ class Initialization():
                         type="Sechskant",
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_640', screw_class_node, ["training_run_1"], length=40,
+            GenericNode('screw_640', screw_class_node, [["training_run_1"], ["usedIn"]], length=40,
                         width=10,
                         thickness=4.0,
                         weight=9.2,
@@ -79,7 +84,7 @@ class Initialization():
                         type="Sechskant",
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_650', screw_class_node, ["training_run_1"], length=50,
+            GenericNode('screw_650', screw_class_node, [["training_run_1"], ["usedIn"]], length=50,
                         width=10,
                         thickness=4.0,
                         weight=11.0,
@@ -87,7 +92,7 @@ class Initialization():
                         type="Sechskant",
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_660', screw_class_node, ["training_run_1"], length=60,
+            GenericNode('screw_660', screw_class_node, [["training_run_1"], ["usedIn"]], length=60,
                         width=10,
                         thickness=4.0,
                         weight=12.7,
@@ -95,7 +100,7 @@ class Initialization():
                         type="Sechskant",
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_670', screw_class_node, ["training_run_1"], length=70,
+            GenericNode('screw_670', screw_class_node, [["training_run_1"], ["usedIn"]], length=70,
                         width=10,
                         thickness=4.0,
                         weight=14.4,
@@ -103,7 +108,7 @@ class Initialization():
                         type="Sechskant",
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_670', screw_class_node, ["training_run_1"], length=70,
+            GenericNode('screw_670', screw_class_node, [["training_run_1"], ["usedIn"]], length=70,
                         width=10,
                         thickness=4.0,
                         weight=14.4,
@@ -111,7 +116,7 @@ class Initialization():
                         type="Sechskant",
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_830', screw_class_node, ["training_run_1"], length=30,
+            GenericNode('screw_830', screw_class_node, [["training_run_1"], ["usedIn"]], length=30,
                         width=13,
                         thickness=5.3,
                         weight=15.5,
@@ -119,7 +124,7 @@ class Initialization():
                         type="Sechskant",
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_840', screw_class_node, ["training_run_1"], length=40,
+            GenericNode('screw_840', screw_class_node, [["training_run_1"], ["usedIn"]], length=40,
                         width=13,
                         thickness=5.3,
                         weight=15.5,
@@ -127,7 +132,7 @@ class Initialization():
                         type="Sechskant",
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_850', screw_class_node, ["training_run_1"],
+            GenericNode('screw_850', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Sechskant",
                         width=13,
                         thickness=5.3,
@@ -136,7 +141,7 @@ class Initialization():
                         diameter=8.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_860', screw_class_node, ["training_run_1"],
+            GenericNode('screw_860', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Sechskant",
                         width=13,
                         thickness=5.3,
@@ -145,7 +150,7 @@ class Initialization():
                         diameter=8.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_870', screw_class_node, ["training_run_1"],
+            GenericNode('screw_870', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Sechskant",
                         width=13,
                         thickness=5.3,
@@ -154,7 +159,7 @@ class Initialization():
                         diameter=8.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_1030', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1030', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Sechskant",
                         width=17,
                         thickness=6.4,
@@ -163,7 +168,7 @@ class Initialization():
                         diameter=10.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_1040', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1040', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Sechskant",
                         width=17,
                         thickness=6.4,
@@ -172,7 +177,7 @@ class Initialization():
                         diameter=10.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_1050', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1050', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Sechskant",
                         width=17,
                         thickness=6.4,
@@ -181,7 +186,7 @@ class Initialization():
                         diameter=10.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_1060', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1060', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Sechskant",
                         width=17,
                         thickness=6.4,
@@ -190,7 +195,7 @@ class Initialization():
                         diameter=10.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_1070', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1070', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Sechskant",
                         width=17,
                         thickness=6.4,
@@ -199,7 +204,7 @@ class Initialization():
                         diameter=10.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_530', screw_class_node, ["training_run_1"],
+            GenericNode('screw_530', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=8.5,
                         thickness=5.0,
@@ -208,7 +213,7 @@ class Initialization():
                         diameter=5.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_540', screw_class_node, ["training_run_1"],
+            GenericNode('screw_540', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=8.5,
                         thickness=5.0,
@@ -217,7 +222,7 @@ class Initialization():
                         diameter=5.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_550', screw_class_node, ["training_run_1"],
+            GenericNode('screw_550', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=8.5,
                         thickness=5.0,
@@ -226,7 +231,7 @@ class Initialization():
                         diameter=5.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_560', screw_class_node, ["training_run_1"],
+            GenericNode('screw_560', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=8.5,
                         thickness=5.0,
@@ -235,7 +240,7 @@ class Initialization():
                         diameter=5.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_570', screw_class_node, ["training_run_1"],
+            GenericNode('screw_570', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=8.5,
                         thickness=5.0,
@@ -244,7 +249,7 @@ class Initialization():
                         diameter=5.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_630', screw_class_node, ["training_run_1"],
+            GenericNode('screw_630', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=10.0,
                         thickness=6.0,
@@ -253,7 +258,7 @@ class Initialization():
                         diameter=6.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_640', screw_class_node, ["training_run_1"],
+            GenericNode('screw_640', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=10.0,
                         thickness=6.0,
@@ -262,7 +267,7 @@ class Initialization():
                         diameter=6.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_650', screw_class_node, ["training_run_1"],
+            GenericNode('screw_650', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=10.0,
                         thickness=6.0,
@@ -271,7 +276,7 @@ class Initialization():
                         diameter=6.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_660', screw_class_node, ["training_run_1"],
+            GenericNode('screw_660', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=10.0,
                         thickness=6.0,
@@ -280,7 +285,7 @@ class Initialization():
                         diameter=6.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_670', screw_class_node, ["training_run_1"],
+            GenericNode('screw_670', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=10.0,
                         thickness=6.0,
@@ -289,7 +294,7 @@ class Initialization():
                         diameter=6.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_830', screw_class_node, ["training_run_1"],
+            GenericNode('screw_830', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=13.0,
                         thickness=8.0,
@@ -298,7 +303,7 @@ class Initialization():
                         diameter=8.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_840', screw_class_node, ["training_run_1"],
+            GenericNode('screw_840', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=13.0,
                         thickness=8.0,
@@ -307,7 +312,7 @@ class Initialization():
                         diameter=8.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_850', screw_class_node, ["training_run_1"],
+            GenericNode('screw_850', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=13.0,
                         thickness=8.0,
@@ -316,7 +321,7 @@ class Initialization():
                         diameter=8.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_860', screw_class_node, ["training_run_1"],
+            GenericNode('screw_860', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=13.0,
                         thickness=8.0,
@@ -325,7 +330,7 @@ class Initialization():
                         diameter=8.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_870', screw_class_node, ["training_run_1"],
+            GenericNode('screw_870', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=13.0,
                         thickness=8.0,
@@ -334,7 +339,7 @@ class Initialization():
                         diameter=8.0,
                         coating=False))
         self.owl.add_node(
-            GenericNode('screw_1030', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1030', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=16.0,
                         thickness=10.0,
@@ -343,7 +348,7 @@ class Initialization():
                         diameter=10.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_1040', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1040', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=16.0,
                         thickness=10.0,
@@ -352,7 +357,7 @@ class Initialization():
                         diameter=10.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_1050', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1050', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=16.0,
                         thickness=10.0,
@@ -361,7 +366,7 @@ class Initialization():
                         diameter=10.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_1060', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1060', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=16.0,
                         thickness=10.0,
@@ -370,7 +375,7 @@ class Initialization():
                         diameter=10.0,
                         coating=True))
         self.owl.add_node(
-            GenericNode('screw_1070', screw_class_node, ["training_run_1"],
+            GenericNode('screw_1070', screw_class_node, [["training_run_1"], ["usedIn"]],
                         type="Zylinder",
                         width=16.0,
                         thickness=10.0,
@@ -380,76 +385,117 @@ class Initialization():
                         coating=False))
 
         self.owl.add_node(GenericNode(node_id="row_1", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=0.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=0.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_2", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=0.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=0.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_3", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=0.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=0.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_4", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=30.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=30.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_5", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=30.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=30.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_6", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=30.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=30.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_7", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=60.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=60.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_8", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=60.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=60.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_9", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=60.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=60.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_10", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=90.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=90.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_11", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=90.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=90.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_12", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Silicon_gripper"], angle=90.00, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=90.00,
+                                      success=True))
         self.owl.add_node(GenericNode(node_id="row_13", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=0.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=0.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_14", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=0.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=0.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_15", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=0.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=0.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_16", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=30.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=30.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_17", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=30.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=30.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_18", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=30.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=30.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_19", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=60.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=60.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_20", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=60.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=60.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_21", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=60.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=60.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_22", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=90.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=90.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_23", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=90.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=90.00,
                                       success=True))
         self.owl.add_node(GenericNode(node_id="row_24", node_class=test_case_class_node,
-                                      connections=["screw_530", "Niryo", "Einkerbung_gripper"], angle=90.00,
+                                      connections=[["screw_530", "Niryo", "Einkerbung_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=90.00,
                                       success=True))
 
-        self.owl.add_node(GenericNode(node_id="model_1", node_class=Model, connections=["training_run_1"]))
+        # self.owl.add_node(
+        #   GenericNode(node_id="model_1", node_class=Model, connections=[["training_run_1"], ["usedIn"]]))
 
         self.owl.add_node(GenericNode(node_id="Test Durchgang", node_class=Attribute,
-                                      connections=["niryo_dataset_september_2024"], datatype="Numerisch/ ID"))
+                                      connections=[["niryo_dataset_september_2024"], ["usedIn"]],
+                                      datatype="Numerisch/ ID"))
         self.owl.add_node(GenericNode(node_id="Schrauben ID", node_class=Attribute,
-                                      connections=["niryo_dataset_september_2024"], datatype="Numerisch/ ID"))
+                                      connections=[["niryo_dataset_september_2024"], ["usedIn"]],
+                                      datatype="Numerisch/ ID"))
         self.owl.add_node(GenericNode(node_id="Schraubentyp", node_class=Attribute,
-                                      connections=["niryo_dataset_september_2024"], datatype="Enum/ Kategorisch"))
+                                      connections=[["niryo_dataset_september_2024"], ["usedIn"]],
+                                      datatype="Enum/ Kategorisch"))
         self.owl.add_node(GenericNode(node_id="TestCase1", node_class=Attribute,
-                                      connections=["screw_530", "Niryo", "Silicone_gripper"], angle=0, success=True))
+                                      connections=[["screw_530", "Niryo", "Silicon_gripper"],
+                                                   ["usedScrew", "usedRobot", "usedGripper"]], angle=0, success=True))
 
     # self.owl.add_node(GenericNode(node_id=""))
 

@@ -1,9 +1,10 @@
 import gptConnector
+from config import Config
 
 
 class Questionnaire:
 
-    def __init__(self, demo_mode=True):
+    def __init__(self, demo_mode=Config.demo_mode):
         self.question_dict = {}
         self.answers_dict = {}
 

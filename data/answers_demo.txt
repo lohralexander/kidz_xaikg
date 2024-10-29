@@ -1,1 +1,2 @@
 Die Attribute haben die folgenden Datentypen:• Test Durchgang: Numerisch/ID• Schrauben ID: Numerisch/ID• Schraubentyp: Enum/Kategorisch
+The result was True.

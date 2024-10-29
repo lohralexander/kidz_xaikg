@@ -41,17 +41,17 @@ class Ontology:
 
     def get_connected_nodes(self, node, depth=1):
         connected_nodes = {}
-        search_list = node.connections
+        search_list = node.connections[0]
         while depth > 0:
             depth -= 1
             temporary_search_list = []
             for connection in search_list:
                 if connection not in connected_nodes and connection is not node.node_id and connection in self._node_dict:
                     connected_nodes.update({self._node_dict[connection].node_id: self._node_dict[connection]})
-                    for following_connection in self._node_dict[connection].connections:
+                    for following_connection in self._node_dict[connection].connections[0]:
                         if following_connection not in connected_nodes:
                             temporary_search_list.append(following_connection)
-                    temporary_search_list.extend(self._node_dict[connection].connections)
+                    temporary_search_list.extend(self._node_dict[connection].connections[0])
             search_list = temporary_search_list
         return connected_nodes
 
@@ -177,21 +177,16 @@ class Ontology:
 
         webbrowser.open(output_file)
 
+
     def create_dynamic_instance_graph(self):
         net = Network(height="100vh", width="100vw", directed=True)
 
-        used_nodes_list = []
-        for node_id in self._node_dict.keys():
-            used_nodes_list.append(node_id)
-            for connection in self.get_node(node_id).connections:
-                used_nodes_list.append(connection)
-        unique_used_nodes_list = list(set(used_nodes_list))
-        for unique_node_id in unique_used_nodes_list:
-            net.add_node(unique_node_id)
+        for node in self._node_dict.values():
+            net.add_node(node.get_node_id(), title=node.get_internal_structure())
 
-        for node_id, node in self._node_dict.items():
-            for connection in node.get_node_connections():
-                net.add_edge(node_id, connection)
+        for node in self._node_dict.values():
+            for connection, edge in zip(node.get_node_connections()[0], node.get_node_connections()[1]):
+                net.add_edge(node.get_node_id(), connection, label=edge, arrows="to", length=200)
 
         output_file = "instance_graph.html"
         net.save_graph(output_file)
@@ -199,7 +194,22 @@ class Ontology:
 
         webbrowser.open(output_file)
 
+    def create_rag_instance_graph(self, rag_dict):
+        net = Network(height="100vh", width="100vw", directed=True)
 
+        for node in rag_dict.values():
+            net.add_node(node.get_node_id(), title=node.get_internal_structure())
+
+        for node in rag_dict.values():
+            for connection, edge in zip(node.get_node_connections()[0], node.get_node_connections()[1]):
+                if connection in rag_dict.keys():
+                    net.add_edge(node.get_node_id(), connection, label=edge, arrows="to", length=200)
+
+        output_file = "rag_instance_graph.html"
+        net.save_graph(output_file)
+        _insert_headline(headline="RAG Node Instance Diagram", output_file=output_file)
+
+        webbrowser.open(output_file)
 class Node:
     class_connections = [[], []]
     node_class_id = ""
@@ -305,7 +315,7 @@ class Model(Node):
     explanation = "A model is an algorithm trained on data."
 
     def __init__(self, node_id, connections, algorithm, accuracy, giniIndex, precision, recall, f1Score,
-                 confusionMatrix, rocAucScore, trainedWith, trainedBy):
+                 confusionMatrix, rocAucScore):
         super().__init__(node_id, connections)
         self.algorithm = algorithm
         self.accuracy = accuracy
@@ -315,8 +325,6 @@ class Model(Node):
         self.f1Score = f1Score
         self.confusionMatrix = confusionMatrix
         self.rocAucScore = rocAucScore
-        self.trainedWith = trainedWith
-        self.trainedBy = trainedBy
         self.explanation = Model.explanation
         self.class_connections = Model.class_connections
         self.node_class_id = Model.node_class_id
@@ -327,8 +335,8 @@ class Model(Node):
                      giniIndex=0.042319749216300995, precision={'Class 0': 0.95, 'Class 1': 0.96},
                      recall={'Class 0': 0.94, 'Class 1': 0.97}, f1Score={'Class 0': 0.95, 'Class 1': 0.96},
                      confusionMatrix=[[239, 14], [13, 372]], rocAucScore=0.9587,
-                     trainedWith='niryo_dataset_september_2024', trainedBy='trainingRun_76d864c9',
-                     connections=['niryo_dataset_september_2024', 'training_run_76d864c9'])
+                     connections=[['niryo_dataset_september_2024', 'training_run_1'],
+                                  ["trainedWith", "trainedBy"]])
 
     @classmethod
     def generate_random_node(cls):
@@ -347,22 +355,19 @@ class Model(Node):
         trainedBy = f'trainingRun_{random.randint(10000000, 99999999)}'
         connections = [trainedWith, trainedBy]
 
-        return Model(node_id=node_id, node_class_id=node_class, algorithm=algorithm, accuracy=accuracy,
+        return Model(node_id=node_id, algorithm=algorithm, accuracy=accuracy,
                      giniIndex=giniIndex, precision=precision, recall=recall, f1Score=f1Score,
-                     confusionMatrix=confusionMatrix, rocAucScore=rocAucScore,
-                     trainedWith=trainedWith, trainedBy=trainedBy, connections=connections)
+                     confusionMatrix=confusionMatrix, rocAucScore=rocAucScore, connections=connections)
 
 
 class TrainingRun(Node):
     class_connections = [["Dataset", "Model"], ["hasInput", "hasOutput"]]
     node_class_id = "TrainingRun"
 
-    def __init__(self, node_id, date, purpose, hasInput, hasOutput, connections):
+    def __init__(self, node_id, date, purpose, connections):
         super().__init__(node_id, connections)
         self.date = date
         self.purpose = purpose
-        self.hasInput = hasInput
-        self.hasOutput = hasOutput
         self.explanation = "A training run is a group of jointly trained models that are all based on a specific data set."
         self.class_connections = TrainingRun.class_connections
         self.node_class_id = TrainingRun.node_class_id
@@ -371,37 +376,35 @@ class TrainingRun(Node):
     def get_premade_node(cls):
         return TrainingRun(node_id='training_run_1', date='10.10.2024',
                            purpose='Train models to predict if a screw can be lifted to a specific position by a roboter arm',
-                           hasInput='niryo_dataset_september_2024', hasOutput='model_1',
-                           connections=['niryo_dataset_september_2024', 'model_1'])
+                           connections=[['niryo_dataset_september_2024', 'model_1'], ["hasInput", "hasOutput"]])
 
-    @classmethod
-    def generate_random_node(cls):
-        node_id = f"training_run_{random.randint(10000000, 99999999)}"
-        node_class = 'TrainingRun'
 
-        # Generate a random date between two dates
-        start_date = datetime.date(2023, 1, 1)
-        end_date = datetime.date(2024, 12, 31)
-        time_between_dates = end_date - start_date
-        random_number_of_days = random.randrange(time_between_dates.days)
-        random_date = start_date + datetime.timedelta(days=random_number_of_days)
-        date = random_date.strftime("%d.%m.%Y")
+def generate_random_node(cls):
+    node_id = f"training_run_{random.randint(10000000, 99999999)}"
+    node_class = 'TrainingRun'
 
-        # Random purpose from a predefined list
-        purpose = random.choice(
-            ['Train models to predict if a cylinder slides down a slide', 'Evaluate model performance on test data',
-             'Optimize hyperparameters for model training', 'Run cross-validation experiments',
-             'Preprocess data for training'])
+    # Generate a random date between two dates
+    start_date = datetime.date(2023, 1, 1)
+    end_date = datetime.date(2024, 12, 31)
+    time_between_dates = end_date - start_date
+    random_number_of_days = random.randrange(time_between_dates.days)
+    random_date = start_date + datetime.timedelta(days=random_number_of_days)
+    date = random_date.strftime("%d.%m.%Y")
 
-        # Random IDs for inputs and outputs
-        hasInput = f"dataset_{random.randint(10000000, 99999999)}"
-        hasOutput = f"model_{random.randint(10000000, 99999999)}"
+    # Random purpose from a predefined list
+    purpose = random.choice(
+        ['Train models to predict if a cylinder slides down a slide', 'Evaluate model performance on test data',
+         'Optimize hyperparameters for model training', 'Run cross-validation experiments',
+         'Preprocess data for training'])
 
-        # Connections based on hasInput and hasOutput
-        connections = [hasInput, hasOutput]
+    # Random IDs for inputs and outputs
+    hasInput = f"dataset_{random.randint(10000000, 99999999)}"
+    hasOutput = f"model_{random.randint(10000000, 99999999)}"
 
-        return TrainingRun(node_id=node_id, node_class_id=node_class, date=date, purpose=purpose, hasInput=hasInput,
-                           hasOutput=hasOutput, connections=connections)
+    # Connections based on hasInput and hasOutput
+    connections = [hasInput, hasOutput]
+
+    return TrainingRun(node_id=node_id, date=date, purpose=purpose, connections=connections)
 
 
 class Dataset(Node):
@@ -430,7 +433,8 @@ class Dataset(Node):
                        usedBy='training_run_1',
                        dataType='Dataset', domain='Niryo Robot', locationOfDataRecording='RWU',
                        dateOfRecording='Q4 2024', createdBy='',
-                       connections=['training_run_76d864c9', "Test Durchgang", "Schrauben ID", "Schraubentyp"])
+                       connections=[['training_run_1', "Test Durchgang", "Schrauben ID", "Schraubentyp"],
+                                    ["usedBy", "hasFeature", "hasFeature", "hasFeature"]])
 
     @classmethod
     def generate_random_node(cls):
@@ -449,10 +453,10 @@ class Dataset(Node):
         hasLabel = f"label_{random.randint(10000000, 99999999)}"
         connections = [usedBy, contains, hasFeature]
 
-        return cls(node_id=node_id, node_class_id=node_class, amountOfRows=amountOfRows,
-                   amountOfAttributes=amountOfAttributes, usedBy=usedBy, hasFeature=hasFeature, contains=contains,
-                   dataType=dataType, domain=domain, locationOfDataRecording=locationOfDataRecording,
-                   dateOfRecording=dateOfRecording, createdBy=createdBy, hasLabel=hasLabel, connections=connections)
+        return cls(node_id=node_id, amountOfRows=amountOfRows,
+                   amountOfAttributes=amountOfAttributes, usedBy=usedBy, dataType=dataType, domain=domain,
+                   locationOfDataRecording=locationOfDataRecording,
+                   dateOfRecording=dateOfRecording, createdBy=createdBy, connections=connections)
 
 
 # Todo Fill out
@@ -464,19 +468,16 @@ class Attribute(Node):
     class_connections = [["Preprocessing", "Dataset"], ["usedBy", "partOf"]]
     node_class_id = "Attribute"
 
-    def __init__(self, node_id, connections, attributeName, usedBy, partOf):
+    def __init__(self, node_id, connections, attributeName):
         super().__init__(node_id, connections)
         self.attributeName = attributeName
-        self.usedBy = usedBy
-        self.partOf = partOf
         self.explanation = "An attribute is a characteristic of a dataset."
         self.class_connections = Attribute.class_connections
 
     @classmethod
     def get_premade_node(cls):
         return Attribute(node_id='attribute_a11be75b', attributeName='Result',
-                         usedBy='Preprocessing_b9875fe0', partOf='Dataset_58ddb600',
-                         connections=['preprocessing_b9875fe0', 'dataset_58ddb600'])
+                         connections=[['preprocessing_b9875fe0', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]])
 
     @classmethod
     def generate_random_node(cls):
@@ -487,18 +488,15 @@ class Attribute(Node):
         part_of = f"dataset_{random.randint(10000000, 99999999)}"
         connections = [used_by, part_of]
 
-        return cls(node_id=node_id, node_class_id=node_class, attributeName=attribute_name, usedBy=used_by,
-                   partOf=part_of,
-                   connections=connections)
+        return cls(node_id=node_id, attributeName=attribute_name, connections=connections)
 
 
 class Preprocessing(Node):
     class_connections = [["Attribute"], ["hasInput"]]
     node_class_id = "Preprocessing"
 
-    def __init__(self, node_id, connections, hasInput, pythonFile):
+    def __init__(self, node_id, connections, pythonFile):
         super().__init__(node_id, connections)
-        self.hasInput = hasInput
         self.pythonFile = pythonFile
         self.explanation = "Preprocessing is the process of preparing data for machine learning algorithms. It involves cleaning, transforming, and encoding data to make it suitable for training models."
         self.class_connections = Preprocessing.class_connections
@@ -506,8 +504,8 @@ class Preprocessing(Node):
 
     @classmethod
     def get_premade_node(cls):
-        return Preprocessing(node_id='b9875fe0',
-                             hasInput=['attribute_a11be75b', 'attribute_4987a624'], pythonFile="""
+        return Preprocessing(node_id='preprocessing_b9875fe0',
+                             pythonFile="""
 import numpy as np
 import pandas as pd
 from sklearn import tree
@@ -534,7 +532,7 @@ plt.show()
 pickle.dump(clf, open('decisionTree.pickle', 'wb'))
 y_pred = clf.predict(X)
 y_pred
-""", connections=[])
+""", connections=[['attribute_a11be75b', 'attribute_a11be75b'], ["hasInput", "hasInput"]])
 
     @classmethod
     def generate_random_node(cls):
@@ -576,7 +574,7 @@ y_pred
         # Connections can be derived from inputs or other logic
         connections = has_input[:]
 
-        return cls(node_id=node_id, node_class_id=node_class, hasInput=has_input, pythonFile=python_file,
+        return cls(node_id=node_id, pythonFile=python_file,
                    connections=connections)
 
 
@@ -584,7 +582,7 @@ class Feature(Node):
     class_connections = [["Dataset"], ["partOf"]]
     node_class_id = "Feature"
 
-    def __init__(self, node_id, node_class_id, connections, feature_name, datatype, mean, standard_deviation, minimum,
+    def __init__(self, node_id, connections, feature_name, datatype, mean, standard_deviation, minimum,
                  maximum):
         super().__init__(node_id, connections)
         self.featureName = feature_name
@@ -599,10 +597,10 @@ class Feature(Node):
 
     @classmethod
     def get_premade_node(cls):
-        return Feature(node_id='feature_87176016', node_class_id='Feature', feature_name='Pressure',
+        return Feature(node_id='feature_87176016', feature_name='Pressure',
                        datatype='numerical',
                        mean=3.003, standard_deviation=0.310, minimum=2.45, maximum=4.91,
-                       connections=['data_row_fc9f70a3'])
+                       connections=[['niryo_dataset_september_2024'], ["partOf"]])
 
     @classmethod
     def generate_random_node(cls):
@@ -619,5 +617,5 @@ class Feature(Node):
 
         connections = [f"data_row_{random.randint(10000000, 99999999)}"]
 
-        return cls(node_id=node_id, node_class_id=node_class, feature_name=feature_name, datatype=datatype, mean=mean,
+        return cls(node_id=node_id, feature_name=feature_name, datatype=datatype, mean=mean,
                    standard_deviation=standard_deviation, minimum=minimum, maximum=maximum, connections=connections)

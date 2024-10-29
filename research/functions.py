@@ -4,6 +4,7 @@ import uuid
 
 import owl
 from config import logger
+from config import Config
 from research.gptConnector import gpt_request
 from research.questionnaire import Questionnaire
 
@@ -33,9 +34,12 @@ def rag(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0, adv
     logger.info(f"Found nodes: {found_nodes_dict}")
 
     if search_depth != 0:
-        graph_search(found_nodes_dict, ontology, search_depth, advanced_search,found_node_class_list)
+        graph_search(found_nodes_dict, ontology, search_depth, advanced_search, found_node_class_list)
 
     instance_structure = ontology.get_node_structure(instances)
+
+    if Config.demo_mode:
+        ontology.create_rag_instance_graph(found_nodes_dict)
     retrieved_relevant_information = [str(obj) for obj in found_nodes_dict.values()]
     logger.info(retrieved_relevant_information)
     return gpt_request(f"Here is information relevant for the Question: {retrieved_relevant_information}",
@@ -153,7 +157,7 @@ def create_overview_file(path_list, quality_measures, search_depth, alternate_cy
 
 
 def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, search_depth: int,
-                       alternation_cycles: int = 0):
+                       alternation_cycles: int = 0, demo_mode=False):
     correct_answers = questionnaire.get_answers()
 
     result_path_list = []
