@@ -1,2 +1,1 @@
-Die Attribute haben die folgenden Datentypen:• Test Durchgang: Numerisch/ID• Schrauben ID: Numerisch/ID• Schraubentyp: Enum/Kategorisch
-The result was True.
+The quality that is typically or optimally achieved for the "ScrewPlacement" task by models using a DecisionTree algorithm is an accuracy of around 0.9 to 0.95768, with Model 1 achieving the highest accuracy of 0.95768

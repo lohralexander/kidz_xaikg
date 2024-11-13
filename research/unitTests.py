@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from research.functions import rag
+from research.functions import rag_basic
 from research.owl import Ontology, Model, TrainingRun, Dataset, Attribute, Preprocessing, Feature
 
 
@@ -14,7 +14,7 @@ class TestOntology(unittest.TestCase):
         demo_ontology.create_demo_ontology()
 
     def test_read_data_entries(self):
-        rag(self.demo_ontology, "Which Dataset did model_a2f6fb37 used and how many entries does it have?")
+        rag_basic(self.demo_ontology, "Which Dataset did model_a2f6fb37 used and how many entries does it have?")
         self.assertEqual("The model with node ID `model_a2f6fb37` used the dataset with node ID `dataset_58ddb600`. This dataset contains 300 entries (rows).")
 
     def test_create_demo_ontology(self):

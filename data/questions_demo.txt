@@ -1,2 +1,1 @@
-Welche Datentypen haben die Attribute des Datensatzes der für Model 1 genutzt wurde?
-What was the Result of Row 24?
+How do other models perform at the task achieved by Model 1?

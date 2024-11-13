@@ -55,6 +55,15 @@ class Ontology:
             search_list = temporary_search_list
         return connected_nodes
 
+    def execute_query(self, node_class, edge, instance):
+        result_list = []
+        for node in self._node_dict.values():
+            if node.get_node_class_id() == node_class:
+                for connection, connection_edge in zip(*node.get_node_connections()):
+                    if edge == connection_edge and instance.get_node_id() == connection:
+                        result_list.append(node)
+
+        return result_list
     def add_nodes(self, nodes):
         self._node_dict.update(nodes)
 
@@ -75,6 +84,12 @@ class Ontology:
 
     def check_if_node_exists(self, node_id):
         return node_id in self._node_dict
+
+    def check_if_class_exists(self, class_id):
+        for node in self._node_dict.values():
+            if node.node_class_id == class_id:
+                return True
+        return False
 
     def get_ontology_structure(self):
         node_list = []
@@ -283,6 +298,7 @@ class GenericNode(Node):
     def get_node_class_id(self):
         return self.node_class_id
 
+
     def get_class_connections(self):
         return self.class_connections
 
@@ -310,7 +326,7 @@ class GenericClass:
 
 
 class Model(Node):
-    class_connections = [["Dataset", "TrainingRun"], ["trainedWith", "trainedBy"]]
+    class_connections = [["Dataset", "TrainingRun", "Task"], ["trainedWith", "trainedBy", "achieves"]]
     node_class_id = "Model"
     explanation = "A model is an algorithm trained on data."
 
@@ -335,8 +351,8 @@ class Model(Node):
                      giniIndex=0.042319749216300995, precision={'Class 0': 0.95, 'Class 1': 0.96},
                      recall={'Class 0': 0.94, 'Class 1': 0.97}, f1Score={'Class 0': 0.95, 'Class 1': 0.96},
                      confusionMatrix=[[239, 14], [13, 372]], rocAucScore=0.9587,
-                     connections=[['niryo_dataset_september_2024', 'training_run_1'],
-                                  ["trainedWith", "trainedBy"]])
+                     connections=[['niryo_dataset_september_2024', 'training_run_1', 'ScrewPlacement'],
+                                  ["trainedWith", "trainedBy", "achieves"]])
 
     @classmethod
     def generate_random_node(cls):

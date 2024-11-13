@@ -18,6 +18,13 @@ class Initialization():
         gripper_class_node = GenericClass("Gripper", class_connections=[["Robotarm"], ["partOf"]], explanation="")
         feature_class_node = GenericClass("Feature", class_connections=[["Dataset"], ["belongsTo"]],
                                           explanation="Feature of a Dataset with statistics.")
+        aufgabenstellung = GenericClass(node_class_id="Task",
+                                        class_connections=[["Model"], ["achievedBy"]],
+                                        explanation="The Task, that a model achieves.")
+
+        self.owl.add_node(
+            GenericNode(node_id="ScrewPlacement", node_class=aufgabenstellung,
+                        connections=[["model_1", "model_2", "model_3"], ["achievedBy", "achievedBy", "achievedBy"]]))
 
         self.owl.add_node(GenericNode("Niryo", robot_arm_class_node, connections=[["training_run_1"], ["usedIn"]]))
         self.owl.add_node(
@@ -484,6 +491,14 @@ class Initialization():
         # self.owl.add_node(
         #   GenericNode(node_id="model_1", node_class=Model, connections=[["training_run_1"], ["usedIn"]]))
 
+        self.owl.add_node(
+            GenericNode(node_id="model_2", node_class=Model,
+                        connections=[["niryo_dataset_september_2024", "ScrewPlacement"], ["used", "achieves"]],
+                        accuracy=0.90))
+        self.owl.add_node(
+            GenericNode(node_id="model_3", node_class=Model,
+                        connections=[["niryo_dataset_september_2024", "ScrewPlacement"], ["used", "achieves"]],
+                        accuracy=0.90))
         self.owl.add_node(GenericNode(node_id="Test Durchgang", node_class=Attribute,
                                       connections=[["niryo_dataset_september_2024"], ["usedIn"]],
                                       datatype="Numerisch/ ID"))
