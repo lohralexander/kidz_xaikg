@@ -3,7 +3,7 @@ from research.questionnaire import Questionnaire
 
 
 class Initialization():
-    def __init__(self, demo_mode=True):
+    def __init__(self, demo_mode=False):
         self.owl = Ontology()
         self.owl.create_demo_ontology()
         self.questionnaire = Questionnaire(demo_mode)
@@ -24,7 +24,19 @@ class Initialization():
 
         self.owl.add_node(
             GenericNode(node_id="ScrewPlacement", node_class=aufgabenstellung,
-                        connections=[["model_1", "model_2", "model_3"], ["achievedBy", "achievedBy", "achievedBy"]]))
+                        connections=[["model_1", "model_2", "model_3"], ["achievedBy", "achievedBy", "achievedBy"]], usecase="This Task is part of a non-critical research experiment."))
+
+        self.owl.add_node(Attribute(node_id="attribute_Schrauben_id", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="ENUM", valueDistribution="530, 540, 550, 560, 570", attributeName="Schrauben ID"))
+        self.owl.add_node(Attribute(node_id="attribute_Schraubentyp", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="ENUM", valueDistribution="Sechskant, Zylinder", attributeName="Schraubentyp"))
+        self.owl.add_node(Attribute(node_id="attribute_kopfbreite", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="Numeric", valueDistribution="8-16", attributeName="Kopfbreite in MM"))
+        self.owl.add_node(Attribute(node_id="attribuite_Kopfdicke", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="Numeric", valueDistribution="3.5-10", attributeName="Kopfdicke in MM"))
+        self.owl.add_node(Attribute(node_id="attribute_laenge", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="Numeric", valueDistribution="30-70", attributeName="Laenge in MM"))
+        self.owl.add_node(Attribute(node_id="attribute_gewicht", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="Numeric", valueDistribution="5.1-52.7", attributeName="Gewicht (g)"))
+        self.owl.add_node(Attribute(node_id="attribute_durchmesser", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="Numeric", valueDistribution="5-10", attributeName="Durchmesser (mm)"))
+        self.owl.add_node(Attribute(node_id="attribute_beschichtung", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="ENUM", valueDistribution="Nein, JA", attributeName="Beschichtung"))
+        self.owl.add_node(Attribute(node_id="attribute_klammertyp", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="ENUM", valueDistribution="Silicon, Einkerbung, Standard", attributeName="Klammer-Typ"))
+        self.owl.add_node(Attribute(node_id="attribute_winkel", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]],datatype="ENUM", valueDistribution="0, 30, 60, 90",  attributeName="Winkel (in Grad)"))
+        self.owl.add_node(Attribute(node_id="attribute_label", connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]], datatype="ENUM", valueDistribution="True, False", attributeName="Erfolgreich (Ja/Nein)", information="Filled in based on the result of the test"))
 
         self.owl.add_node(GenericNode("Niryo", robot_arm_class_node, connections=[["training_run_1"], ["usedIn"]]))
         self.owl.add_node(

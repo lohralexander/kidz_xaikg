@@ -64,6 +64,7 @@ class Ontology:
                         result_list.append(node)
 
         return result_list
+
     def add_nodes(self, nodes):
         self._node_dict.update(nodes)
 
@@ -192,7 +193,6 @@ class Ontology:
 
         webbrowser.open(output_file)
 
-
     def create_dynamic_instance_graph(self):
         net = Network(height="100vh", width="100vw", directed=True)
 
@@ -225,6 +225,8 @@ class Ontology:
         _insert_headline(headline="RAG Node Instance Diagram", output_file=output_file)
 
         webbrowser.open(output_file)
+
+
 class Node:
     class_connections = [[], []]
     node_class_id = ""
@@ -297,7 +299,6 @@ class GenericNode(Node):
 
     def get_node_class_id(self):
         return self.node_class_id
-
 
     def get_class_connections(self):
         return self.class_connections
@@ -380,19 +381,21 @@ class TrainingRun(Node):
     class_connections = [["Dataset", "Model"], ["hasInput", "hasOutput"]]
     node_class_id = "TrainingRun"
 
-    def __init__(self, node_id, date, purpose, connections):
+    def __init__(self, node_id, date, purpose, connections, trainingParameters):
         super().__init__(node_id, connections)
         self.date = date
         self.purpose = purpose
         self.explanation = "A training run is a group of jointly trained models that are all based on a specific data set."
         self.class_connections = TrainingRun.class_connections
         self.node_class_id = TrainingRun.node_class_id
+        self.trainingParameters = trainingParameters
 
     @classmethod
     def get_premade_node(cls):
         return TrainingRun(node_id='training_run_1', date='10.10.2024',
                            purpose='Train models to predict if a screw can be lifted to a specific position by a roboter arm',
-                           connections=[['niryo_dataset_september_2024', 'model_1'], ["hasInput", "hasOutput"]])
+                           connections=[['niryo_dataset_september_2024', 'model_1'], ["hasInput", "hasOutput"]],
+                           trainingParameters="Criterion: Gini, splitter: Best, max_depth: None, min_samples_split: 2, min_samples_leaf: 1, max_features: None, random_state: 42, max_leaf_nodes: None, in_impurity_decrease: 0.0")
 
 
 def generate_random_node(cls):
@@ -424,15 +427,14 @@ def generate_random_node(cls):
 
 
 class Dataset(Node):
-    class_connections = [["TrainingRun", "Feature"], ["usedBy", "hasFeature"]]
+    class_connections = [["TrainingRun", "Attribute"], ["usedBy", "has"]]
     node_class_id = "Dataset"
 
-    def __init__(self, node_id, connections, amountOfRows, amountOfAttributes, usedBy,
-                 dataType, domain, locationOfDataRecording, dateOfRecording, createdBy):
+    def __init__(self, node_id, connections, amountOfRows, amountOfAttributes, dataType, domain,
+                 locationOfDataRecording, dateOfRecording, createdBy):
         super().__init__(node_id, connections)
         self.amountOfRows = amountOfRows
         self.amountOfAttributes = amountOfAttributes
-        self.usedBy = usedBy
         self.dataType = dataType
         self.domain = domain
         self.locationOfDataRecording = locationOfDataRecording
@@ -446,11 +448,16 @@ class Dataset(Node):
     def get_premade_node(cls):
         return Dataset(node_id='niryo_dataset_september_2024', amountOfRows=2126,
                        amountOfAttributes=12,
-                       usedBy='training_run_1',
-                       dataType='Dataset', domain='Niryo Robot', locationOfDataRecording='RWU',
-                       dateOfRecording='Q4 2024', createdBy='',
-                       connections=[['training_run_1', "Test Durchgang", "Schrauben ID", "Schraubentyp"],
-                                    ["usedBy", "hasFeature", "hasFeature", "hasFeature"]])
+                       dataType='Dataset', domain='Niryo Robot',
+                       locationOfDataRecording='Ravensburg Weingarten University, Baden-Wuerttemberg',
+                       dateOfRecording='Recorded in Q4 2024', createdBy='',
+                       connections=[['training_run_1', "attribute_test_durchgang", "attribute_Schrauben_id",
+                                     "attribute_Schraubentyp", "attribute_kopfbreite", "attribuite_Kopfdicke",
+                                     "attribute_laenge", "attribute_gewicht", "attribute_durchmesser",
+                                     "attribute_beschichtung", "attribute_klammertyp", "attribute_winkel",
+                                     "attribute_label"],
+                                    ["usedBy", "has", "has", "has", "has", "has", "has", "has", "has", "has", "has",
+                                     "has", "has"]])
 
     @classmethod
     def generate_random_node(cls):
@@ -470,7 +477,7 @@ class Dataset(Node):
         connections = [usedBy, contains, hasFeature]
 
         return cls(node_id=node_id, amountOfRows=amountOfRows,
-                   amountOfAttributes=amountOfAttributes, usedBy=usedBy, dataType=dataType, domain=domain,
+                   amountOfAttributes=amountOfAttributes, dataType=dataType, domain=domain,
                    locationOfDataRecording=locationOfDataRecording,
                    dateOfRecording=dateOfRecording, createdBy=createdBy, connections=connections)
 
@@ -484,16 +491,20 @@ class Attribute(Node):
     class_connections = [["Preprocessing", "Dataset"], ["usedBy", "partOf"]]
     node_class_id = "Attribute"
 
-    def __init__(self, node_id, connections, attributeName):
+    def __init__(self, node_id, connections, attributeName, valueDistribution, datatype, information=""):
         super().__init__(node_id, connections)
         self.attributeName = attributeName
         self.explanation = "An attribute is a characteristic of a dataset."
         self.class_connections = Attribute.class_connections
+        self.valueDistribution = valueDistribution
+        self.datatype = datatype
+        self.information = information
 
     @classmethod
     def get_premade_node(cls):
-        return Attribute(node_id='attribute_a11be75b', attributeName='Result',
-                         connections=[['preprocessing_b9875fe0', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]])
+        return Attribute(node_id='attribute_test_durchgang', attributeName='Test Durchgang', datatype="ID",
+                         valueDistribution="No Distribution because it is an ID",
+                         connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'], ["usedBy", "partOf"]])
 
     @classmethod
     def generate_random_node(cls):
@@ -508,7 +519,7 @@ class Attribute(Node):
 
 
 class Preprocessing(Node):
-    class_connections = [["Attribute"], ["hasInput"]]
+    class_connections = [["Attribute", "Dataset"], ["hasInput", "hasInput"]]
     node_class_id = "Preprocessing"
 
     def __init__(self, node_id, connections, pythonFile):
@@ -520,7 +531,7 @@ class Preprocessing(Node):
 
     @classmethod
     def get_premade_node(cls):
-        return Preprocessing(node_id='preprocessing_b9875fe0',
+        return Preprocessing(node_id='preprocessing_niryo',
                              pythonFile="""
 import numpy as np
 import pandas as pd
@@ -531,7 +542,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 import matplotlib.pyplot as plt
 import pickle
-df = pd.read_csv("sparqlResult.csv")
+df = pd.read_csv("niryo_dataset_september_2024.csv")
 df
 df.drop('experiment', axis='columns', inplace=True)
 df.drop('cylinder', axis='columns', inplace=True)
@@ -548,7 +559,13 @@ plt.show()
 pickle.dump(clf, open('decisionTree.pickle', 'wb'))
 y_pred = clf.predict(X)
 y_pred
-""", connections=[['attribute_a11be75b', 'attribute_a11be75b'], ["hasInput", "hasInput"]])
+""", connections=[['attribute_test_durchgang', 'attribute_Schrauben_id', 'attribute_Schraubentyp',
+                   'attribute_kopfbreite', 'attribuite_Kopfdicke', 'attribute_laenge',
+                   'attribute_gewicht', 'attribute_durchmesser', 'attribute_beschichtung',
+                   'attribute_klammertyp', 'attribute_winkel', 'attribute_label',
+                   'niryo_dataset_september_2024'],
+                  ["hasInput", "hasInput", "hasInput", "hasInput", "hasInput", "hasInput", "hasInput", "hasInput",
+                   "hasInput", "hasInput", "hasInput", "hasInput", "hasInput"]])
 
     @classmethod
     def generate_random_node(cls):

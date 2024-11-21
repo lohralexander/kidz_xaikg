@@ -1,6 +1,6 @@
 Der verwendete Datensatz hat 2.126 Einträge
 Der Datensatz hat 12 Attribute
-Die Attribute haben die folgenden Datentypen:• Test Durchgang: Numerisch/ID• Schrauben ID: Numerisch/ID• Schraubentyp: Enum/Kategorisch• Kopfbreite (mm): Numerisch• Kopfdicke (mm): Numerisch• Länge (mm): Numerisch• Gewicht (g): Numerisch• Durchmesser (mm): Numerisch• Beschichtung: Enum/ Kategorisch• Klammer-Typ: Enum/ Kategorisch• Winkel (in Grad): Numerisch• Erfolgreich (Ja/Nein): Enum/ Kategorisch
+Die Attribute haben die folgenden Datentypen:Test Durchgang: ID; Schrauben ID: ENUM; Schraubentyp: ENUM; Kopfbreite (mm): Numerisch; Kopfdicke (mm): Numerisch; Laenge (mm): Numerisch; Gewicht (g): Numerisch; Durchmesser (mm): Numerisch; Beschichtung: ENUM; Klammer-Typ: Enum; Winkel (in Grad): Numerisch; Erfolgreich (Ja/Nein): Enum
 Durchschnitt 14.06, Minimum 8, Maximum 24.65
 Der Datensatz wurde an der Ravensburg Weingarten University erhoben worden und wurde mit einem Trainingsroboter erstellt.
 Die Daten wurden im September 2024 erhoben.

@@ -37,7 +37,9 @@ def rag_advanced(ontology: owl.Ontology, question: str, search_depth=0, sleep_ti
     # RAG Mainstep
     message = [{"role": "system", "content": f"**Ontology Traversal System Prompt:**"
                                              f"**Syntax Structure**:"
-                                             f"   - Use the syntax `[Class], [edge], [Instance]` for targeting specific connections and retrieving related instances."
+                                             f"   - Use the syntax `[Class], [edge], [Instance]` for targeting "
+                                             f"specific connections and retrieving related instances. Place a bracket "
+                                             f"around the specific elements"
                                              f"   - `[Class]`: Specify the class or type of nodes you are interested in."
                                              f"   - `[edge]`: Define the connection or relationship used to navigate between instances."
                                              f"   - `[Instance]`: Identify the specific instance from which to start or connect."
@@ -57,11 +59,13 @@ def rag_advanced(ontology: owl.Ontology, question: str, search_depth=0, sleep_ti
     found_nodes_dict = {}
     while not break_condition_reached:
         rag_results = execute_query(gpt_response, ontology)
-        for node in rag_results:
-            found_nodes_dict.update({f"{node.get_node_id()}":node})
-        message = [
-            {"role": "user", "content": f"This is the result to your query: {[node.__dict__ for node in rag_results]}. If you need more information, use another query."}]
-        gpt_response, history = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)
+        if rag_results is not None:
+            for node in rag_results:
+                found_nodes_dict.update({f"{node.get_node_id()}":node})
+            message = [
+                {"role": "user", "content": f"This is the result to your query: {[node.__dict__ for node in rag_results]}. If you need more information, use another query."}]
+            gpt_response, history = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)
+
         if "BREAK" in gpt_response:
             break_condition_reached = True
         else:
@@ -132,8 +136,11 @@ def search_graph(found_nodes_dict, ontology, search_depth, advanced_search, foun
 
 
 def execute_query(query, ontology):
-    pattern = "\[([A-Za-z0-9._ ]*)\]"
+    #Regex are not robust enough
+    #pattern = "\[([A-Za-z0-9._ ]*)\]"
     # pattern = "\[([A - Za - z0 - 9._] * (?:, [A-Za-z0-9._] *){0, 2})\]"
+
+    pattern = r"\b\w+\b"
     matches = re.findall(pattern, query)
     if len(matches) != 3:
         return None
@@ -274,9 +281,9 @@ def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, sea
     return aggregated_quality_measures
 
 
-if __name__ == '__main__':
-    conf = research_config.Initialization()
-    owl = conf.get_ontology()
-    execute_query(
-        "Let's begin querying step by step. Here's the first query:\n\n**Query 1:**\n\n```plaintext\n[Task], [achievedBy], [model_1]\n```\n\nPlease provide the result of this query.",
-        owl)
+#if __name__ == '__main__':
+#    conf = research_config.Initialization()
+ #   owl = conf.get_ontology()
+ #   execute_query(
+  #      "Let's begin querying step by step. Here's the first query:\n\n**Query 1:**\n\n```plaintext\n[Task], [achievedBy], [model_1]\n```\n\nPlease provide the result of this query.",
+    #    owl)

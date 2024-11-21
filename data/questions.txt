@@ -1,17 +1,17 @@
 Wie viele Einträge hat der für das Training von Model 1 verwendete Datensatz?
 Wie viele Attribute hat der für das Training von Model 1 verwendete Datensatz?
-Welche Datentypen haben die Attribute vom Datensatz aus September 2024 ?
+Welche Datentypen haben die Attribute vom Datensatz aus September 2024?
 Wie sind die Werteverteilungen des Attributs Kopfbreite des Datzensatzes aus September 2024?
 In welcher Umgebung (Ort, Unternehmen, System, etc.) wurde der Datensatz niryo_dataset_september_2024 erhoben?
 Wann / über welchen Zeitraum wurde der Datensatz niryo_dataset_september_2024 erhoben?
 Welchen Einschränkungen oder potenziellen Verfälschungen unterliegen die Daten aus niryo_dataset_september_2024?
 Wie wurde die Zielvariable in den Trainingsdaten des Datensatzes niryo_dataset_september_2024 befüllt?
 Welcher Algorithmus wurde für das Trainging von Model 1 verwendet?
-Welche Parameter wurden für das Trainging von Model 1 verwendet (Wert pro Parameter)?
+Welche Trainingsparameter wurden für das Trainging von Model 1 verwendet (Wert pro Parameter)?
 Welcher Algorithmus wurde zur Normalisierung für das Trainging von Model 1 verwendet?
 Welcher Algorithmus für die Ausreißererkennung für das Trainging von Model 1 verwendet?
 Wie präzise und verlässlich ist Model 1?
-Ist die Performanz von Model 1 ausreichend für die Anwendung in einem industriellen Produktivbetrieb?
+Ist die Performanz von Model 1 ausreichend für den Anwendungsfall?
 Welchen Einschränkungen unterliegt Model 1?
 Auf welcher Menge an Daten wurde Model 1 trainiert?
 Auf welcher Art von Daten wurde Model 1 trainiert?

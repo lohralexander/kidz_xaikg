@@ -1,1 +1,1 @@
-How do other models perform at the task achieved by Model 1?
+Welche Datentypen haben die Attribute vom Datensatz aus September 2024?
