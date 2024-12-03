@@ -1,1 +1,1 @@
-Der verwendete Datensatz hat 2.126 Einträge
+Den größten Einfluss hat das Attribut Klammer-Typ.

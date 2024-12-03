@@ -54,7 +54,7 @@ def rag_advanced(ontology: owl.Ontology, question: str, search_depth=0, sleep_ti
     #                                          f"This is your starting node: {[ontology.get_node_structure(node) for node in found_nodes_dict.values()]}"},
     #            {"role": "user", "content": f"{question}"}]
 
-    message = [{"role": "system", "content": f"You can ask for additional nodes in the following form: [node_id], for example [model_a].Your job is to gather enough information to answer this question:{question}. If you think you have enough information, write ""BREAK"" and give an educated answer. "
+    message = [{"role": "system", "content": f"You can ask for additional nodes in the following form: [node_id], for example [model_a]. You can find instances to search in the connections of the nodes. Your job is to gather enough information to answer this question:{question}. If you think you have enough information, write ""BREAK"" and give an educated answer. "
                                                          f"This is your starting node: {[ontology.get_node_structure(node) for node in found_nodes_dict.values()]}"},
                            {"role": "user", "content": f"{question}"}]
     gpt_response, history = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)
@@ -66,6 +66,8 @@ def rag_advanced(ontology: owl.Ontology, question: str, search_depth=0, sleep_ti
             for node in found_nodes:
                 gpt_input.append(ontology.get_node_structure(node))
                 found_nodes_dict.update({f"{node.get_node_id()}": found_nodes})
+        else:
+            gpt_input="Error, no instance found. Did you asked for a class or searched for a non existing instance?"
         message = [
             {"role": "user",
              "content": f"This is the result to your query: {gpt_input}. If you need more information, use another query."}]

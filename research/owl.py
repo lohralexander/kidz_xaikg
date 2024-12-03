@@ -331,7 +331,7 @@ class GenericClass:
 
 
 class Model(Node):
-    class_connections = [["Dataset", "TrainingRun", "Task"], ["trainedWith", "trainedBy", "achieves"]]
+    class_connections = [["Dataset", "TrainingRun", "Task", "GlobalExplanationRun"], ["trainedWith", "trainedBy", "achieves", "isExplainedBy"]]
     node_class_id = "Model"
     explanation = "A model is an algorithm trained on data."
 
@@ -356,8 +356,8 @@ class Model(Node):
                      giniIndex=0.042319749216300995, precision={'Class 0': 0.95, 'Class 1': 0.96},
                      recall={'Class 0': 0.94, 'Class 1': 0.97}, f1Score={'Class 0': 0.95, 'Class 1': 0.96},
                      confusionMatrix=[[239, 14], [13, 372]], rocAucScore=0.934,
-                     connections=[['niryo_dataset_september_2024', 'training_run_1', 'ScrewPlacement'],
-                                  ["trainedWith", "trainedBy", "achieves"]])
+                     connections=[['niryo_dataset_september_2024', 'training_run_1', 'ScrewPlacement', "GlobalExplanationRun_1"],
+                                  ["trainedWith", "trainedBy", "achieves", "isExplainedBy"]])
 
     @classmethod
     def generate_random_node(cls):

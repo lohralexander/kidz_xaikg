@@ -1,1 +1,1 @@
-Wie viele Einträge hat der für das Training von Model 1 verwendete Datensatz?
+Welche(s) Attribut(e) haben den größten Einfluss in Model 1?
