@@ -1,1 +1,1 @@
-Die Attribute haben die folgenden Datentypen:Test Durchgang: ID; Schrauben ID: ENUM; Schraubentyp: ENUM; Kopfbreite (mm): Numerisch; Kopfdicke (mm): Numerisch; Laenge (mm): Numerisch; Gewicht (g): Numerisch; Durchmesser (mm): Numerisch; Beschichtung: ENUM; Klammer-Typ: Enum; Winkel (in Grad): Numerisch; Erfolgreich (Ja/Nein): Enum
+Üblicherweise kann mit ca. 90% gerechnet werden, bestenfalls 93.4%.

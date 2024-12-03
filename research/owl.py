@@ -118,14 +118,14 @@ class Ontology:
         for node in node_list:
             node_structure = {"Node": node.get_node_id(), "Explanation": node.get_explanation(),
                               "Connections": ", ".join([f"{edge} {connection}" for connection, edge in
-                                                        zip(node.get_class_connections()[0],
-                                                            node.get_class_connections()[1])])}
+                                                        zip(node.get_node_connections()[0],
+                                                            node.get_node_connections()[1])])}
             annotation_list = []
             annotations_to_ignore = {"connections", "class_connections", "node_id",
                                      "node_class_id", "explanation"}
             for key, value in node.__dict__.items():
                 if key not in annotations_to_ignore:
-                    annotation_list.append(key)
+                    annotation_list.append((key, value))
             node_structure.update({"Annotations": annotation_list})
             node_structure_list.append(node_structure)
         return node_structure_list
