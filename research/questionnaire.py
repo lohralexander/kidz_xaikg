@@ -4,7 +4,7 @@ from config import Config
 
 class Questionnaire:
 
-    def __init__(self, demo_mode=Config.demo_mode):
+    def __init__(self, demo_mode=False):
         self.question_dict = {}
         self.answers_dict = {}
 

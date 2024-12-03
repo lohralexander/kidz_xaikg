@@ -27,27 +27,46 @@ class Initialization():
                                                                ["hasInput", "hasOutput", "hasInput"]],
                                             explanation="A global Explanation Run is an algorithm which generates insight on a model. Examples are Shapley or Lime")
         globalInsight = GenericClass(node_class_id="GlobalInsight",
-                                     class_connections=[["Model", "Attribute"], ["explains", "basedOn"]], explanation="A global Insight explains a model globally and not based on a single prediction.")
+                                     class_connections=[["Model", "Attribute"], ["explains", "basedOn"]],
+                                     explanation="A global Insight explains a model globally and not based on a single prediction.")
 
-        self.owl.add_node(GenericNode(node_id="Insight_1_1", node_class=globalInsight, connections=[["model_1", "attribute_klammertyp"],["explains", "basedOn"]], shap_value=1))
-        self.owl.add_node(GenericNode(node_id="Insight_1_2", node_class=globalInsight, connections=[["model_1", "attribute_laenge"],["explains", "basedOn"]], shap_value=0.5))
-        self.owl.add_node(GenericNode(node_id="Insight_1_3", node_class=globalInsight, connections=[["model_1", "attribute_Schrauben_id"],["explains", "basedOn"]], shap_value=0))
+        self.owl.add_node(GenericNode(node_id="Insight_1_1", node_class=globalInsight,
+                                      connections=[["model_1", "attribute_klammertyp"], ["explains", "basedOn"]],
+                                      shap_value=1))
+        self.owl.add_node(GenericNode(node_id="Insight_1_2", node_class=globalInsight,
+                                      connections=[["model_1", "attribute_laenge"], ["explains", "basedOn"]],
+                                      shap_value=0.5))
+        self.owl.add_node(GenericNode(node_id="Insight_1_3", node_class=globalInsight,
+                                      connections=[["model_1", "attribute_Schrauben_id"], ["explains", "basedOn"]],
+                                      shap_value=0))
 
         self.owl.add_node(GenericNode(node_id="GlobalExplanationRun_1", node_class=globalExplanationRun, connections=[
             ["niryo_dataset_september_2024", "Insight_1_1", "Insight_1_2", "Insight_1_3"],
             ["hasInput", "hasOutput", "hasInput", "hasInput"]]))
 
-        self.owl.add_node(GenericNode(node_id="Insight_2_1", node_class=globalInsight, connections=[["model_1", "attribute_klammertyp"],["explains", "basedOn"]], shap_value=0.9))
-        self.owl.add_node(GenericNode(node_id="Insight_2_2", node_class=globalInsight, connections=[["model_1", "attribute_laenge"],["explains", "basedOn"]], shap_value=0.4))
-        self.owl.add_node(GenericNode(node_id="Insight_2_3", node_class=globalInsight, connections=[["model_1", "attribute_Schrauben_id"],["explains", "basedOn"]], shap_value=0.01))
+        self.owl.add_node(GenericNode(node_id="Insight_2_1", node_class=globalInsight,
+                                      connections=[["model_1", "attribute_klammertyp"], ["explains", "basedOn"]],
+                                      shap_value=0.9))
+        self.owl.add_node(GenericNode(node_id="Insight_2_2", node_class=globalInsight,
+                                      connections=[["model_1", "attribute_laenge"], ["explains", "basedOn"]],
+                                      shap_value=0.4))
+        self.owl.add_node(GenericNode(node_id="Insight_2_3", node_class=globalInsight,
+                                      connections=[["model_1", "attribute_Schrauben_id"], ["explains", "basedOn"]],
+                                      shap_value=0.01))
 
         self.owl.add_node(GenericNode(node_id="GlobalExplanationRun_2", node_class=globalExplanationRun, connections=[
             ["niryo_dataset_september_2024", "Insight_2_1", "Insight_2_2", "Insight_2_3"],
             ["hasInput", "hasOutput", "hasInput", "hasInput"]]))
 
-        self.owl.add_node(GenericNode(node_id="Insight_3_1", node_class=globalInsight, connections=[["model_1", "attribute_klammertyp"],["explains", "basedOn"]], shap_value=1.1))
-        self.owl.add_node(GenericNode(node_id="Insight_3_2", node_class=globalInsight, connections=[["model_1", "attribute_laenge"],["explains", "basedOn"]], shap_value=0.6))
-        self.owl.add_node(GenericNode(node_id="Insight_3_3", node_class=globalInsight, connections=[["model_1", "attribute_Schrauben_id"],["explains", "basedOn"]], shap_value=0))
+        self.owl.add_node(GenericNode(node_id="Insight_3_1", node_class=globalInsight,
+                                      connections=[["model_1", "attribute_klammertyp"], ["explains", "basedOn"]],
+                                      shap_value=1.1))
+        self.owl.add_node(GenericNode(node_id="Insight_3_2", node_class=globalInsight,
+                                      connections=[["model_1", "attribute_laenge"], ["explains", "basedOn"]],
+                                      shap_value=0.6))
+        self.owl.add_node(GenericNode(node_id="Insight_3_3", node_class=globalInsight,
+                                      connections=[["model_1", "attribute_Schrauben_id"], ["explains", "basedOn"]],
+                                      shap_value=0))
 
         self.owl.add_node(GenericNode(node_id="GlobalExplanationRun_3", node_class=globalExplanationRun, connections=[
             ["niryo_dataset_september_2024", "Insight_3_1", "Insight_3_2", "Insight_3_3"],
@@ -68,7 +87,8 @@ class Initialization():
                                     valueDistribution="Sechskant, Zylinder", attributeName="Schraubentyp"))
         self.owl.add_node(Attribute(node_id="attribute_kopfbreite",
                                     connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'],
-                                                 ["usedBy", "partOf"]], datatype="Numeric", valueDistribution="8-16",
+                                                 ["usedBy", "partOf"]], datatype="Numeric", valueDistribution="8-24.65",
+                                    valueAverage="14.06",
                                     attributeName="Kopfbreite in MM"))
         self.owl.add_node(Attribute(node_id="attribuite_Kopfdicke",
                                     connections=[['preprocessing_niryo', 'niryo_dataset_september_2024'],

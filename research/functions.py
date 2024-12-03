@@ -34,50 +34,49 @@ def rag_advanced(ontology: owl.Ontology, question: str, search_depth=0, sleep_ti
     found_node_instances_list = re.findall(r'\w+', gpt_response)
     found_nodes_dict = ontology.get_nodes(found_node_instances_list)
 
-    # RAG Mainstep
-    message = [{"role": "system", "content": f"**Ontology Traversal System Prompt:**"
-                                             f"**Syntax Structure**:"
-                                             f"   - Use the syntax `[Class], [edge], [Instance]` for targeting "
-                                             f"specific connections and retrieving related instances. Place a bracket "
-                                             f"around the specific elements"
-                                             f"   - `[Class]`: Specify the class or type of nodes you are interested in."
-                                             f"   - `[edge]`: Define the connection or relationship used to navigate between instances."
-                                             f"   - `[Instance]`: Identify the specific instance from which to start or connect."
-                                             f"**Guidelines for Building Queries**:"
-                                             f"   - **Starting Point**: Always begin your traversal with a well-defined instance to provide context (e.g., `Model 1`)."
-                                             f"   - **Identifying Connections**: Use appropriate edge names to navigate through the ontology’s structure (e.g., `achievedBy`, `hasOutput`)."
-                                             f"     - **Watch the directions of connections. The Instances from the class you want have to point to the known instance. (e.g., TrainingRun hasOutp Model, not TrainingRun trainedBy Model)"
-                                             f"   - **Iterative Approach**: Build queries iteratively to explore layers of relationships, using results from one query to inform the next. Request only one Query at a time."
-                                             f"**Example Query Scenarios**:"
-                                             f"   - To identify tasks associated with a model: `[Task], [achievedBy], [model x]`"
-                                             f"Use this Query Syntax to create requests to the given Ontology. Your job is to gather enough information to answer this question:{question}. If you think you have enough information, write ""BREAK"" and give an educated answer."
-                                             f"This is your starting node: {str(found_nodes_dict)}"},
-               {"role": "user", "content": f"{question}"}]
-    gpt_response, history = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)
-    found_node_class_list = re.findall(r'\w+', gpt_response)
-    break_condition_reached = False
-    loop_count = 0
-    found_nodes_dict = {}
-    while not break_condition_reached:
-        rag_results = execute_query(gpt_response, ontology)
-        for node in rag_results:
-            found_nodes_dict.update({f"{node.get_node_id()}":node})
-        message = [
-            {"role": "user", "content": f"This is the result to your query: {[node.__dict__ for node in rag_results]}. If you need more information, use another query."}]
-        gpt_response, history = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)
-        if "BREAK" in gpt_response:
-            break_condition_reached = True
-        else:
-            loop_count += 1
-            if loop_count > 10:
-                break_condition_reached = True
+    # RAG Mainstep out of commision. Problem is, it mistakes too often the syntax
+    # message = [{"role": "system", "content": f"**Ontology Traversal System Prompt:**"
+    #                                          f"**Syntax Structure**:"
+    #                                          f"   - Use the syntax `[Class], [edge], [Instance]` for targeting "
+    #                                          f"specific connections and retrieving related instances. Place a bracket "
+    #                                          f"around the specific elements"
+    #                                          f"   - `[Class]`: Specify the class or type of nodes you are interested in."
+    #                                          f"   - `[edge]`: Define the connection or relationship used to navigate between instances."
+    #                                          f"   - `[Instance]`: Identify the specific instance from which to start or connect."
+    #                                          f"**Guidelines for Building Queries**:"
+    #                                          f"   - **Starting Point**: Always begin your traversal with a well-defined instance to provide context (e.g., `Model 1`)."
+    #                                          f"   - **Identifying Connections**: Use appropriate edge names to navigate through the ontology’s structure (e.g., `achievedBy`, `hasOutput`)."
+    #                                          f"     - **Watch the directions of connections. The Instances from the class you want have to point to the known instance. (e.g., TrainingRun hasOutp Model, not TrainingRun trainedBy Model)"
+    #                                          f"   - **Iterative Approach**: Build queries iteratively to explore layers of relationships, using results from one query to inform the next. Request only one Query at a time."
+    #                                          f"**Example Query Scenarios**:"
+    #                                          f"   - To identify tasks associated with a model: `[Task], [achievedBy], [model x]`"
+    #                                          f"Use this Query Syntax to create requests to the given Ontology. Your job is to gather enough information to answer this question:{question}. If you think you have enough information, write ""BREAK"" and give an educated answer."
+    #                                          f"This is your starting node: {[ontology.get_node_structure(node) for node in found_nodes_dict.values()]}"},
+    #            {"role": "user", "content": f"{question}"}]
 
-    if Config.demo_mode:
+    message = [{"role": "system", "content": f"You can ask for additional nodes in the following form: [node_id], for example [model_a].Your job is to gather enough information to answer this question:{question}. If you think you have enough information, write ""BREAK"" and give an educated answer. "
+                                                         f"This is your starting node: {[ontology.get_node_structure(node) for node in found_nodes_dict.values()]}"},
+                           {"role": "user", "content": f"{question}"}]
+    gpt_response, history = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)
+    loop_count = 0
+    while loop_count < 15 and "BREAK" not in gpt_response:
+        found_nodes = execute_query(gpt_response, ontology)
+        gpt_input = []
+        if found_nodes is not None:
+            for node in found_nodes:
+                gpt_input.append(ontology.get_node_structure(node))
+                found_nodes_dict.update({f"{node.get_node_id()}": found_nodes})
+        message = [
+            {"role": "user",
+             "content": f"This is the result to your query: {gpt_input}. If you need more information, use another query."}]
+        gpt_response, history = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)
+        loop_count += 1
+
+    if Config.graph_gen:
         ontology.create_rag_instance_graph(found_nodes_dict)
     retrieved_relevant_information = [str(obj) for obj in found_nodes_dict.values()]
     logger.info(retrieved_relevant_information)
-    return gpt_request(f"Here is information relevant for the Question: {retrieved_relevant_information}",
-                       question, sleep_time)
+    return gpt_response.replace("BREAK", "").replace("\n", "")
 
 
 def rag_basic(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0, advanced_search=True):
@@ -107,9 +106,9 @@ def rag_basic(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=
     if search_depth != 0:
         search_graph(found_nodes_dict, ontology, search_depth, advanced_search, found_node_class_list)
 
-    instance_structure = ontology.get_node_structure(instances)
+    instance_structure = ontology.get_node_structure_by_list(instances)
 
-    if Config.demo_mode:
+    if Config.graph_gen:
         ontology.create_rag_instance_graph(found_nodes_dict)
     retrieved_relevant_information = [str(obj) for obj in found_nodes_dict.values()]
     logger.info(retrieved_relevant_information)
@@ -135,24 +134,11 @@ def search_graph(found_nodes_dict, ontology, search_depth, advanced_search, foun
 
 
 def execute_query(query, ontology):
-    pattern = "\[([A-Za-z0-9._ ]*)\]"
+    pattern = r"\['?([^'\]]+)'?\]"
     # pattern = "\[([A - Za - z0 - 9._] * (?:, [A-Za-z0-9._] *){0, 2})\]"
     matches = re.findall(pattern, query)
-    if len(matches) != 3:
-        return None
+    return list(ontology.get_nodes(matches).values())
 
-    query_dict = {}
-    if ontology.check_if_class_exists(matches[0]) and ontology.check_if_node_exists(matches[2]):
-        query_dict.update({"node_class": matches[0]})
-        query_dict.update({"node": ontology.get_node(matches[2])})
-    elif ontology.check_if_class_exists(matches[2]) and ontology.check_if_node_exists(matches[0]):
-        query_dict.update({"node_class": matches[2]})
-        query_dict.update({"node": ontology.get_node(matches[0])})
-    else:
-        return None
-
-    query_dict.update({"edge": matches[1]})
-    return ontology.execute_query(query_dict.get("node_class"), query_dict.get("edge"), query_dict.get("node"))
 
 
 def work_through_the_questionnaire(ontology: owl.Ontology, questionnaire: Questionnaire, search_depth=0):
@@ -197,10 +183,10 @@ def calculate_quality_measures(score_list):
     }
 
 
-def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, quality_measures):
-    file_path = f"results_{uuid.uuid1()}.txt"
+def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, quality_measures, id):
+    file_path = f"results/results_{id}.txt"
 
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w', encoding='utf-8') as file:
         for key, gpt_answer in gpt_answers.items():
             cleaned_gpt_answer = gpt_answer.replace("\n", "")
             file.write(f"Question {key}: {questionnaire.get_question(key)}\n"
@@ -214,10 +200,10 @@ def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, qu
     return file_path
 
 
-def create_overview_file(path_list, quality_measures, search_depth, alternate_cycles):
-    run_id = uuid.uuid1()
+def create_overview_file(path_list, quality_measures, search_depth, alternate_cycles, id):
+    run_id = id
 
-    file_path = f"overview_measurements_{run_id}.html"
+    file_path = f"results/overview_measurements_{run_id}.html"
     with open(file_path, 'w') as file:
         # Write the HTML header
         file.write(f"<html>\n<head>\n<title>Run Overview {run_id}</title>\n</head>\n<body>\n")
@@ -267,19 +253,13 @@ def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, sea
             logger.info(f"Comparing answers: /n Correct: {correct_answer} /n GPT: {gpt_answer}")
             score_list.append(compare_question_answer_pair(gpt_answer, correct_answer))
 
+        run_id = uuid.uuid1()
         overview_scores_list.extend(score_list)
         quality_measures = calculate_quality_measures(score_list)
-        result_path_list.append(create_result_file(questionnaire, gpt_answers, score_list, quality_measures))
+        result_path_list.append(create_result_file(questionnaire, gpt_answers, score_list, quality_measures, run_id))
 
     aggregated_quality_measures = calculate_quality_measures(overview_scores_list)
-    create_overview_file(result_path_list, aggregated_quality_measures, search_depth, alternation_cycles)
+    create_overview_file(result_path_list, aggregated_quality_measures, search_depth, alternation_cycles, run_id)
     logger.info("Research run finished.")
     return aggregated_quality_measures
 
-
-if __name__ == '__main__':
-    conf = research_config.Initialization()
-    owl = conf.get_ontology()
-    execute_query(
-        "Let's begin querying step by step. Here's the first query:\n\n**Query 1:**\n\n```plaintext\n[Task], [achievedBy], [model_1]\n```\n\nPlease provide the result of this query.",
-        owl)

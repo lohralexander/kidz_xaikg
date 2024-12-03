@@ -113,22 +113,26 @@ class Ontology:
                 node_list.append(node_structure)
         return str(node_list)
 
-    def get_node_structure(self, node_list):
+    def get_node_structure_by_list(self, node_list):
         node_structure_list = []
         for node in node_list:
-            node_structure = {"Node": node.get_node_id(), "Explanation": node.get_explanation(),
-                              "Connections": ", ".join([f"{edge} {connection}" for connection, edge in
-                                                        zip(node.get_node_connections()[0],
-                                                            node.get_node_connections()[1])])}
-            annotation_list = []
-            annotations_to_ignore = {"connections", "class_connections", "node_id",
-                                     "node_class_id", "explanation"}
-            for key, value in node.__dict__.items():
-                if key not in annotations_to_ignore:
-                    annotation_list.append((key, value))
-            node_structure.update({"Annotations": annotation_list})
+            node_structure = self.get_node_structure(node)
             node_structure_list.append(node_structure)
         return node_structure_list
+
+    def get_node_structure(self, node):
+        node_structure = {"Node": node.get_node_id(), "Explanation": node.get_explanation(),
+                          "Connections": ", ".join([f"{edge} {connection}" for connection, edge in
+                                                    zip(node.get_node_connections()[0],
+                                                        node.get_node_connections()[1])])}
+        annotation_list = []
+        annotations_to_ignore = {"connections", "class_connections", "node_id",
+                                 "node_class_id", "explanation"}
+        for key, value in node.__dict__.items():
+            if key not in annotations_to_ignore:
+                annotation_list.append((key, value))
+        node_structure.update({"Annotations": annotation_list})
+        return node_structure
 
     def get_ontology_node_overview(self):
         return list(self._node_dict.keys())
@@ -351,7 +355,7 @@ class Model(Node):
         return Model(node_id='model_1', algorithm='DecisionTree', accuracy=0.95768,
                      giniIndex=0.042319749216300995, precision={'Class 0': 0.95, 'Class 1': 0.96},
                      recall={'Class 0': 0.94, 'Class 1': 0.97}, f1Score={'Class 0': 0.95, 'Class 1': 0.96},
-                     confusionMatrix=[[239, 14], [13, 372]], rocAucScore=0.9587,
+                     confusionMatrix=[[239, 14], [13, 372]], rocAucScore=0.934,
                      connections=[['niryo_dataset_september_2024', 'training_run_1', 'ScrewPlacement'],
                                   ["trainedWith", "trainedBy", "achieves"]])
 
@@ -491,12 +495,14 @@ class Attribute(Node):
     class_connections = [["Preprocessing", "Dataset"], ["usedBy", "partOf"]]
     node_class_id = "Attribute"
 
-    def __init__(self, node_id, connections, attributeName, valueDistribution, datatype, information=""):
+    def __init__(self, node_id, connections, attributeName, valueDistribution, datatype, information="",
+                 valueAverage=""):
         super().__init__(node_id, connections)
         self.attributeName = attributeName
         self.explanation = "An attribute is a characteristic of a dataset."
         self.class_connections = Attribute.class_connections
         self.valueDistribution = valueDistribution
+        self.valueAverage = valueAverage
         self.datatype = datatype
         self.information = information
 

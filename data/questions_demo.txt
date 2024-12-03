@@ -1,1 +1,1 @@
-Welche Güte erreichen Modelle für die Aufgabenstellung von Model 1 üblicherweise?
+Wie viele Einträge hat der für das Training von Model 1 verwendete Datensatz?
