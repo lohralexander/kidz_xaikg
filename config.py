@@ -5,7 +5,7 @@ from datetime import datetime
 
 class Config:
 
-    graph_gen = False
+    graph_gen = True
 
     graphdb_repository = "http://localhost:7200/repositories/KIDZ"
     graphddb_repository_update = graphdb_repository + "/statements"

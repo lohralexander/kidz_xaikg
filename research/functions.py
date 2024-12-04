@@ -1,24 +1,23 @@
+import hashlib
 import re
 import statistics
 import uuid
 
 import owl
-from research import research_config
 from research.gptConnector import *
 from research.questionnaire import Questionnaire
 
 
-def rag_advanced(ontology: owl.Ontology, question: str, search_depth=0, sleep_time=0, advanced_search=True):
+def rag_advanced(ontology: owl.Ontology, question: str, run_id, sleep_time=0, ):
     if not isinstance(ontology, owl.Ontology):
         Exception(TypeError, "The given ontology is not an instance of the Ontology class.")
     ontology_structure = ontology.get_ontology_structure()
     # RAG Prestep 1
     message = [{
         "role": "system",
-        "content": f"Use the following Ontology:{str(ontology_structure)}. Only give as an answer a List of Nodes which could be "
-                   f"usefull in answering the given question. Use a python usable list structure."},
-        {"role": "user", "content": f"{question}"}]
-
+        "content": f"The following structure illustrates the class level of the ontology, which will be used to answer the subsequent questions. The node classes have instances that are not listed here. :{str(ontology_structure)}."},
+        {"role": "user",
+         "content": f"Only give as an answer a List of Classes which could be usefull in answering the given question: {question}. Use a python usable list structure."}]
     gpt_response, history = gpt_request_new(message=message, sleep_time=sleep_time)
     found_node_class_list = re.findall(r'\w+', gpt_response)
 
@@ -27,47 +26,28 @@ def rag_advanced(ontology: owl.Ontology, question: str, search_depth=0, sleep_ti
     instance_ids = []
     for node in instances:
         instance_ids.append(node.get_node_id())
-    message = [{"role": "system",
-                "content": f"Use the following list of instances: {str(instance_ids)}. Which of these instances is named in the question. Use a python usable list structure."},
-               {"role": "user", "content": f"{question}"}]
-    gpt_response, history = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)
+    message = [{"role": "user",
+                "content": f"Use the following list of instances: {str(instance_ids)}. Which of these instances is named in the previously given question? Only use the correct ones. You can ignore spelling error or cases. Use a python usable list structure."}]
+    gpt_response = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)[0]
     found_node_instances_list = re.findall(r'\w+', gpt_response)
     found_nodes_dict = ontology.get_nodes(found_node_instances_list)
 
-    # RAG Mainstep out of commision. Problem is, it mistakes too often the syntax
-    # message = [{"role": "system", "content": f"**Ontology Traversal System Prompt:**"
-    #                                          f"**Syntax Structure**:"
-    #                                          f"   - Use the syntax `[Class], [edge], [Instance]` for targeting "
-    #                                          f"specific connections and retrieving related instances. Place a bracket "
-    #                                          f"around the specific elements"
-    #                                          f"   - `[Class]`: Specify the class or type of nodes you are interested in."
-    #                                          f"   - `[edge]`: Define the connection or relationship used to navigate between instances."
-    #                                          f"   - `[Instance]`: Identify the specific instance from which to start or connect."
-    #                                          f"**Guidelines for Building Queries**:"
-    #                                          f"   - **Starting Point**: Always begin your traversal with a well-defined instance to provide context (e.g., `Model 1`)."
-    #                                          f"   - **Identifying Connections**: Use appropriate edge names to navigate through the ontology’s structure (e.g., `achievedBy`, `hasOutput`)."
-    #                                          f"     - **Watch the directions of connections. The Instances from the class you want have to point to the known instance. (e.g., TrainingRun hasOutp Model, not TrainingRun trainedBy Model)"
-    #                                          f"   - **Iterative Approach**: Build queries iteratively to explore layers of relationships, using results from one query to inform the next. Request only one Query at a time."
-    #                                          f"**Example Query Scenarios**:"
-    #                                          f"   - To identify tasks associated with a model: `[Task], [achievedBy], [model x]`"
-    #                                          f"Use this Query Syntax to create requests to the given Ontology. Your job is to gather enough information to answer this question:{question}. If you think you have enough information, write ""BREAK"" and give an educated answer."
-    #                                          f"This is your starting node: {[ontology.get_node_structure(node) for node in found_nodes_dict.values()]}"},
-    #            {"role": "user", "content": f"{question}"}]
+    message = [{"role": "system",
+                "content": f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections':trainedWith data_1. You can request new nodes. To do so write  [name of the requested node], for example [data_1]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you think you have enough information, write \"BREAK\" and give an educated answer. Use this class level ontology to orientate yourself: {str(ontology_structure)} "
+                           f"This is your starting node: {[ontology.get_node_structure(node) for node in found_nodes_dict.values()]}"},
+               {"role": "user", "content": f"{question}"}]
+    gpt_response, history = gpt_request_new(message=message, sleep_time=sleep_time)
 
-    message = [{"role": "system", "content": f"You can ask for additional nodes in the following form: [node_id], for example [model_a]. You can find instances to search in the connections of the nodes. Your job is to gather enough information to answer this question:{question}. If you think you have enough information, write ""BREAK"" and give an educated answer. "
-                                                         f"This is your starting node: {[ontology.get_node_structure(node) for node in found_nodes_dict.values()]}"},
-                           {"role": "user", "content": f"{question}"}]
-    gpt_response, history = gpt_request_new(message=message, previous_messages=history, sleep_time=sleep_time)
     loop_count = 0
     while loop_count < 15 and "BREAK" not in gpt_response:
         found_nodes = execute_query(gpt_response, ontology)
         gpt_input = []
-        if found_nodes is not None:
+        if found_nodes:
             for node in found_nodes:
                 gpt_input.append(ontology.get_node_structure(node))
-                found_nodes_dict.update({f"{node.get_node_id()}": found_nodes})
+                found_nodes_dict.update({f"{node.get_node_id()}": node})
         else:
-            gpt_input="Error, no instance found. Did you asked for a class or searched for a non existing instance?"
+            gpt_input = "Error, no instance found. Did you asked for a class or searched for a non existing instance?"
         message = [
             {"role": "user",
              "content": f"This is the result to your query: {gpt_input}. If you need more information, use another query."}]
@@ -75,7 +55,7 @@ def rag_advanced(ontology: owl.Ontology, question: str, search_depth=0, sleep_ti
         loop_count += 1
 
     if Config.graph_gen:
-        ontology.create_rag_instance_graph(found_nodes_dict)
+        ontology.create_rag_instance_graph(found_nodes_dict, run_id, hashlib.sha256(question.encode()).hexdigest()[:8])
     retrieved_relevant_information = [str(obj) for obj in found_nodes_dict.values()]
     logger.info(retrieved_relevant_information)
     return gpt_response.replace("BREAK", "").replace("\n", "")
@@ -142,11 +122,10 @@ def execute_query(query, ontology):
     return list(ontology.get_nodes(matches).values())
 
 
-
-def work_through_the_questionnaire(ontology: owl.Ontology, questionnaire: Questionnaire, search_depth=0):
+def work_through_the_questionnaire(ontology: owl.Ontology, questionnaire: Questionnaire, run_id, search_depth=0):
     gpt_answers = {}
     for index, question in enumerate(questionnaire.get_questions().values(), start=1):
-        gpt_answers.update({index: rag_advanced(ontology, question, search_depth=search_depth, sleep_time=5)})
+        gpt_answers.update({index: rag_advanced(ontology, question, run_id, sleep_time=5)})
     return gpt_answers
 
 
@@ -185,13 +164,14 @@ def calculate_quality_measures(score_list):
     }
 
 
-def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, quality_measures, id):
-    file_path = f"results/results_{id}.txt"
+def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, quality_measures, run_id):
+    file_path = f"results/results_{run_id}.txt"
 
     with open(file_path, 'w', encoding='utf-8') as file:
         for key, gpt_answer in gpt_answers.items():
             cleaned_gpt_answer = gpt_answer.replace("\n", "")
-            file.write(f"Question {key}: {questionnaire.get_question(key)}\n"
+            file.write(f"Unique ID: {hashlib.sha256(questionnaire.get_question(key).encode()).hexdigest()[:8]}\n"
+                       f"Question {key}: {questionnaire.get_question(key)}\n"
                        f"Correct Answer {key}: {questionnaire.get_answer(key)}\n"
                        f"GPT Answer {key}: {cleaned_gpt_answer}\n"
                        f"Score: {score_list[key - 1]}\n\n")
@@ -237,8 +217,14 @@ def create_overview_file(path_list, quality_measures, search_depth, alternate_cy
 
 
 def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, search_depth: int,
-                       alternation_cycles: int = 0, demo_mode=False):
+                       alternation_cycles: int = 0):
     correct_answers = questionnaire.get_answers()
+
+    run_id = uuid.uuid1()
+
+    if Config.graph_gen:
+        ontology.create_dynamic_instance_graph(run_id)
+        ontology.create_dynamic_class_graph(run_id)
 
     result_path_list = []
     overview_scores_list = []
@@ -249,19 +235,17 @@ def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, sea
             questionnaire.alternate_questions()
 
         score_list = []
-        gpt_answers = work_through_the_questionnaire(ontology, questionnaire, search_depth=search_depth)
+        gpt_answers = work_through_the_questionnaire(ontology, questionnaire, run_id, search_depth=search_depth)
 
         for gpt_answer, correct_answer in zip(gpt_answers.values(), correct_answers.values()):
             logger.info(f"Comparing answers: /n Correct: {correct_answer} /n GPT: {gpt_answer}")
             score_list.append(compare_question_answer_pair(gpt_answer, correct_answer))
 
-        run_id = uuid.uuid1()
         overview_scores_list.extend(score_list)
         quality_measures = calculate_quality_measures(score_list)
         result_path_list.append(create_result_file(questionnaire, gpt_answers, score_list, quality_measures, run_id))
 
     aggregated_quality_measures = calculate_quality_measures(overview_scores_list)
     create_overview_file(result_path_list, aggregated_quality_measures, search_depth, alternation_cycles, run_id)
-    logger.info("Research run finished.")
+    logger.info(f"Research run {run_id} finished.")
     return aggregated_quality_measures
-

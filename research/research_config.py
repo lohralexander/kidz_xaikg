@@ -31,13 +31,13 @@ class Initialization():
                                      explanation="A global Insight explains a model globally and not based on a single prediction.")
 
         self.owl.add_node(GenericNode(node_id="Insight_1_1", node_class=globalInsight,
-                                      connections=[["model_1", "attribute_klammertyp"], ["explains", "basedOn"]],
+                                      connections=[["model_a23b", "attribute_klammertyp"], ["explains", "basedOn"]],
                                       shap_value=1))
         self.owl.add_node(GenericNode(node_id="Insight_1_2", node_class=globalInsight,
-                                      connections=[["model_1", "attribute_laenge"], ["explains", "basedOn"]],
+                                      connections=[["model_a23b", "attribute_laenge"], ["explains", "basedOn"]],
                                       shap_value=0.5))
         self.owl.add_node(GenericNode(node_id="Insight_1_3", node_class=globalInsight,
-                                      connections=[["model_1", "attribute_Schrauben_id"], ["explains", "basedOn"]],
+                                      connections=[["model_a23b", "attribute_Schrauben_id"], ["explains", "basedOn"]],
                                       shap_value=0))
 
         self.owl.add_node(GenericNode(node_id="GlobalExplanationRun_1", node_class=globalExplanationRun, connections=[
@@ -45,13 +45,13 @@ class Initialization():
             ["hasInput", "hasOutput", "hasInput", "hasInput"]]))
 
         self.owl.add_node(GenericNode(node_id="Insight_2_1", node_class=globalInsight,
-                                      connections=[["model_1", "attribute_klammertyp"], ["explains", "basedOn"]],
+                                      connections=[["model_a23b", "attribute_klammertyp"], ["explains", "basedOn"]],
                                       shap_value=0.9))
         self.owl.add_node(GenericNode(node_id="Insight_2_2", node_class=globalInsight,
-                                      connections=[["model_1", "attribute_laenge"], ["explains", "basedOn"]],
+                                      connections=[["model_a23b", "attribute_laenge"], ["explains", "basedOn"]],
                                       shap_value=0.4))
         self.owl.add_node(GenericNode(node_id="Insight_2_3", node_class=globalInsight,
-                                      connections=[["model_1", "attribute_Schrauben_id"], ["explains", "basedOn"]],
+                                      connections=[["model_a23b", "attribute_Schrauben_id"], ["explains", "basedOn"]],
                                       shap_value=0.01))
 
         self.owl.add_node(GenericNode(node_id="GlobalExplanationRun_2", node_class=globalExplanationRun, connections=[
@@ -59,13 +59,13 @@ class Initialization():
             ["hasInput", "hasOutput", "hasInput", "hasInput"]]))
 
         self.owl.add_node(GenericNode(node_id="Insight_3_1", node_class=globalInsight,
-                                      connections=[["model_1", "attribute_klammertyp"], ["explains", "basedOn"]],
+                                      connections=[["model_a23b", "attribute_klammertyp"], ["explains", "basedOn"]],
                                       shap_value=1.1))
         self.owl.add_node(GenericNode(node_id="Insight_3_2", node_class=globalInsight,
-                                      connections=[["model_1", "attribute_laenge"], ["explains", "basedOn"]],
+                                      connections=[["model_a23b", "attribute_laenge"], ["explains", "basedOn"]],
                                       shap_value=0.6))
         self.owl.add_node(GenericNode(node_id="Insight_3_3", node_class=globalInsight,
-                                      connections=[["model_1", "attribute_Schrauben_id"], ["explains", "basedOn"]],
+                                      connections=[["model_a23b", "attribute_Schrauben_id"], ["explains", "basedOn"]],
                                       shap_value=0))
 
         self.owl.add_node(GenericNode(node_id="GlobalExplanationRun_3", node_class=globalExplanationRun, connections=[
@@ -74,7 +74,7 @@ class Initialization():
 
         self.owl.add_node(
             GenericNode(node_id="ScrewPlacement", node_class=task,
-                        connections=[["model_1", "model_2", "model_3"], ["achievedBy", "achievedBy", "achievedBy"]],
+                        connections=[["model_a23b", "model_xT77", "model_p1b3", "model_qdk1"], ["achievedBy", "achievedBy", "achievedBy", "achievedBy"]],
                         usecase="This Task is part of a non-critical research experiment."))
 
         self.owl.add_node(Attribute(node_id="attribute_Schrauben_id",
@@ -587,16 +587,20 @@ class Initialization():
                                       success=True))
 
         # self.owl.add_node(
-        #   GenericNode(node_id="model_1", node_class=Model, connections=[["training_run_1"], ["usedIn"]]))
+        #   GenericNode(node_id="model_a23b", node_class=Model, connections=[["training_run_1"], ["usedIn"]]))
 
         self.owl.add_node(
-            GenericNode(node_id="model_2", node_class=Model,
+            GenericNode(node_id="model_xT77", node_class=Model, algorithm="Neural Net",
                         connections=[["niryo_dataset_september_2024", "ScrewPlacement"], ["used", "achieves"]],
                         accuracy=0.90))
         self.owl.add_node(
-            GenericNode(node_id="model_3", node_class=Model,
+            GenericNode(node_id="model_p1b3", node_class=Model, algorithm="Naive Bayes",
                         connections=[["niryo_dataset_september_2024", "ScrewPlacement"], ["used", "achieves"]],
                         accuracy=0.90))
+        self.owl.add_node(
+            GenericNode(node_id="model_qdk1", node_class=Model, algorithm="Decision Tree",
+                        connections=[["niryo_dataset_september_2024", "ScrewPlacement"], ["used", "achieves"]],
+                        accuracy=0.92))
         self.owl.add_node(GenericNode(node_id="Test Durchgang", node_class=Attribute,
                                       connections=[["niryo_dataset_september_2024"], ["usedIn"]],
                                       datatype="Numerisch/ ID"))

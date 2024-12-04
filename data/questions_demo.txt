@@ -1,1 +1,1 @@
-Welche(s) Attribut(e) haben den größten Einfluss in Model 1?
+Welcher Algorithmus wird am häufigsten (wie häufig) für die Aufgabenstellung von Model a23b eingesetzt?

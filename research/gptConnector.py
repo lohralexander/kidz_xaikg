@@ -44,7 +44,7 @@ def gpt_request_new(message, previous_messages=None, model="gpt-4o", sleep_time=
 
     if previous_messages is not None:
         message = previous_messages+message
-
+    logger.info(f"User: {message}")
     response = client.chat.completions.create(seed=42,
                                               temperature=0,
                                               messages=message,

@@ -1,36 +1,36 @@
-Wie viele Einträge hat der für das Training von Model 1 verwendete Datensatz?
-Wie viele Attribute hat der für das Training von Model 1 verwendete Datensatz?
+Wie viele Einträge hat der für das Training von Model a23b verwendete Datensatz?
+Wie viele Attribute hat der für das Training von Model a23b verwendete Datensatz?
 Welche Datentypen haben die Attribute vom Datensatz aus September 2024?
 Wie sind die Werteverteilungen des Attributs Kopfbreite des Datzensatzes aus September 2024?
 In welcher Umgebung (Ort, Unternehmen, System, etc.) wurde der Datensatz niryo_dataset_september_2024 erhoben?
 Wann / über welchen Zeitraum wurde der Datensatz niryo_dataset_september_2024 erhoben?
 Welchen Einschränkungen oder potenziellen Verfälschungen unterliegen die Daten aus niryo_dataset_september_2024?
 Wie wurde die Zielvariable in den Trainingsdaten des Datensatzes niryo_dataset_september_2024 befüllt?
-Welcher Algorithmus wurde für das Trainging von Model 1 verwendet?
-Welche Trainingsparameter wurden für das Trainging von Model 1 verwendet (Wert pro Parameter)?
-Welcher Algorithmus wurde zur Normalisierung für das Trainging von Model 1 verwendet?
-Welcher Algorithmus für die Ausreißererkennung für das Trainging von Model 1 verwendet?
-Wie präzise und verlässlich ist Model 1?
-Ist die Performanz von Model 1 ausreichend für den Anwendungsfall?
-Welchen Einschränkungen unterliegt Model 1?
-Auf welcher Menge an Daten wurde Model 1 trainiert?
-Auf welcher Art von Daten wurde Model 1 trainiert?
-Welche Daten wurden nicht zum Trainieren von Model 1 verwendet?
-Welche(s) Attribut(e) haben den größten Einfluss in Model 1?
-Welche Attribute werden in Model 1 berücksichtigt?
-Wie ist die Gesamtlogik von Model 1?
-Wie trifft Model 1 Entscheidungen?
-Wie kann ich Model 1 optimal nutzen?
-Was bedeuten die Ergebnisse von Model 1?
-Was ist der Einsatzbereich von Model 1?
-Welche Art von Ergebnis liefert Model 1?
+Welcher Algorithmus wurde für das Trainging von Model a23b verwendet?
+Welche Trainingsparameter wurden für das Trainging von Model a23b verwendet (Wert pro Parameter)?
+Welcher Algorithmus wurde zur Normalisierung für das Trainging von Model a23b verwendet?
+Welcher Algorithmus für die Ausreißererkennung für das Trainging von Model a23b verwendet?
+Wie präzise und verlässlich ist Model a23b?
+Ist die Performanz von Model a23b ausreichend für den Anwendungsfall?
+Welchen Einschränkungen unterliegt Model a23b?
+Auf welcher Menge an Daten wurde Model a23b trainiert?
+Auf welcher Art von Daten wurde Model a23b trainiert?
+Welche Daten wurden nicht zum Trainieren von Model a23b verwendet?
+Welche(s) Attribut(e) haben den größten Einfluss in Model a23b?
+Welche Attribute werden in Model a23b berücksichtigt?
+Wie ist die Gesamtlogik von Model a23b?
+Wie trifft Model a23b Entscheidungen?
+Wie kann ich Model a23b optimal nutzen?
+Was bedeuten die Ergebnisse von Model a23b?
+Was ist der Einsatzbereich von Model a23b?
+Welche Art von Ergebnis liefert Model a23b?
 Mit welchem Algorithmus werden die besten Ergebnisse für Datensatz niryo_dataset_september_2024 erreicht?
-Welcher Algorithmus wird am häufigsten (wie häufig) für die Aufgabenstellung von Model 1 eingesetzt?
-Welche Güte kann für die Aufgabenstellung von Model 1 üblicherweise/bestenfalls erreicht werden?
+Welcher Algorithmus wird am häufigsten (wie häufig) für die Aufgabenstellung von Model a23b eingesetzt?
+Welche Güte kann für die Aufgabenstellung von Model a23b üblicherweise/bestenfalls erreicht werden?
 Hat Attribut Klammer-Typ in anderen Modellen (überwiegend) einen Einfluss auf das Ergebnis?
 Bestätigen andere Modelle den Einfluss von Attribut Klammer-Typ auf das Ergebnis?
 Was ist die Bedeutung des Attributs Klammer-Typ?
 Mit welchen anderen Entitäten steht das Attribut Klammer-Typ in Beziehung (Ober/Unterklassen, usw.)
-Wie kann Model 1 verbessert werden?
-Wie und warum wird sich Model 1 im Laufe der Zeit verändern/driften?
-Warum wurden diese Attribute nicht in Model 1 verwendet: Test Durchgang, Schrauben ID?
+Wie kann Model a23b verbessert werden?
+Wie und warum wird sich Model a23b im Laufe der Zeit verändern/driften?
+Warum wurden diese Attribute nicht in Model a23b verwendet: Test Durchgang, Schrauben ID?

@@ -176,7 +176,7 @@ class Ontology:
         plt.title("Graphical Representation of Nodes and Connections")
         plt.show()
 
-    def create_dynamic_class_graph(self):
+    def create_dynamic_class_graph(self, run_id):
         net = Network(height="100vh", width="100vw", directed=True)
 
         node_class_set = set()
@@ -191,13 +191,13 @@ class Ontology:
                 for connection, edge in zip(node.get_class_connections()[0], node.get_class_connections()[1]):
                     net.add_edge(node.get_node_class_id(), connection, label=edge, arrows="to", length=200)
 
-        output_file = "class_graph.html"
+        output_file = f"graph/{run_id}_class_graph.html"
         net.save_graph(output_file)
         _insert_headline(headline="Ontology Node Class Diagram", output_file=output_file)
 
-        webbrowser.open(output_file)
+        #webbrowser.open(output_file)
 
-    def create_dynamic_instance_graph(self):
+    def create_dynamic_instance_graph(self, run_id):
         net = Network(height="100vh", width="100vw", directed=True)
 
         for node in self._node_dict.values():
@@ -205,15 +205,15 @@ class Ontology:
 
         for node in self._node_dict.values():
             for connection, edge in zip(node.get_node_connections()[0], node.get_node_connections()[1]):
-                net.add_edge(node.get_node_id(), connection, label=edge, arrows="to", length=200)
+                net.add_edge(node.get_node_id(), connection, label=edge, arrows="to", length=400)
 
-        output_file = "instance_graph.html"
+        output_file = f"graph/{run_id}_instance_graph.html"
         net.save_graph(output_file)
         _insert_headline(headline="Ontology Node Instance Diagram", output_file=output_file)
 
-        webbrowser.open(output_file)
+        #webbrowser.open(f".\{output_file}")
 
-    def create_rag_instance_graph(self, rag_dict):
+    def create_rag_instance_graph(self, rag_dict, run_id, question_id):
         net = Network(height="100vh", width="100vw", directed=True)
 
         for node in rag_dict.values():
@@ -224,11 +224,11 @@ class Ontology:
                 if connection in rag_dict.keys():
                     net.add_edge(node.get_node_id(), connection, label=edge, arrows="to", length=200)
 
-        output_file = "rag_instance_graph.html"
+        output_file = f"graph/{run_id}_{question_id}_rag_instance_graph.html"
         net.save_graph(output_file)
-        _insert_headline(headline="RAG Node Instance Diagram", output_file=output_file)
+        _insert_headline(headline=f"ID: {question_id}, RAG Node Instance Diagram", output_file=output_file)
 
-        webbrowser.open(output_file)
+        #webbrowser.open(output_file)
 
 
 class Node:
@@ -352,7 +352,7 @@ class Model(Node):
 
     @classmethod
     def get_premade_node(cls):
-        return Model(node_id='model_1', algorithm='DecisionTree', accuracy=0.95768,
+        return Model(node_id='model_a23b', algorithm='DecisionTree', accuracy=0.934,
                      giniIndex=0.042319749216300995, precision={'Class 0': 0.95, 'Class 1': 0.96},
                      recall={'Class 0': 0.94, 'Class 1': 0.97}, f1Score={'Class 0': 0.95, 'Class 1': 0.96},
                      confusionMatrix=[[239, 14], [13, 372]], rocAucScore=0.934,
@@ -398,7 +398,7 @@ class TrainingRun(Node):
     def get_premade_node(cls):
         return TrainingRun(node_id='training_run_1', date='10.10.2024',
                            purpose='Train models to predict if a screw can be lifted to a specific position by a roboter arm',
-                           connections=[['niryo_dataset_september_2024', 'model_1'], ["hasInput", "hasOutput"]],
+                           connections=[['niryo_dataset_september_2024', 'model_a23b'], ["hasInput", "hasOutput"]],
                            trainingParameters="Criterion: Gini, splitter: Best, max_depth: None, min_samples_split: 2, min_samples_leaf: 1, max_features: None, random_state: 42, max_leaf_nodes: None, in_impurity_decrease: 0.0")
 
 
