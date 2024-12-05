@@ -1,36 +1,36 @@
-Der verwendete Datensatz hat 2.126 Einträge
-Der Datensatz hat 12 Attribute
-Die Attribute haben die folgenden Datentypen:Test Durchgang: ID; Schrauben ID: ENUM; Schraubentyp: ENUM; Kopfbreite (mm): Numerisch; Kopfdicke (mm): Numerisch; Laenge (mm): Numerisch; Gewicht (g): Numerisch; Durchmesser (mm): Numerisch; Beschichtung: ENUM; Klammer-Typ: Enum; Winkel (in Grad): Numerisch; Erfolgreich (Ja/Nein): Enum
-Durchschnitt 14.06, Minimum 8, Maximum 24.65
-Der Datensatz wurde an der Ravensburg Weingarten University erhoben worden und wurde mit einem Trainingsroboter erstellt.
-Die Daten wurden im September 2024 erhoben.
-Die Daten enthalten eine Auswahl an Schrauben mit festen Maßen. Modelle, die Schrauben mit Werten außerhalb der getesteten Parameter können fehlerhafte Aussagen treffen. Potenzielle Verfälschungen können sich durch fehlerhafte Versuchsaufbauten ergeben
-Die Zielvariable wurde manuell von dem Versuchsleiter je nach Ausgang des Experiments befüllt.
-Der genutzte Algorithmus ist der Decission Tree
-Die folgenden Parameter wurden verwendet:-	criterion: "gini" (used for measuring the quality of a split)-	splitter: "best" (used to choose the best split at each node)-	max_depth: None (the tree is grown until all leaves are pure or until all leaves contain less than min_samples_split samples)-	min_samples_split: 2 (minimum number of samples required to split an internal node)-	min_samples_leaf: 1 (minimum number of samples required to be at a leaf node)-	max_features: None (all features are considered)-	random_state: 42 (used to ensure reproducibility)-	max_leaf_nodes: None (unrestricted number of leaf nodes)-	min_impurity_decrease: 0.0 (no minimum threshold for splitting based on impurity decrease)
-Es wurde keine Normalisierung durchgeführt.
-Es wurde keine Ausreißererkennung durchgeführt.
-Die Accuracy war 93.4%.
-Die Performanz ist für den gewählten Fall ausreichend, da keine kritischen Entscheidungen mit dem Modell getroffen werden. Es dient der Veranschaulichung und ist in keinem Operativsystem im Einsatz. Sollte ein solches Modell im Operativbetrieb eingesetzt werden, könnte die Güte nicht ausreichend sein.
-Das Modell lässt sich nur in einem bestimmten Bereich an Schraubengrößen einsetzen. Zudem können keine allgemeinen Aussagen auf das Verhalten anderer Roboterarten gegeben werden. Schlussendlich ist das Modell für einen sehr speziellen Ablauf aus Bewegungen gemacht worden, deren Verallgemeinbarkeit nicht geprüft wurde.
-Das Modell wurde auf 70% der Daten trainiert.
-Auf Daten, die durch händisches Ausprobieren erhoben wurden.
-Es wurden eine Reihe von Daten zufällig vom Training ausgeschlossen. 30% wurden zurück gehalten.
-Den größten Einfluss hat das Attribut Klammer-Typ.
-Folgende Attribute wurden genutzt: Schraubentyp, Kopfbreite (mm), Kopfdicke, Länge (mm), Gewicht (g), Durchmesser (mm), Beschichtung, Klammer-Typ, Winkel (in Grad).
-Die Logik des gelernten Entscheidungsbaums funktioniert folgendermaßen:1.	Datenaufteilung: Der Baum wählt die wichtigsten Merkmale (z.B. Länge, Gewicht) aus, um die Daten zu trennen.2.	Entscheidungsknoten: An jedem Knoten entscheidet der Baum basierend auf einem Merkmal (z.B. ob die Schraubenlänge größer als 50 mm ist) und teilt die Daten entsprechend auf.3.	Blätter: Am Ende führen die Entscheidungen zu einem Blattknoten, der den Ausgang (z.B. Erfolg oder Misserfolg) vorhersagt.4.	Vorhersagen: Für neue Datenpunkte wird derselbe Entscheidungsprozess durchlaufen, bis eine Vorhersage getroffen wird.Die Logik basiert auf den Mustern, die der Baum während des Trainings gelernt hat.
-Das Modell nutzt einen Entscheidungsbaum um Entscheidungen zu treffen.
-Um das Modell optimal zu nutzen muss darauf geachtet werden, die gleichen Attribute zu verwenden, mit denen das Modell trainiert wurde. Ebenfalls muss darauf geachtet werden, dass die Wertebereiche der Attribute mit denen des Trainingsdatensatzes überein stimmen.
-Die Ergebnisse des Modells zeigen an, ob eine Schraube angehoben werden und in einen passenden Steckplatz gesteckt werden konnte.
-Das Modell wird als Prototyp zur Validierung einer Forschungsfrage eingesetzt.
-Das Modell liefert als Ergebnis einen Boolean in Form von Fail/ Success.
-Die besten Ergebnisse liefert der Entscheidungsbaum.
-Der Entscheidungsbaum wurde 3 Mal für diese Aufgabenstellung eingesetzt.
-Üblicherweise kann mit ca. 90% gerechnet werden, bestenfalls 93.4%.
-Ja, auch in anderen Modellen hat das Attribut Klammer-Typ überwiegend einen Einfluss auf das Ergebnis.
-Ja, andere Modelle bestätigen dies.
-Das Attribut Klammer-Typ beschreibt die Art des Greifarmes, der zum Greifen der Schrauben verwendet wurde. Es gibt Silicon, Einkerbung und Standard.
-Klammer-Typ steht in Beziehung zu Roboterarm
-Das Modell kann mit weiteren Datensätzen verbessert werden, die den Wertebereich der bisherigen Daten erweitern. Auch kann der Einsatz verschiedener Roboterarm Typen die Verallgemeinerbarkeit des Modells verbessern.
-Ein Drift ist unwahrscheinlich, da die Attribute und der Versuchsaufbau keiner Schwankung unterliegen. Eine Möglichkeit wäre allerdings, dass die Leistung des Roboterarms über die Zeit nachlässt und so Schrauben, die bisher gehoben werden konnten, nicht mehr gehoben werden können.
-Bei diesen Attributen handelt es sich um IDs. Diese werden üblicherweise nicht genutzt, da sie das Ergebnis verfälschen.
+The data set used has 2,126 entries
+The data set has 12 attributes
+The attributes have the following data types: Test Durchgang: Enum/ Identifier; Schrauben ID: ENUM; Schraubentyp: ENUM; Kopfbreite (mm): Numerisch; Kopfdicke (mm): Numerisch; Laenge (mm): Numerisch; Gewicht (g): Numerisch; Durchmesser (mm): Numerisch; Beschichtung: ENUM; Klammer-Typ: Enum; Winkel (in Grad): Numerisch; Erfolgreich (Ja/Nein): Enum
+Average 14.06, minimum 8, maximum 24.65
+The data set was collected at Ravensburg Weingarten University
+The data was collected in September 2024.
+The data contains a selection of screws with fixed dimensions. Models that use screws with values outside the tested parameters can make incorrect statements. Potential falsifications can result from incorrect test setups
+The target variable was filled in manually by the experimenter depending on the outcome of the experiment.
+The algorithm used was the Decision Tree
+The following parameters were used:- criterion: “gini” (used to measure the quality of a split)- splitter: “best” (used to choose the best split at each node)- max_depth: None (the tree grows until all leaves are pure or until all leaves contain less than min_samples_split samples)- min_samples_split: 2 (minimum number of samples required to split an internal node)- min_samples_leaf: 1 (minimum number of samples required to form a leaf node)- max_features: None (all features are taken into account)- random_state: 42 (used to ensure reproducibility)- max_leaf_nodes: None (unlimited number of leaf nodes)- min_impurity_decrease: 0.0 (no minimum threshold for splitting based on impurity decrease)
+No normalization was carried out.
+No outlier detection was carried out.
+The accuracy was 93.4%.
+The performance is sufficient for the selected case, as no critical decisions are made with the model. It is used for illustrative purposes and is not used in any operational system. If such a model were to be used in an operational system, the quality might not be sufficient.
+The model can only be used in a certain range of screw sizes. In addition, no general statements can be made about the behavior of other robot types. Finally, the model has been created for a very specific sequence of movements whose generalizability has not been tested.
+The model was trained with 2,126 entries
+Yes, a cross-validation was carried out
+The data was collected in a real-world experiment using a Niryo robot and commercially available screws. They consist of categorical values, e.g. the screw type and numerical values, e.g. the screw length or the screw weight. The target variable is a binomial attribute that represents success with True or False.
+No data was withheld.
+The attribute Klammer-Typ has the greatest influence.
+The following attributes were used: Schraubentyp, Kopfbreite (mm), Kopfdicke, Länge (mm), Gewicht (g), Durchmesser (mm), Beschichtung, Klammer-Typ, Winkel (in Grad).
+The logic of the learned decision tree works as follows:1. data splitting: The tree selects the most important features (e.g. length, weight) to separate the data.2. decision nodes: At each node, the tree decides based on a feature (e.g. whether the screw length is greater than 50 mm) and splits the data accordingly.3. Leaves: At the end, the decisions lead to a leaf node that predicts the outcome (e.g. success or failure).4. Predictions: For new data points, the same decision process is run until a prediction is made.The logic is based on the patterns the tree has learned during training.
+The model uses a decision tree to make decisions.
+In order to use the model optimally, care must be taken to use the same attributes with which the model was trained. Care must also be taken to ensure that the value ranges of the attributes match those of the training data set.
+The results of the model show whether a screw could be lifted and inserted into a suitable slot.
+The model is used as a prototype to validate a research question.
+The model returns a Boolean in the form of Fail/ Success as the result.
+Which algorithm achieves the best results for the dataset niryo_dataset_september_2024?
+The decision tree was used 2 times for this task.
+Usually about 90% can be expected, at best 93.4%.
+Yes, the Klammer-Typ attribute also has a major influence on the result in other models.
+The Klammer-Typ attribute describes the type of gripper arm used to grip the screws. There are silicone, notch and standard.
+Clamp type is related to robot arm
+The model can be improved with additional data sets that extend the value range of the previous data. The use of different robot arm types can also improve the generalizability of the model.
+Drift is unlikely, as the attributes and the test setup are not subject to fluctuation. However, one possibility would be that the performance of the robot arm decreases over time, meaning that screws that could previously be lifted can no longer be lifted.
+attribute_test_durchgang is an ID for the dataset and attribute_label is the result of the experiment and has to be included.

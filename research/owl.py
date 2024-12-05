@@ -572,30 +572,18 @@ class GenericClass:
 #                              pythonFile="""
 # import numpy as np
 # import pandas as pd
-# from sklearn import tree
 # from sklearn.model_selection import cross_val_score
 # from sklearn.model_selection import train_test_split
 # from sklearn.tree import DecisionTreeClassifier
-# from sklearn.tree import DecisionTreeClassifier, plot_tree
-# import matplotlib.pyplot as plt
+# from sklearn.tree import DecisionTreeClassifier
 # import pickle
 # df = pd.read_csv("niryo_dataset_september_2024.csv")
-# df
-# df.drop('experiment', axis='columns', inplace=True)
-# df.drop('cylinder', axis='columns', inplace=True)
-# df
-# X = df.drop('result', axis=1)
+# df.drop('Test Durchgang', axis='columns', inplace=True)
+# X = df.drop('attribute_label', axis=1)
 # y = df['result']
 # clf = DecisionTreeClassifier(random_state=0)
 # clf = clf.fit(X, y)
 # cross_val_score(clf, X, y, cv=5)
-# plt.figure(figsize=(10,8))
-# plot_tree(clf, feature_names=X.columns, class_names=['True', 'False'], filled=True)
-# plt.savefig('FestoDecisionTree.png', dpi=800)
-# plt.show()
-# pickle.dump(clf, open('decisionTree.pickle', 'wb'))
-# y_pred = clf.predict(X)
-# y_pred
 # """, connections=[['attribute_test_durchgang', 'attribute_Schrauben_id', 'attribute_Schraubentyp',
 #                    'attribute_kopfbreite', 'attribuite_Kopfdicke', 'attribute_laenge',
 #                    'attribute_gewicht', 'attribute_durchmesser', 'attribute_beschichtung',

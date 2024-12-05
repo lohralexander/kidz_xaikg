@@ -33,13 +33,13 @@ def rag_advanced(ontology: owl.Ontology, question: str, run_id, sleep_time=0, ):
     found_nodes_dict = ontology.get_nodes(found_node_instances_list)
 
     message = [{"role": "system",
-                "content": f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections':trainedWith data_1. You can request new nodes. To do so write  [name of the requested node], for example [data_1]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you think you have enough information, write \"BREAK\" and give an educated answer. Use this class level ontology to orientate yourself: {str(ontology_structure)} "
+                "content": f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections':trainedWith data_1. You can request new nodes. To do so write  [name of the requested node], for example [data_1]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you think you have enough information, write \"BREAK\" and give an educated answer in the same message. Use this class level ontology to orientate yourself: {str(ontology_structure)} "
                            f"This is your starting node: {[ontology.get_node_structure(node) for node in found_nodes_dict.values()]}"},
                {"role": "user", "content": f"{question}"}]
     gpt_response, history = gpt_request_new(message=message, sleep_time=sleep_time)
 
     loop_count = 0
-    while loop_count < 15 and "BREAK" not in gpt_response:
+    while loop_count < 30 and "BREAK" not in gpt_response:
         found_nodes = execute_query(gpt_response, ontology)
         gpt_input = []
         if found_nodes:

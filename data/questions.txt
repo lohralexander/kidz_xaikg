@@ -1,36 +1,36 @@
-Wie viele Einträge hat der für das Training von Model a23b verwendete Datensatz?
-Wie viele Attribute hat der für das Training von Model a23b verwendete Datensatz?
-Welche Datentypen haben die Attribute vom Datensatz aus September 2024?
-Wie sind die Werteverteilungen des Attributs Kopfbreite des Datzensatzes aus September 2024?
-In welcher Umgebung (Ort, Unternehmen, System, etc.) wurde der Datensatz niryo_dataset_september_2024 erhoben?
-Wann / über welchen Zeitraum wurde der Datensatz niryo_dataset_september_2024 erhoben?
-Welchen Einschränkungen oder potenziellen Verfälschungen unterliegen die Daten aus niryo_dataset_september_2024?
-Wie wurde die Zielvariable in den Trainingsdaten des Datensatzes niryo_dataset_september_2024 befüllt?
-Welcher Algorithmus wurde für das Trainging von Model a23b verwendet?
-Welche Trainingsparameter wurden für das Trainging von Model a23b verwendet (Wert pro Parameter)?
-Welcher Algorithmus wurde zur Normalisierung für das Trainging von Model a23b verwendet?
-Welcher Algorithmus für die Ausreißererkennung für das Trainging von Model a23b verwendet?
-Wie präzise und verlässlich ist Model a23b?
-Ist die Performanz von Model a23b ausreichend für den Anwendungsfall?
-Welchen Einschränkungen unterliegt Model a23b?
-Auf welcher Menge an Daten wurde Model a23b trainiert?
-Auf welcher Art von Daten wurde Model a23b trainiert?
-Welche Daten wurden nicht zum Trainieren von Model a23b verwendet?
-Welche(s) Attribut(e) haben den größten Einfluss in Model a23b?
-Welche Attribute werden in Model a23b berücksichtigt?
-Wie ist die Gesamtlogik von Model a23b?
-Wie trifft Model a23b Entscheidungen?
-Wie kann ich Model a23b optimal nutzen?
-Was bedeuten die Ergebnisse von Model a23b?
-Was ist der Einsatzbereich von Model a23b?
-Welche Art von Ergebnis liefert Model a23b?
-Mit welchem Algorithmus werden die besten Ergebnisse für Datensatz niryo_dataset_september_2024 erreicht?
-Welcher Algorithmus wird am häufigsten (wie häufig) für die Aufgabenstellung von Model a23b eingesetzt?
-Welche Güte kann für die Aufgabenstellung von Model a23b üblicherweise/bestenfalls erreicht werden?
-Hat Attribut Klammer-Typ in anderen Modellen (überwiegend) einen Einfluss auf das Ergebnis?
-Bestätigen andere Modelle den Einfluss von Attribut Klammer-Typ auf das Ergebnis?
-Was ist die Bedeutung des Attributs Klammer-Typ?
-Mit welchen anderen Entitäten steht das Attribut Klammer-Typ in Beziehung (Ober/Unterklassen, usw.)
-Wie kann Model a23b verbessert werden?
-Wie und warum wird sich Model a23b im Laufe der Zeit verändern/driften?
-Warum wurden diese Attribute nicht in Model a23b verwendet: Test Durchgang, Schrauben ID?
+How many entries does the dataset used for training model a23b have?
+How many attributes does the data set used for training model a23b have?
+What data types do the attributes of the data set from September 2024 have?
+What are the value distributions of the Kopfbreite attribute of the record set from September 2024?
+In which environment (location, company, system, etc.) was the data set niryo_dataset_september_2024 collected?
+When / over what period was the data set niryo_dataset_september_2024 collected?
+What are the limitations or potential falsifications of the data from niryo_dataset_september_2024?
+How was the target variable filled in the training data of the niryo_dataset_september_2024 dataset?
+Which algorithm was used for trainging model a23b?
+Which training parameters were used for training model a23b (value per parameter)?
+Which algorithm was used for normalization for the training of model a23b?
+Which algorithm is used for outlier detection for the trainging of model a23b?
+How precise and reliable is Model a23b?
+Is the performance of Model a23b sufficient for its use case?
+What restrictions apply to model a23b?
+On what amount of data was model a23b trained?
+Have precautions been taken to detect overfitting?
+On what type of data was model a23b trained?
+Which data was not used to train model a23b?
+Which attribute(s) have the greatest influence in model a23b?
+Which attributes are taken into account in model a23b?
+What is the overall logic of model a23b?
+How does Model a23b make decisions?
+How can I get the most out of Model a23b?
+What do the results of model a23b mean?
+What is the area of application of Model a23b?
+What kind of result does model a23b provide?
+Which algorithm achieves the best results for dataset niryo_dataset_september_2024?
+Which algorithm is used most frequently (how often) for the task of model a23b?
+What quality can usually/at best be achieved for the task of model a23b?
+Does attribute Klammer-Typ in other models (predominantly) have an influence on the result?
+What is the meaning of the bracket type attribute?
+With which other entities is the bracket type attribute related (superclasses/subclasses, etc.)?
+How can model a23b be improved?
+How and why will model a23b change/drift over time?
+Why were these attributes not used in model a23b: attribute_test_durchgang, attribute_label

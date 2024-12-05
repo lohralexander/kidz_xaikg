@@ -1,1 +1,1 @@
-Der Entscheidungsbaum wurde 2 Mal fÃ¼r diese Aufgabenstellung eingesetzt.
+The model is used as a prototype to validate a research question.
