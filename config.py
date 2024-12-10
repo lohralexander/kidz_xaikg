@@ -1,10 +1,8 @@
 import logging
 import os
-from datetime import datetime
 
 
 class Config:
-
     graph_gen = True
 
     graphdb_repository = "http://localhost:7200/repositories/KIDZ"
@@ -45,8 +43,7 @@ class Logger:
         logger.addHandler(file_handler)
         logger.addHandler(console_handler)
 
-        logging.basicConfig(filename=f'logs/research_log_{datetime.now().strftime("%Y_%m_%d_%H_%M")}.txt',
-                            level=logging.INFO)
+        # logging.basicConfig(filename=f'logs/research_log_{datetime.now().strftime("%Y_%m_%d_%H_%M")}.txt', level=logging.INFO)
 
         return logger
 

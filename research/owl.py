@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import random
 
 import matplotlib.pyplot as plt
@@ -212,6 +213,9 @@ class Ontology:
                 net.add_edge(node.get_node_id(), connection, label=edge, arrows="to", length=400)
 
         output_file = f"graph/{run_id}_instance_graph.html"
+        directory = os.path.dirname(output_file)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         net.save_graph(output_file)
         _insert_headline(headline="Ontology Node Instance Diagram", output_file=output_file)
 
@@ -229,6 +233,10 @@ class Ontology:
                     net.add_edge(node.get_node_id(), connection, label=edge, arrows="to", length=400)
 
         output_file = f"graph/{run_id}_{question_id}_rag_instance_graph.html"
+
+        directory = os.path.dirname(output_file)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         net.save_graph(output_file)
         _insert_headline(headline=f"ID: {question_id}, RAG Node Instance Diagram", output_file=output_file)
 

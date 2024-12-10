@@ -1,5 +1,5 @@
-import gptConnector
 from config import Config
+from research import gptConnector
 
 
 class Questionnaire:
