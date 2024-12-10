@@ -1922,10 +1922,12 @@
       "connections": [
         [
           "niryo_dataset_september_2024",
-          "model_a23b"
+          "model_a23b",
+          "model_xT77"
         ],
         [
           "hasInput",
+          "hasOutput",
           "hasOutput"
         ]
       ],

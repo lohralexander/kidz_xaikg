@@ -1,6 +1,8 @@
 import logging
 import os
 
+from openai import OpenAI
+
 
 class Config:
     graph_gen = True
@@ -10,6 +12,7 @@ class Config:
     graphdb_connector = "http://localhost:7200/rest/chat/retrieval"
 
     openai_api_key = os.getenv("gptkidz")
+    chatgpt_client = OpenAI(api_key=openai_api_key)
 
     mongodb_client = 'mongodb://localhost:27017/'
     mongodb_database = 'datalake'

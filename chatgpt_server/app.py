@@ -1,14 +1,19 @@
 from flask import Flask, request, jsonify, render_template
-from research import functions
+from rag import information_retriever
 from research.owl import Ontology
+from connectors.gptconnector import gpt_request
 
 app = Flask(__name__)
 owl = Ontology()
-owl.deserialize("../ontology/ontology.json")
+owl.deserialize("../research/ontology/ontology.json")
+server_history = []
 
 
 def rag(input_text):
-    return functions.rag_advanced(owl, input_text)
+    retrieved_information = information_retriever(owl, input_text)
+    gpt_response, history = gpt_request(input_text, retrieved_information=retrieved_information)
+    server_history.append(history)
+    return gpt_response
 
 
 @app.route("/")
