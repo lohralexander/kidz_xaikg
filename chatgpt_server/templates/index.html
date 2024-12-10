@@ -92,6 +92,11 @@
         <button id="send-button">Send</button>
         <div id="spinner" class="spinner" style="display: none;"></div>
     </div>
+    <div id="dynamic-content"
+         style="margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 4px; display: none;">
+        <h3>Additional Information</h3>
+        <div id="content-area"></div>
+    </div>
 </div>
 
 
@@ -102,15 +107,11 @@
         const userInput = document.getElementById("user-input").value;
         if (!userInput) return;
 
-        // Append the user's message to the chat log
         appendMessage("user", userInput);
-
-        // Clear the input field and disable the send button
         document.getElementById("user-input").value = "";
         toggleLoading(true);
 
         try {
-            // Send the user's input to the server
             const response = await fetch(apiUrl, {
                 method: "POST",
                 headers: {
@@ -122,14 +123,18 @@
             if (response.ok) {
                 const data = await response.json();
                 appendMessage("bot", data.response);
-            } else {
-                appendMessage("bot", "Error: Could not fetch a response from the server.");
-            }
+
+                // Open the dynamic file in a popup
+                if (data.dynamicFileUrl) {
+                        openInPopup(data.dynamicFileUrl);
+                    }
+                } else {
+                    appendMessage("bot", "Error: Could not fetch a response from the server.");
+                }
         } catch (error) {
             console.error("Error communicating with the server:", error);
             appendMessage("bot", "Error: Unable to connect to the server.");
         } finally {
-            // Re-enable the send button and hide the spinner
             toggleLoading(false);
         }
     });
@@ -148,13 +153,27 @@
         const spinner = document.getElementById("spinner");
 
         if (isLoading) {
-            sendButton.style.display = "none"; // Hide the send button
-            spinner.style.display = "inline-block"; // Show the spinner
+            sendButton.style.display = "none";
+            spinner.style.display = "inline-block";
         } else {
-            sendButton.style.display = "inline-block"; // Show the send button
-            spinner.style.display = "none"; // Hide the spinner
+            sendButton.style.display = "inline-block";
+            spinner.style.display = "none";
         }
     }
+
+     function openInPopup(url) {
+        const width = 800; // Set the width of the popup
+        const height = 600; // Set the height of the popup
+        const left = (screen.width - width) / 2; // Center horizontally
+        const top = (screen.height - height) / 2; // Center vertically
+
+        // Open a new popup window
+        window.open(
+            url,
+            "PopupWindow", // Name of the window
+            `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+        );
+}
 </script>
 
 </body>

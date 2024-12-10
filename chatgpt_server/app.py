@@ -29,7 +29,8 @@ def rag_endpoint():
     if not input_text:
         return jsonify({"response": "Error: No input provided."}), 400
     response = rag(input_text)
-    return jsonify({"response": response})
+    return jsonify({"response": response,
+        "dynamicFileUrl": "static/graph/rag_graph_79f09ab8_rag_instance_graph.html"})
 
 
 if __name__ == "__main__":
