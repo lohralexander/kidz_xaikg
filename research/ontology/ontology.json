@@ -18,7 +18,7 @@
       "node_class_id": "Dataset",
       "class_connections": [
         [
-          "TrainingRun",
+          "Model",
           "Attribute"
         ],
         [
@@ -27,20 +27,6 @@
         ]
       ],
       "explanation": "A Dataset consisting of multiple Rows."
-    },
-    {
-      "node_class_id": "TrainingRun",
-      "class_connections": [
-        [
-          "Dataset",
-          "Model"
-        ],
-        [
-          "hasInput",
-          "hasOutput"
-        ]
-      ],
-      "explanation": "A training run is a group of jointly trained models that are all based on a specific data set."
     },
     {
       "node_class_id": "Screw",
@@ -129,22 +115,6 @@
       "explanation": "The Task, that a model achieves."
     },
     {
-      "node_class_id": "GlobalExplanationRun",
-      "class_connections": [
-        [
-          "Dataset",
-          "GlobalInsight",
-          "Model"
-        ],
-        [
-          "hasInput",
-          "hasOutput",
-          "hasInput"
-        ]
-      ],
-      "explanation": "A global Explanation Run is an algorithm which generates insight on a model. Examples are Shapley or Lime"
-    },
-    {
       "node_class_id": "GlobalInsight",
       "class_connections": [
         [
@@ -177,13 +147,11 @@
       "class_connections": [
         [
           "Dataset",
-          "TrainingRun",
           "Task",
-          "GlobalExplanationRun"
+          "Insight"
         ],
         [
           "trainedWith",
-          "trainedBy",
           "achieves",
           "isExplainedBy"
         ]
@@ -238,31 +206,11 @@
       "shap_value": 0
     },
     {
-      "node_id": "GlobalExplanationRun_1",
-      "node_class": "GlobalExplanationRun",
-      "connections": [
-        [
-          "niryo_dataset_september_2024",
-          "Insight_1_1",
-          "Insight_1_2",
-          "Insight_1_3",
-          "model_a23b"
-        ],
-        [
-          "hasInput",
-          "hasOutput",
-          "hasInput",
-          "hasInput",
-          "hasInput"
-        ]
-      ]
-    },
-    {
       "node_id": "Insight_2_1",
       "node_class": "GlobalInsight",
       "connections": [
         [
-          "model_a23b",
+          "model_xT77",
           "attribute_klammertyp"
         ],
         [
@@ -277,7 +225,7 @@
       "node_class": "GlobalInsight",
       "connections": [
         [
-          "model_a23b",
+          "model_xT77",
           "attribute_laenge"
         ],
         [
@@ -292,7 +240,7 @@
       "node_class": "GlobalInsight",
       "connections": [
         [
-          "model_a23b",
+          "model_xT77",
           "attribute_Schrauben_id"
         ],
         [
@@ -303,31 +251,11 @@
       "shap_value": 0.01
     },
     {
-      "node_id": "GlobalExplanationRun_2",
-      "node_class": "GlobalExplanationRun",
-      "connections": [
-        [
-          "niryo_dataset_september_2024",
-          "Insight_2_1",
-          "Insight_2_2",
-          "Insight_2_3",
-          "model_xT77"
-        ],
-        [
-          "hasInput",
-          "hasOutput",
-          "hasInput",
-          "hasInput",
-          "hasInput"
-        ]
-      ]
-    },
-    {
       "node_id": "Insight_3_1",
       "node_class": "GlobalInsight",
       "connections": [
         [
-          "model_a23b",
+          "model_qdk1",
           "attribute_klammertyp"
         ],
         [
@@ -342,7 +270,7 @@
       "node_class": "GlobalInsight",
       "connections": [
         [
-          "model_a23b",
+          "model_qdk1",
           "attribute_laenge"
         ],
         [
@@ -357,7 +285,7 @@
       "node_class": "GlobalInsight",
       "connections": [
         [
-          "model_a23b",
+          "model_qdk1",
           "attribute_Schrauben_id"
         ],
         [
@@ -366,24 +294,6 @@
         ]
       ],
       "shap_value": 0
-    },
-    {
-      "node_id": "GlobalExplanationRun_3",
-      "node_class": "GlobalExplanationRun",
-      "connections": [
-        [
-          "niryo_dataset_september_2024",
-          "Insight_3_1",
-          "Insight_3_2",
-          "Insight_3_3"
-        ],
-        [
-          "hasInput",
-          "hasOutput",
-          "hasInput",
-          "hasInput"
-        ]
-      ]
     },
     {
       "node_id": "ScrewPlacement",
@@ -632,10 +542,17 @@
       "node_class": "Robotarm",
       "connections": [
         [
-          "training_run_1"
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
+
         ],
         [
-          "usedIn"
+          "usedBy",
+          "usedBy",
+          "usedBy",
+          "usedBy"
         ]
       ]
     },
@@ -683,7 +600,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -702,7 +619,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -721,7 +638,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -740,7 +657,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -759,7 +676,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -778,7 +695,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -797,7 +714,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -816,7 +733,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -835,7 +752,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -854,7 +771,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -873,7 +790,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -892,7 +809,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -911,7 +828,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -930,7 +847,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -949,7 +866,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -968,7 +885,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -987,7 +904,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1006,7 +923,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1025,7 +942,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1044,7 +961,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1063,7 +980,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1082,7 +999,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1101,7 +1018,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1120,7 +1037,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1139,7 +1056,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1158,7 +1075,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1177,7 +1094,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1196,7 +1113,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1215,7 +1132,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1234,7 +1151,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1253,7 +1170,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1272,7 +1189,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1291,7 +1208,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1310,7 +1227,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1329,7 +1246,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1348,7 +1265,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1367,7 +1284,7 @@
       "node_class": "Screw",
       "connections": [
         [
-          "training_run_1"
+          "niryo_dataset_september_2024"
         ],
         [
           "usedIn"
@@ -1387,14 +1304,16 @@
       "connections": [
         [
           "niryo_dataset_september_2024",
-          "training_run_1",
           "ScrewPlacement",
-          "GlobalExplanationRun_1"
+          "Insight_1_1",
+          "Insight_1_2",
+          "Insight_1_3"
         ],
         [
           "trainedWith",
-          "trainedBy",
           "achieves",
+          "isExplainedBy",
+          "isExplainedBy",
           "isExplainedBy"
         ]
       ],
@@ -1431,18 +1350,21 @@
       "connections": [
         [
           "niryo_dataset_september_2024",
-          "training_run_1",
           "ScrewPlacement",
-          "GlobalExplanationRun_2"
+          "Insight_2_1",
+          "Insight_2_2",
+          "Insight_2_3"
         ],
         [
           "trainedWith",
-          "trainedBy",
           "achieves",
+          "isExplainedBy",
+          "isExplainedBy",
           "isExplainedBy"
         ]
       ],
-      "algorithm": "Neural Net"
+      "algorithm": "Neural Net",
+      "accuracy" : 0.91
     },
     {
       "node_id": "model_p1b3",
@@ -1450,14 +1372,16 @@
       "connections": [
         [
           "niryo_dataset_september_2024",
-          "training_run_1",
           "ScrewPlacement",
-          "GlobalExplanationRun_3"
+          "Insight_3_1",
+          "Insight_3_2",
+          "Insight_3_3"
         ],
         [
           "trainedWith",
-          "trainedBy",
           "achieves",
+          "isExplainedBy",
+          "isExplainedBy",
           "isExplainedBy"
         ]
       ],
@@ -1470,12 +1394,10 @@
       "connections": [
         [
           "niryo_dataset_september_2024",
-          "training_run_1",
           "ScrewPlacement"
         ],
         [
           "trainedWith",
-          "trainedBy",
           "achieves"
         ]
       ],
@@ -1915,35 +1837,15 @@
       "success": true
     },
     {
-      "node_id": "training_run_1",
-      "node_class": "TrainingRun",
-      "date": "10.10.2024",
-      "purpose": "Train models to predict if a screw can be lifted to a specific position by a roboter arm",
-      "connections": [
-        [
-          "niryo_dataset_september_2024",
-          "model_a23b",
-          "model_xT77"
-        ],
-        [
-          "hasInput",
-          "hasOutput",
-          "hasOutput"
-        ]
-      ],
-      "trainingParameters": "Criterion: Gini, splitter: Best, max_depth: None, min_samples_split: 2, min_samples_leaf: 1, max_features: None, random_state: 42, max_leaf_nodes: None, in_impurity_decrease: 0.0"
-    },
-    {
       "node_id": "niryo_dataset_september_2024",
       "amountOfRows": 2126,
       "amountOfAttributes": 12,
       "node_class": "Dataset",
       "domain": "Niryo Robot",
       "locationOfDataRecording": "Ravensburg Weingarten University, Baden-Wuerttemberg",
-      "dateOfRecording": "Recorded in September 2024",
+      "dateOfRecording": "Recorded in Juli 2025",
       "connections": [
         [
-          "training_run_1",
           "attribute_test_durchgang",
           "attribute_Schrauben_id",
           "attribute_Schraubentyp",
@@ -1958,7 +1860,6 @@
           "attribute_label"
         ],
         [
-          "usedBy",
           "has",
           "has",
           "has",

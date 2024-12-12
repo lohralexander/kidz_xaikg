@@ -1,4 +1,3 @@
-import datetime
 import json
 import os
 import random
@@ -104,19 +103,19 @@ class Ontology:
         for node in self._node_dict.values():
             if node.node_class_id not in used_node_classes:
                 used_node_classes.append(node.node_class_id)
-                node_structure = {"Node": node.node_class_id, "Explanation": node.explanation,
-                                  "Connections": ", ".join([f"{edge} {connection}" for connection, edge in
-                                                            zip(node.get_class_connections()[0],
-                                                                node.get_class_connections()[1])])}
-                annotation_list = []
-                annotations_to_ignore = {"connections", "class_connections", "node_id",
-                                         "node_class_id", "explanation"}
-                for key, value in node.__dict__.items():
-                    if key not in annotations_to_ignore:
-                        annotation_list.append(key)
-                node_structure.update({"Annotations": annotation_list})
+                node_structure = {"Node Class ID": node.node_class_id, "Explanation": node.explanation,
+                                  "Connected Classes": ", ".join([f"{edge} {connection}" for connection, edge in
+                                                                zip(node.get_class_connections()[0],
+                                                                    node.get_class_connections()[1])])}
+                # annotation_list = []
+                # annotations_to_ignore = {"connections", "class_connections", "node_id",
+                #                          "node_class_id", "explanation"}
+                # for key, value in node.__dict__.items():
+                #     if key not in annotations_to_ignore:
+                #         annotation_list.append(key)
+                # node_structure.update({"Annotations": annotation_list})
                 node_list.append(node_structure)
-        return str(node_list)
+        return node_list
 
     def get_node_structure_by_list(self, node_list):
         node_structure_list = []
@@ -126,8 +125,8 @@ class Ontology:
         return node_structure_list
 
     def get_node_structure(self, node):
-        node_structure = {"Node": node.get_node_id(), "Explanation": node.get_explanation(),
-                          "Connections": ", ".join([f"{edge} {connection}" for connection, edge in
+        node_structure = {"Node Instance ID": node.get_node_id(), "Explanation": node.get_explanation(),
+                          "Connected Instances": ", ".join([f"{edge} {connection}" for connection, edge in
                                                     zip(node.get_node_connections()[0],
                                                         node.get_node_connections()[1])])}
         annotation_list = []
@@ -221,7 +220,7 @@ class Ontology:
 
         # webbrowser.open(f".\{output_file}")
 
-    def create_rag_instance_graph(self, rag_dict, run_id, question_id):
+    def create_rag_instance_graph(self, rag_dict, run_id="rag_graph", question_id=""):
         net = Network(height="100vh", width="100vw", directed=True)
 
         for node in rag_dict.values():
@@ -249,8 +248,8 @@ class Ontology:
 
         for node_class in data.get("node_classes"):
             self.add_node_class(GenericClass(node_class_id=node_class.get("node_class_id"),
-                                       class_connections=node_class.get("class_connections"),
-                                       explanation=node_class.get("explanation")))
+                                             class_connections=node_class.get("class_connections"),
+                                             explanation=node_class.get("explanation")))
 
         for node_instance in data.get("node_instances", []):
             node_id = node_instance.get("node_id")
@@ -339,7 +338,6 @@ class GenericNode(Node):
 
     def get_class_connections(self):
         return self.class_connections
-
 
 
 class GenericClass:
