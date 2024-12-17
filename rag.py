@@ -1,98 +1,174 @@
-import json
 import re
 import uuid
-
-from flask import jsonify
 
 from config import logger
 from connectors.gptconnector import gpt_request
 from research.owl import *
 
 
-def information_retriever(ontology: Ontology, question: str, anker_points=None, sleep_time=0, ):
+def information_retriever(ontology: Ontology, user_query: str, previous_conversation=None, sleep_time=0, ):
+    logger.info("Starting RAG")
     # if not isinstance(ontology, owl.Ontology):
     #     Exception(TypeError, "The given ontology is not an instance of the Ontology class.")
     ontology_structure = ontology.get_ontology_structure()
-    # if anker_points is not None:
     # Identify the used classes, so we don't have to give gpt every single instance to pick an anker node
     system_message = f"The following structure illustrates the class level of the ontology, which will be used to answer the subsequent questions. The node classes have instances that are not listed here. :{json.dumps(ontology_structure)}."
-    user_message = f"Only give as an answer a List of Classes which could be useful in answering the given question: {question} Return only JSON Syntax without prefix."
-    gpt_response, history = gpt_request(user_message=user_message, system_message=system_message, sleep_time=sleep_time)
+    user_message = f"Only give as an answer a list of classes (following this syntax: [class1, class2, ...]) which are connected to this user query: {user_query} Return only JSON Syntax without prefix."
+    gpt_response = gpt_request(user_message=user_message,
+                               system_message=system_message,
+                               previous_conversation=previous_conversation,
+                               sleep_time=sleep_time,
+                               model="gpt-4o-mini-2024-07-18"
+                               )[0]
     found_node_class_list = re.findall(r'\w+', gpt_response)
+    logger.info(f"Found node classes: {found_node_class_list}")
 
     # Identify possible starting nodes
     instance_ids = [node.get_node_id() for node in ontology.get_instances_by_class(found_node_class_list)]
-    user_message = f"Use the following list of instances: {str(instance_ids)}. Which of these instances is named in the previously given question? Only use the correct ones. You can ignore spelling error or cases. Return only JSON Syntax."
-    gpt_response = gpt_request(user_message=user_message, previous_conversation=history, sleep_time=sleep_time)[0]
+    user_message = f"Here is a list of instances: {str(instance_ids)}. To which of them refers this user query: {user_query}? Only use the correct one. You can ignore spelling error or cases. Return only JSON Syntax without prefix."
+    gpt_response = \
+        gpt_request(user_message=user_message,
+                    previous_conversation=previous_conversation,
+                    sleep_time=sleep_time,
+                    model="gpt-4o-mini-2024-07-18")[0]
     found_node_instances_list = re.findall(r'\w+', gpt_response)
     retrieved_node_dict = ontology.get_nodes(found_node_instances_list)
+    logger.info(f"Found node instances: {found_node_instances_list}")
 
-    system_message = f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections': trainedWith data_1. You can request new nodes. To do so write [name of the requested node], for example [data_1]. You can ask for more than one instance this way. For example  [data_1, data_2]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you think you have enough information, write \"BREAK\". Use this class level ontology to orientate yourself: {str(ontology_structure)} This is your starting node: {[ontology.get_node_structure(node) for node in retrieved_node_dict.values()]}. Return only JSON Syntax without prefix."
-    user_message = question
-    gpt_response, history = gpt_request(user_message=user_message, system_message=system_message, sleep_time=sleep_time)
-
+    starting_nodes = [ontology.get_node_structure(node) for node in retrieved_node_dict.values()]
+    logger.info("Beginning iterative ontology search ")
+    logger.info(f"Iteration 0. Starting node: {starting_nodes}")
+    system_message = f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections': trainedWith data_1. You can request new nodes. To do so write [name of the requested node], for example [data_1]. You can ask for more than one instance this way. For example  [data_1, data_2]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you think you have enough information, write \"BREAK\". Use this class level ontology to orientate yourself: {str(ontology_structure)} This is your starting node: {starting_nodes}. Return only JSON Syntax without prefix."
+    gpt_response, history = gpt_request(user_message=user_query, system_message=system_message, sleep_time=sleep_time)
     loop_count = 0
     while loop_count < 10 and "BREAK" not in gpt_response:
+        logger.info(f"Iteration {loop_count}. Requested nodes: {gpt_response}")
         found_node_instances = execute_query(gpt_response, ontology)
         retrieved_information = []
         if found_node_instances:
+            logger.info(
+                f"Iteration {loop_count}. Nodes found: {[ontology.get_node_structure(node) for node in found_node_instances]}.")
             for node in found_node_instances:
                 retrieved_information.append(ontology.get_node_structure(node))
                 retrieved_node_dict.update({f"{node.get_node_id()}": node})
-            logger.debug(f"RETRIEVED INFORMATION: {retrieved_information}")
         else:
             retrieved_information = "No instance exists for that ID. You asked for a class or searched for a non existing instance."
+            logger.info(f"Iteration {loop_count}. No nodes where found.")
         user_message = f"This is the result to your query: {retrieved_information}. If you need more information, use another query, otherwise write BREAK. Return only JSON Syntax without prefix."
 
-        if found_node_instances:
-            gpt_response, history = gpt_request(user_message=user_message, previous_conversation=history,
-                                                sleep_time=sleep_time)
-        else:
-            gpt_response = gpt_request(user_message=user_message, previous_conversation=history, sleep_time=sleep_time)[
-                0]
+        gpt_response, history = gpt_request(user_message=user_message,
+                                            previous_conversation=history,
+                                            sleep_time=sleep_time)
         loop_count += 1
+    logger.info(f"Iterative search ended with {loop_count - 1} iteration.")
 
     retrieved_graph_id = uuid.uuid1()
-    graph_path = create_rag_instance_graph(retrieved_node_dict, retrieved_graph_id, question)
+    graph_path = create_rag_instance_graph(retrieved_node_dict, retrieved_graph_id, user_query)
     retrieved_relevant_information = []
     for node in retrieved_node_dict.values():
         retrieved_relevant_information.append(ontology.get_node_structure(node))
-    #retrieved_relevant_information = [str(obj) for obj in retrieved_node_dict.values()]
+    # retrieved_relevant_information = [str(obj) for obj in retrieved_node_dict.values()]
     logger.debug(retrieved_relevant_information)
     return retrieved_relevant_information, graph_path
 
 
 def execute_query(query, ontology):
     pattern = r"\b([a-zA-Z_1-9]+)"
-    #pattern = r"\['?([^'\]]+)'?\]"
+    # pattern = r"\['?([^'\]]+)'?\]"
     # pattern = "\[([A - Za - z0 - 9._] * (?:, [A-Za-z0-9._] *){0, 2})\]"
     matches = re.findall(pattern, query)
     return list(ontology.get_nodes(matches).values())
 
 
 def create_rag_instance_graph(rag_dict, question_id, question):
-    net = Network(height="100vh", width="100vw", directed=True)
+    net = Network(height="100vh", width="100vw", directed=True, notebook=False)
 
+    # Header blue color
+    header_blue = "#457b9d"
+
+    # Add nodes with custom color
     for node in rag_dict.values():
-        net.add_node(node.get_node_id(), title=node.get_internal_structure())
+        net.add_node(
+            node.get_node_id(),
+            title=node.get_internal_structure(),
+            color=header_blue  # Set node color to header blue
+        )
 
+    # Add edges
     for node in rag_dict.values():
         for connection, edge in zip(node.get_node_connections()[0], node.get_node_connections()[1]):
             if connection in rag_dict.keys():
                 net.add_edge(node.get_node_id(), connection, label=edge, arrows="to", length=400)
 
+    # Save the graph
     output_file = f"static/graph/rag_{question_id}.html"
-
     directory = os.path.dirname(output_file)
     if not os.path.exists(directory):
         os.makedirs(directory)
     net.save_graph(output_file)
 
+    # Add custom styling and header
+    custom_styles = """
+    <style>
+        body {
+            font-family: 'Barlow Semi Condensed', Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        #header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #457b9d;
+            color: white;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        #logo {
+            height: 50px;
+            width: auto;
+            margin-right: 15px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        h2 {
+            text-align: center;
+            color: #457b9d;
+            margin-top: 20px;
+            font-weight: 700;
+        }
+        #graph-container {
+            margin: 20px auto;
+            max-width: 90%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    """
+
+    custom_header = f"""
+    <div id="header">
+        <img src="../images/kidz.png" alt="Logo" id="logo">
+        <h1>Retrieval Augmented Generation</h1>
+    </div>
+    <h2>Used Nodes for Question: {question}</h2>
+    <div id="graph-container">
+    """
+
+    # Inject custom styles and header into the graph's HTML
     with open(output_file, 'r') as file:
         html_content = file.read()
 
-    headline_html = f"<h2 style='text-align:center;color:black;font:arial;margin-top:20px;'>Used nodes for question: {question}</h2>"
-    html_content = html_content.replace('<body>', f'<body>\n{headline_html}', 1)
+    html_content = html_content.replace("<head>", f"<head>\n{custom_styles}", 1)
+    html_content = html_content.replace("<body>", f"<body>\n{custom_header}", 1)
+    html_content = html_content.replace("</body>", "</div>\n</body>", 1)
 
     with open(output_file, 'w') as file:
         file.write(html_content)
@@ -103,4 +179,4 @@ def create_rag_instance_graph(rag_dict, question_id, question):
 if __name__ == '__main__':
     owl = Ontology()
     owl.deserialize("research/ontology/ontology.json")
-    information_retriever(question="How does other models perform on the task of model a23b?", ontology=owl)
+    information_retriever(user_query="How does other models perform on the task of model a23b?", ontology=owl)

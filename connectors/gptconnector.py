@@ -7,21 +7,24 @@ def gpt_request(user_message, system_message=None, previous_conversation=None, r
                 model="gpt-4o-2024-11-20",
                 sleep_time=0, seed=42, temperature=0):
     client = Config.chatgpt_client
+    logger.debug(f"GPT Request started. Used model: {model}")
+    logger.debug(f"User message: {user_message}")
     message = []
     if previous_conversation is not None:
         message = previous_conversation
         message.append({"role": "user", "content": user_message})
+        logger.debug(f"Previous conversation: {previous_conversation}")
 
     if system_message is not None:
         message.append({"role": "system", "content": system_message})
+        logger.debug(f"System message: {system_message}")
 
     if retrieved_information is not None:
-        logger.debug(f"USED RETRIEVED INFORMATION FOR REQUEST: {retrieved_information}")
+        logger.debug(f"Retrieved information: {retrieved_information}")
         message.append({"role": "user",
                         "content": f"{user_message}. Here is ontology retrieved information based on the topic: {retrieved_information}"})
     else:
         message.append({"role": "user", "content": user_message})
-    logger.debug(f"Message: {message}")
     try:
         response = client.chat.completions.create(
             temperature=temperature,
@@ -34,12 +37,12 @@ def gpt_request(user_message, system_message=None, previous_conversation=None, r
         return None, previous_conversation
     if response and response.choices:
         response_message = response.choices[0].message.content
+        logger.debug(f"GPT Respond: {response_message}")
         message.append({"role": "assistant", "content": response_message})
-        conversation = message
+
     else:
         response_message = "Error: No valid response from API."
-        conversation = message
+        logger.error(response_message)
 
-    logger.debug(f"Assistant: {response_message}")
     time.sleep(sleep_time)
-    return response_message, conversation
+    return response_message, message

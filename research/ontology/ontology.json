@@ -5,11 +5,13 @@
       "class_connections": [
         [
           "Attribute",
-          "Dataset"
+          "Dataset",
+          "Model"
         ],
         [
           "hasInput",
-          "hasInput"
+          "hasInput",
+          "doneFor"
         ]
       ],
       "explanation": "Preprocessing is the process of preparing data for machine learning algorithms. It involves cleaning, transforming, and encoding data to make it suitable for training models."
@@ -133,11 +135,13 @@
       "class_connections": [
         [
           "Preprocessing",
-          "Dataset"
+          "Dataset",
+          "Model"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain"
         ]
       ],
       "explanation": "An attribute is a characteristic of a dataset."
@@ -148,12 +152,14 @@
         [
           "Dataset",
           "Task",
-          "Insight"
+          "Insight",
+          "Attribute"
         ],
         [
           "trainedWith",
           "achieves",
-          "isExplainedBy"
+          "isExplainedBy",
+          "used"
         ]
       ],
       "explanation": "An attribute is a characteristic of a dataset."
@@ -337,11 +343,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "Enum",
@@ -354,11 +368,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "Enum",
@@ -371,11 +393,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "Numeric",
@@ -389,11 +419,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "Numeric",
@@ -406,11 +444,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "Numeric",
@@ -423,11 +469,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "Numeric",
@@ -440,11 +494,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "Numeric",
@@ -457,11 +519,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "ENUM",
@@ -474,11 +544,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "ENUM",
@@ -491,11 +569,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "Numeric",
@@ -508,11 +594,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "ENUM/ Label",
@@ -526,11 +620,19 @@
       "connections": [
         [
           "preprocessing_niryo",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "usedBy",
-          "partOf"
+          "partOf",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain",
+          "usedToTrain"
         ]
       ],
       "datatype": "Numeric",
@@ -545,10 +647,11 @@
           "model_a23b",
           "model_xT77",
           "model_p1b3",
-          "model_qdk1"
-
+          "model_qdk1",
+          "niryo_dataset_september_2024"
         ],
         [
+          "usedBy",
           "usedBy",
           "usedBy",
           "usedBy",
@@ -1301,20 +1404,43 @@
     {
       "node_id": "model_a23b",
       "node_class": "Model",
+      "training_information": "A cross validation was used. The training data was not split",
       "connections": [
         [
           "niryo_dataset_september_2024",
           "ScrewPlacement",
           "Insight_1_1",
           "Insight_1_2",
-          "Insight_1_3"
+          "Insight_1_3",
+          "attribute_Schrauben_id",
+          "attribute_Schraubentyp",
+          "attribute_kopfbreite",
+          "attribute_Kopfdicke",
+          "attribute_laenge",
+          "attribute_gewicht",
+          "attribute_durchmesser",
+          "attribute_beschichtung",
+          "attribute_klammertyp",
+          "attribute_winkel",
+          "attribute_label"
         ],
         [
           "trainedWith",
           "achieves",
           "isExplainedBy",
           "isExplainedBy",
-          "isExplainedBy"
+          "isExplainedBy",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used"
         ]
       ],
       "algorithm": "DecisionTree",
@@ -1364,7 +1490,7 @@
         ]
       ],
       "algorithm": "Neural Net",
-      "accuracy" : 0.91
+      "accuracy": 0.91
     },
     {
       "node_id": "model_p1b3",
@@ -1857,7 +1983,11 @@
           "attribute_beschichtung",
           "attribute_klammertyp",
           "attribute_winkel",
-          "attribute_label"
+          "attribute_label",
+          "model_a23b",
+          "model_xT77",
+          "model_p1b3",
+          "model_qdk1"
         ],
         [
           "has",
@@ -1871,14 +2001,18 @@
           "has",
           "has",
           "has",
-          "has"
+          "has",
+          "usedBy",
+          "usedBy",
+          "usedBy",
+          "usedBy"
         ]
       ]
     },
     {
-      "node_id": "preprocessing_niryo",
+      "node_id": "preprocessing_niryo_model_a23b",
+      "normalization": "There was no normalization.",
       "node_class": "Preprocessing",
-      "python_code": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import cross_val_score\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.tree import DecisionTreeClassifier\nimport pickle\ndf = pd.read_csv(\"niryo_dataset_september_2024.csv\")\ndf.drop('Test Durchgang', axis='columns', inplace=True)\nX = df.drop('attribute_label', axis=1)\ny = df['result']\nclf = DecisionTreeClassifier(random_state=0)\nclf = clf.fit(X, y)\ncross_val_score(clf, X, y, cv=5)\n",
       "connections": [
         [
           "attribute_test_durchgang",
@@ -1893,7 +2027,8 @@
           "attribute_klammertyp",
           "attribute_winkel",
           "attribute_label",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_september_2024",
+          "model_a23b"
         ],
         [
           "hasInput",
@@ -1908,7 +2043,47 @@
           "hasInput",
           "hasInput",
           "hasInput",
-          "hasInput"
+          "hasInput",
+          "doneFor"
+        ]
+      ]
+    },
+    {
+      "node_id": "preprocessing_niryo_model_xT77",
+      "normalization": "Z-Score Normalization",
+      "node_class": "Preprocessing",
+      "connections": [
+        [
+          "attribute_test_durchgang",
+          "attribute_Schrauben_id",
+          "attribute_Schraubentyp",
+          "attribute_kopfbreite",
+          "attribuite_Kopfdicke",
+          "attribute_laenge",
+          "attribute_gewicht",
+          "attribute_durchmesser",
+          "attribute_beschichtung",
+          "attribute_klammertyp",
+          "attribute_winkel",
+          "attribute_label",
+          "niryo_dataset_september_2024",
+          "model_xT77"
+        ],
+        [
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "hasInput",
+          "doneFor"
         ]
       ]
     }
