@@ -9,7 +9,7 @@ from research.owl import Ontology
 
 app = Flask(__name__)
 owl = Ontology()
-owl.deserialize("../research/ontology/ontology.json")
+owl.deserialize("./ontology/ontology.json")
 app.secret_key = 'BzPopVRViW'
 
 

@@ -117,6 +117,7 @@ def create_rag_instance_graph(rag_dict, question_id, question):
             color: #333;
         }
         #header {
+            font-family: 'Barlow Semi Condensed', Arial, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -133,10 +134,12 @@ def create_rag_instance_graph(rag_dict, question_id, question):
             margin-right: 15px;
         }
         h1 {
+            font-family: 'Barlow Semi Condensed', Arial, sans-serif;
             font-size: 1.8rem;
             margin: 0;
         }
         h2 {
+            font-family: 'Barlow Semi Condensed', Arial, sans-serif;
             text-align: center;
             color: #457b9d;
             margin-top: 20px;
@@ -158,7 +161,7 @@ def create_rag_instance_graph(rag_dict, question_id, question):
         <img src="../images/kidz.png" alt="Logo" id="logo">
         <h1>Retrieval Augmented Generation</h1>
     </div>
-    <h2>Used Nodes for Question: {question}</h2>
+    <h2>{question}</h2>
     <div id="graph-container">
     """
 
