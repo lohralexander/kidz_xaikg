@@ -3,8 +3,8 @@ import copy
 from flask import Flask, request, jsonify, render_template, session
 
 from config import logger
-from connectors.gptconnector import gpt_request
-from rag import information_retriever
+from connectors.gptconnector import gpt_request_with_history
+from rag import information_retriever_with_graph
 from research.owl import Ontology
 
 app = Flask(__name__)
@@ -15,15 +15,16 @@ app.secret_key = 'BzPopVRViW'
 
 def rag(question):
     logger.debug(f"Conversation History: {session.get('conversation_history', None)}")
-    retrieved_information, graph_path = information_retriever(ontology=owl,
-                                                              user_query=question,
-                                                              previous_conversation=copy.deepcopy(
-                                                                  session.get('conversation_history', [])))
+    retrieved_information, graph_path = information_retriever_with_graph(ontology=owl,
+                                                                         user_query=question,
+                                                                         previous_conversation=copy.deepcopy(
+                                                                             session.get('conversation_history', [])))
     logger.info(f"Retrieved information: {retrieved_information}")
     logger.debug(f"Conversation History: {session.get('conversation_history', None)}")
-    gpt_response, history = gpt_request(user_message=question,
-                                        previous_conversation=copy.deepcopy(session.get('conversation_history', [])),
-                                        retrieved_information=retrieved_information)
+    gpt_response, history = gpt_request_with_history(user_message=question,
+                                                     previous_conversation=copy.deepcopy(
+                                                         session.get('conversation_history', [])),
+                                                     retrieved_information=retrieved_information)
     logger.info(f"History: {history}")
     session['conversation_history'] = history
     logger.info(f"Assistend response: {gpt_response}")

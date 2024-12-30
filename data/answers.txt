@@ -19,7 +19,7 @@ The data was collected in a real-world experiment using a Niryo robot and commer
 No data was withheld.
 The attribute Klammer-Typ has the greatest influence.
 The following attributes were used: Schraubentyp, Kopfbreite (mm), Kopfdicke, Länge (mm), Gewicht (g), Durchmesser (mm), Beschichtung, Klammer-Typ, Winkel (in Grad).
-The logic of the learned decision tree works as follows:1. data splitting: The tree selects the most important features (e.g. length, weight) to separate the data.2. decision nodes: At each node, the tree decides based on a feature (e.g. whether the screw length is greater than 50 mm) and splits the data accordingly.3. Leaves: At the end, the decisions lead to a leaf node that predicts the outcome (e.g. success or failure).4. Predictions: For new data points, the same decision process is run until a prediction is made.The logic is based on the patterns the tree has learned during training.
+Model a23b is used to predict whether a Niryo robotic arm is capable of grasping specific screws and placing them into designated holes. It is based on a decision tree. To predict whether the screw will be successfully placed, the model uses various characteristics of the screw to be placed as input and generates a binary output.
 The model uses a decision tree to make decisions.
 In order to use the model optimally, care must be taken to use the same attributes with which the model was trained. Care must also be taken to ensure that the value ranges of the attributes match those of the training data set.
 The results of the model show whether a screw could be lifted and inserted into a suitable slot.

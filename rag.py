@@ -2,24 +2,26 @@ import re
 import uuid
 
 from config import logger
-from connectors.gptconnector import gpt_request
+from connectors.gptconnector import gpt_request_with_history
 from research.owl import *
 
 
-def information_retriever(ontology: Ontology, user_query: str, previous_conversation=None, sleep_time=0, ):
+def information_retriever(ontology: Ontology, user_query: str, previous_conversation=None, sleep_time=0):
+    return information_retriever_with_graph(ontology, user_query, previous_conversation, sleep_time)[0]
+
+
+def information_retriever_with_graph(ontology: Ontology, user_query: str, previous_conversation=None, sleep_time=0):
     logger.info("Starting RAG")
-    # if not isinstance(ontology, owl.Ontology):
-    #     Exception(TypeError, "The given ontology is not an instance of the Ontology class.")
     ontology_structure = ontology.get_ontology_structure()
     # Identify the used classes, so we don't have to give gpt every single instance to pick an anker node
     system_message = f"The following structure illustrates the class level of the ontology, which will be used to answer the subsequent questions. The node classes have instances that are not listed here. :{json.dumps(ontology_structure)}."
     user_message = f"Only give as an answer a list of classes (following this syntax: [class1, class2, ...]) which are connected to this user query: {user_query} Return only JSON Syntax without prefix."
-    gpt_response = gpt_request(user_message=user_message,
-                               system_message=system_message,
-                               previous_conversation=previous_conversation,
-                               sleep_time=sleep_time,
-                               model="gpt-4o-mini-2024-07-18"
-                               )[0]
+    gpt_response = gpt_request_with_history(user_message=user_message,
+                                            system_message=system_message,
+                                            previous_conversation=previous_conversation,
+                                            sleep_time=sleep_time,
+                                            model="gpt-4o-mini-2024-07-18"
+                                            )[0]
     found_node_class_list = re.findall(r'\w+', gpt_response)
     logger.info(f"Found node classes: {found_node_class_list}")
 
@@ -27,10 +29,10 @@ def information_retriever(ontology: Ontology, user_query: str, previous_conversa
     instance_ids = [node.get_node_id() for node in ontology.get_instances_by_class(found_node_class_list)]
     user_message = f"Here is a list of instances: {str(instance_ids)}. To which of them refers this user query: {user_query}? Only use the correct one. You can ignore spelling error or cases. Return only JSON Syntax without prefix."
     gpt_response = \
-        gpt_request(user_message=user_message,
-                    previous_conversation=previous_conversation,
-                    sleep_time=sleep_time,
-                    model="gpt-4o-mini-2024-07-18")[0]
+        gpt_request_with_history(user_message=user_message,
+                                 previous_conversation=previous_conversation,
+                                 sleep_time=sleep_time,
+                                 model="gpt-4o-mini-2024-07-18")[0]
     found_node_instances_list = re.findall(r'\w+', gpt_response)
     retrieved_node_dict = ontology.get_nodes(found_node_instances_list)
     logger.info(f"Found node instances: {found_node_instances_list}")
@@ -39,7 +41,8 @@ def information_retriever(ontology: Ontology, user_query: str, previous_conversa
     logger.info("Beginning iterative ontology search ")
     logger.info(f"Iteration 0. Starting node: {starting_nodes}")
     system_message = f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections': trainedWith data_1. You can request new nodes. To do so write [name of the requested node], for example [data_1]. You can ask for more than one instance this way. For example  [data_1, data_2]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you think you have enough information, write \"BREAK\". Use this class level ontology to orientate yourself: {str(ontology_structure)} This is your starting node: {starting_nodes}. Return only JSON Syntax without prefix."
-    gpt_response, history = gpt_request(user_message=user_query, system_message=system_message, sleep_time=sleep_time)
+    gpt_response, history = gpt_request_with_history(user_message=user_query, system_message=system_message,
+                                                     sleep_time=sleep_time)
     loop_count = 0
     while loop_count < 10 and "BREAK" not in gpt_response:
         logger.info(f"Iteration {loop_count}. Requested nodes: {gpt_response}")
@@ -56,9 +59,9 @@ def information_retriever(ontology: Ontology, user_query: str, previous_conversa
             logger.info(f"Iteration {loop_count}. No nodes where found.")
         user_message = f"This is the result to your query: {retrieved_information}. If you need more information, use another query, otherwise write BREAK. Return only JSON Syntax without prefix."
 
-        gpt_response, history = gpt_request(user_message=user_message,
-                                            previous_conversation=history,
-                                            sleep_time=sleep_time)
+        gpt_response, history = gpt_request_with_history(user_message=user_message,
+                                                         previous_conversation=history,
+                                                         sleep_time=sleep_time)
         loop_count += 1
     logger.info(f"Iterative search ended with {loop_count - 1} iteration.")
 
@@ -182,4 +185,5 @@ def create_rag_instance_graph(rag_dict, question_id, question):
 if __name__ == '__main__':
     owl = Ontology()
     owl.deserialize("research/ontology/ontology.json")
-    information_retriever(user_query="How does other models perform on the task of model a23b?", ontology=owl)
+    information_retriever_with_graph(user_query="How does other models perform on the task of model a23b?",
+                                     ontology=owl)

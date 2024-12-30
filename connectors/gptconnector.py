@@ -6,6 +6,13 @@ from config import Config, logger
 def gpt_request(user_message, system_message=None, previous_conversation=None, retrieved_information=None,
                 model="gpt-4o-2024-11-20",
                 sleep_time=0, seed=42, temperature=0):
+    return gpt_request_with_history(user_message, system_message, previous_conversation, retrieved_information, model,
+                                    sleep_time, seed, temperature)[0]
+
+
+def gpt_request_with_history(user_message, system_message=None, previous_conversation=None, retrieved_information=None,
+                             model="gpt-4o-2024-11-20",
+                             sleep_time=0, seed=42, temperature=0):
     client = Config.chatgpt_client
     logger.debug(f"GPT Request started. Used model: {model}")
     logger.debug(f"User message: {user_message}")
