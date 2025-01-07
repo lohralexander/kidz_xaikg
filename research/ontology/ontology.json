@@ -72,10 +72,12 @@
       "node_class_id": "TestCase",
       "class_connections": [
         [
-          "Task"
+          "Task",
+          "Dataset"
         ],
         [
-          "implementedBy"
+          "implementedBy",
+          "basedOn"
         ]
       ],
       "explanation": "A screw is given to a roboter arm. The roboter arm has to lift the screw and place it in a given place on a given angle. It is saved in the form of rows"
@@ -1690,6 +1692,44 @@
       "type": "Zylinder",
       "coating": false
     },
+        {
+      "node_id": "screw_W070",
+      "node_class": "Screw",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024"
+        ],
+        [
+          "usedIn"
+        ]
+      ],
+      "length": 72,
+      "width": 14.0,
+      "thickness": 10.0,
+      "weight": 50.7,
+      "diameter": 9.0,
+      "type": "Quadrat",
+      "coating": true
+    },
+        {
+      "node_id": "screw_W080",
+      "node_class": "Screw",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024"
+        ],
+        [
+          "usedIn"
+        ]
+      ],
+      "length": 55,
+      "width": 8.0,
+      "thickness": 3.0,
+      "weight": 33.7,
+      "diameter": 5.0,
+      "type": "Circle",
+      "coating": false
+    },
     {
       "node_id": "model_T3ZT",
       "node_class": "Model",
@@ -1884,30 +1924,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
-        ]
-      ],
-      "angle": 0.0,
-      "success": true
-    },
-    {
-      "node_id": "row_1",
-      "node_class": "TestCase",
-      "connections": [
-        [
-          "screw_530",
-          "Niryo",
-          "Silicon_gripper"
-        ],
-        [
-          "usedScrew",
-          "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -1920,12 +1944,34 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
+        ]
+      ],
+      "angle": 0.0,
+      "success": true
+    },
+    {
+      "node_id": "row_3",
+      "node_class": "TestCase",
+      "connections": [
+        [
+          "screw_530",
+          "Niryo",
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
+        ],
+        [
+          "usedScrew",
+          "usedRobot",
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -1938,12 +1984,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -1956,12 +2004,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -1974,12 +2024,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -1992,12 +2044,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -2010,12 +2064,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -2028,12 +2084,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -2046,12 +2104,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -2064,12 +2124,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -2082,12 +2144,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -2100,12 +2164,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -2118,12 +2184,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -2136,12 +2204,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -2154,12 +2224,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -2172,12 +2244,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -2190,12 +2264,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -2208,12 +2284,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -2226,12 +2304,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -2244,12 +2324,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -2262,12 +2344,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -2280,12 +2364,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -2298,12 +2384,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -2366,18 +2454,18 @@
       "dateOfRecording": "Recorded in Oktober 2024",
       "connections": [
         [
-          "attribute_test_durchgang",
-          "attribute_schrauben_id",
-          "attribute_schraubentyp",
-          "attribute_kopfbreite",
-          "attribute_kopfdicke",
-          "attribute_laenge",
-          "attribute_gewicht",
-          "attribute_durchmesser",
-          "attribute_beschichtung",
-          "attribute_klammertyp",
-          "attribute_winkel",
-          "attribute_label",
+          "attribute_test_durchgang_okt24",
+          "attribute_schrauben_id_okt24",
+          "attribute_schraubentyp_okt24",
+          "attribute_kopfbreite_okt24",
+          "attribute_kopfdicke_okt24",
+          "attribute_laenge_okt24",
+          "attribute_gewicht_okt24",
+          "attribute_durchmesser_okt24",
+          "attribute_beschichtung_okt24",
+          "attribute_klammertyp_okt24",
+          "attribute_winkel_okt24",
+          "attribute_label_okt24",
           "model_T3ZT"
         ],
         [
@@ -2442,19 +2530,19 @@
       "node_class": "Preprocessing",
       "connections": [
         [
-          "attribute_test_durchgang",
-          "attribute_schrauben_id",
-          "attribute_schraubentyp",
-          "attribute_kopfbreite",
-          "attribute_kopfdicke",
-          "attribute_laenge",
-          "attribute_gewicht",
-          "attribute_durchmesser",
-          "attribute_beschichtung",
-          "attribute_klammertyp",
-          "attribute_winkel",
-          "attribute_label",
-          "niryo_dataset_september_2024",
+          "attribute_test_durchgang_okt24",
+          "attribute_schrauben_id_okt24",
+          "attribute_schraubentyp_okt24",
+          "attribute_kopfbreite_okt24",
+          "attribute_kopfdicke_okt24",
+          "attribute_laenge_okt24",
+          "attribute_gewicht_okt24",
+          "attribute_durchmesser_okt24",
+          "attribute_beschichtung_okt24",
+          "attribute_klammertyp_okt24",
+          "attribute_winkel_okt24",
+          "attribute_label_okt24",
+          "niryo_dataset_oktober_2024",
           "model_xT77"
         ],
         [

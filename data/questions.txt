@@ -25,12 +25,12 @@ How can I get the most out of Model a23b?
 What do the results of model a23b mean?
 What is the area of application of Model a23b?
 What kind of result does model a23b provide?
-Which algorithm achieves the best results for dataset niryo_dataset_september_2024?
+Which algorithm achieves the best results for dataset niryo_dataset_september_2024 in the Screw Placement Task?
 Which algorithm is used most frequently (how often) for the task of model a23b?
 What quality can usually/at best be achieved for the task of model a23b?
-Does attribute Klammer-Typ in other models (predominantly) have an influence on the result?
+Does the bracket type attribute have similar relevance in other models as in model a23b?
 What is the meaning of the bracket type attribute?
-With which other entities is the bracket type attribute related (superclasses/subclasses, etc.)?
+With which other entities is the Gripper related?
 How can model a23b be improved?
 How and why will model a23b change/drift over time?
-Why were these attributes not used in model a23b: attribute_test_durchgang, attribute_label
+Why were these attributes not used in model a23b as input attributes: attribute_test_durchgang, attribute_label

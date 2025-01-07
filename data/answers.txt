@@ -1,5 +1,5 @@
 The data set used has 2,126 entries
-The data set has 12 attributes
+The data set has 12 attributes but only 11 were used for training
 The attributes have the following data types: Test Durchgang: Enum/ Identifier; Schrauben ID: ENUM; Schraubentyp: ENUM; Kopfbreite (mm): Numerisch; Kopfdicke (mm): Numerisch; Laenge (mm): Numerisch; Gewicht (g): Numerisch; Durchmesser (mm): Numerisch; Beschichtung: ENUM; Klammer-Typ: Enum; Winkel (in Grad): Numerisch; Erfolgreich (Ja/Nein): Enum
 Average 14.06, minimum 8, maximum 24.65
 The data set was collected at Ravensburg Weingarten University
@@ -23,14 +23,14 @@ Model a23b is used to predict whether a Niryo robotic arm is capable of grasping
 The model uses a decision tree to make decisions.
 In order to use the model optimally, care must be taken to use the same attributes with which the model was trained. Care must also be taken to ensure that the value ranges of the attributes match those of the training data set.
 The results of the model show whether a screw could be lifted and inserted into a suitable slot.
-The model is used as a prototype to validate a research question.
+The model is used as a prototype to validate a research question. A Niryo robot is used to place screws in different holes.
 The model returns a Boolean in the form of Fail/ Success as the result.
 Which algorithm achieves the best results for the dataset niryo_dataset_september_2024?
 The decision tree was used 2 times for this task.
 Usually about 90% can be expected, at best 93.4%.
-Yes, the Klammer-Typ attribute also has a major influence on the result in other models.
-The Klammer-Typ attribute describes the type of gripper arm used to grip the screws. There are silicone, notch and standard.
-Clamp type is related to robot arm
+Yes, the bracket type attribute also has a major influence on the result in other models.
+The bracket type attribute describes the type of gripper arm used to grip the screws. There are silicone, notch and standard.
+The Gripper is part of the robot arm
 The model can be improved with additional data sets that extend the value range of the previous data. The use of different robot arm types can also improve the generalizability of the model.
 Drift is unlikely, as the attributes and the test setup are not subject to fluctuation. However, one possibility would be that the performance of the robot arm decreases over time, meaning that screws that could previously be lifted can no longer be lifted.
 attribute_test_durchgang is an ID for the dataset and attribute_label is the result of the experiment and has to be included.

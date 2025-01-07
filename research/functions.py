@@ -76,8 +76,7 @@ def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, qu
     return file_path
 
 
-def create_overview_file(path_list, quality_measures, search_depth, alternate_cycles, id):
-    run_id = id
+def create_overview_file(path_list, quality_measures, alternate_cycles, run_id):
 
     file_path = f"results/overview_measurements_{run_id}.html"
     with open(file_path, 'w') as file:
@@ -89,7 +88,6 @@ def create_overview_file(path_list, quality_measures, search_depth, alternate_cy
 
         # Add parameters as a subsection
         file.write(f"<h2>Parameters</h2>\n")
-        file.write(f"<p><strong>Search Depth:</strong> {search_depth}</p>\n")
         file.write(f"<p><strong>Question Alternation Cycles:</strong> {alternate_cycles}</p>\n")
 
         # Add a list for paths
@@ -110,7 +108,7 @@ def create_overview_file(path_list, quality_measures, search_depth, alternate_cy
         file.write(f"</body>\n</html>")
 
 
-def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, search_depth: int,
+def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire,
                        alternation_cycles: int = 0):
     correct_answers = questionnaire.get_answers()
 
@@ -140,6 +138,6 @@ def start_research_run(ontology: owl.Ontology, questionnaire: Questionnaire, sea
         result_path_list.append(create_result_file(questionnaire, gpt_answers, score_list, quality_measures, run_id))
 
     aggregated_quality_measures = calculate_quality_measures(overview_scores_list)
-    create_overview_file(result_path_list, aggregated_quality_measures, search_depth, alternation_cycles, run_id)
+    create_overview_file(result_path_list, aggregated_quality_measures, alternation_cycles, run_id)
     logger.info(f"Research run {run_id} finished.")
     return aggregated_quality_measures

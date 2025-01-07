@@ -2,7 +2,7 @@ import re
 import uuid
 
 from config import logger
-from connectors.gptconnector import gpt_request_with_history
+from connectors.gptconnector import *
 from research.owl import *
 
 
@@ -16,12 +16,12 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
     # Identify the used classes, so we don't have to give gpt every single instance to pick an anker node
     system_message = f"The following structure illustrates the class level of the ontology, which will be used to answer the subsequent questions. The node classes have instances that are not listed here. :{json.dumps(ontology_structure)}."
     user_message = f"Only give as an answer a list of classes (following this syntax: [class1, class2, ...]) which are connected to this user query: {user_query} Return only JSON Syntax without prefix."
-    gpt_response = gpt_request_with_history(user_message=user_message,
+    gpt_response = gpt_request(user_message=user_message,
                                             system_message=system_message,
                                             previous_conversation=previous_conversation,
                                             sleep_time=sleep_time,
                                             model="gpt-4o-mini-2024-07-18"
-                                            )[0]
+                                            )
     found_node_class_list = re.findall(r'\w+', gpt_response)
     logger.info(f"Found node classes: {found_node_class_list}")
 
@@ -40,11 +40,11 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
     starting_nodes = [ontology.get_node_structure(node) for node in retrieved_node_dict.values()]
     logger.info("Beginning iterative ontology search ")
     logger.info(f"Iteration 0. Starting node: {starting_nodes}")
-    system_message = f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections': trainedWith data_1. You can request new nodes. To do so write [name of the requested node], for example [data_1]. You can ask for more than one instance this way. For example  [data_1, data_2]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you think you have enough information, write \"BREAK\". Use this class level ontology to orientate yourself: {str(ontology_structure)} This is your starting node: {starting_nodes}. Return only JSON Syntax without prefix."
+    system_message = f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections': trainedWith data_1. You can request new nodes. To do so write [name of the requested node], for example [data_1]. You can ask for more than one instance this way. For example  [data_1, data_2]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you have enough information, write \"BREAK\". Use this class level ontology to orientate yourself: {str(ontology_structure)} This is your starting node: {starting_nodes}. Return only JSON Syntax without prefix."
     gpt_response, history = gpt_request_with_history(user_message=user_query, system_message=system_message,
                                                      sleep_time=sleep_time)
     loop_count = 0
-    while loop_count < 10 and "BREAK" not in gpt_response:
+    while loop_count < 20 and "BREAK" not in gpt_response:
         logger.info(f"Iteration {loop_count}. Requested nodes: {gpt_response}")
         found_node_instances = execute_query(gpt_response, ontology)
         retrieved_information = []
@@ -76,7 +76,7 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
 
 
 def execute_query(query, ontology):
-    pattern = r"\b([a-zA-Z_1-9]+)"
+    pattern = r"(?<=\[|,)([^,\]]+)(?=,|\])"
     # pattern = r"\['?([^'\]]+)'?\]"
     # pattern = "\[([A - Za - z0 - 9._] * (?:, [A-Za-z0-9._] *){0, 2})\]"
     matches = re.findall(pattern, query)
@@ -185,5 +185,5 @@ def create_rag_instance_graph(rag_dict, question_id, question):
 if __name__ == '__main__':
     owl = Ontology()
     owl.deserialize("research/ontology/ontology.json")
-    information_retriever_with_graph(user_query="How does other models perform on the task of model a23b?",
+    information_retriever_with_graph(user_query="What data types do the attributes of the data set from September 2024 have?",
                                      ontology=owl)

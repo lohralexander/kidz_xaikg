@@ -15,12 +15,12 @@ class Questionnaire:
             questions_link = '../data/questions.txt'
             answers_link = '../data/answers.txt'
 
-        with open(questions_link, 'r') as file:
+        with open(questions_link, encoding="utf-8") as file:
             for index, line in enumerate(file, start=1):
                 self.question_dict[
                     index] = line.strip()
 
-        with open(answers_link, 'r') as file:
+        with open(answers_link, encoding="utf-8") as file:
             for index, line in enumerate(file, start=1):
                 self.answers_dict[
                     index] = line.strip()
