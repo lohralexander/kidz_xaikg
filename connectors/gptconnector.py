@@ -19,7 +19,7 @@ def gpt_request_with_history(user_message, system_message=None, previous_convers
     message = []
     if previous_conversation is not None:
         message = previous_conversation
-        message.append({"role": "user", "content": user_message})
+        #message.append({"role": "user", "content": user_message})
         logger.debug(f"Previous conversation: {previous_conversation}")
 
     if system_message is not None:

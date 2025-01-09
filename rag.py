@@ -1,7 +1,6 @@
 import re
 import uuid
 
-from config import logger
 from connectors.gptconnector import *
 from research.owl import *
 
@@ -15,13 +14,20 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
     ontology_structure = ontology.get_ontology_structure()
     # Identify the used classes, so we don't have to give gpt every single instance to pick an anker node
     system_message = f"The following structure illustrates the class level of the ontology, which will be used to answer the subsequent questions. The node classes have instances that are not listed here. :{json.dumps(ontology_structure)}."
-    user_message = f"Only give as an answer a list of classes (following this syntax: [class1, class2, ...]) which are connected to this user query: {user_query} Return only JSON Syntax without prefix."
-    gpt_response = gpt_request(user_message=user_message,
-                                            system_message=system_message,
-                                            previous_conversation=previous_conversation,
-                                            sleep_time=sleep_time,
-                                            model="gpt-4o-mini-2024-07-18"
-                                            )
+    user_message = f"Only give as an answer a list of classes (following this syntax: [class1, class2, ...]) which are relevant for this user query: {user_query} Return only JSON Syntax without prefix."
+    no_class_found = True
+    find_class_iterations = 0
+    while no_class_found or find_class_iterations > 10:
+        gpt_response = gpt_request(user_message=user_message,
+                                   system_message=system_message,
+                                   previous_conversation=previous_conversation,
+                                   sleep_time=sleep_time
+                                   )
+        if gpt_response is not "[]":
+            no_class_found = False
+        else:
+            find_class_iterations += 1
+
     found_node_class_list = re.findall(r'\w+', gpt_response)
     logger.info(f"Found node classes: {found_node_class_list}")
 
@@ -31,8 +37,7 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
     gpt_response = \
         gpt_request_with_history(user_message=user_message,
                                  previous_conversation=previous_conversation,
-                                 sleep_time=sleep_time,
-                                 model="gpt-4o-mini-2024-07-18")[0]
+                                 sleep_time=sleep_time)[0]
     found_node_instances_list = re.findall(r'\w+', gpt_response)
     retrieved_node_dict = ontology.get_nodes(found_node_instances_list)
     logger.info(f"Found node instances: {found_node_instances_list}")
@@ -40,8 +45,14 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
     starting_nodes = [ontology.get_node_structure(node) for node in retrieved_node_dict.values()]
     logger.info("Beginning iterative ontology search ")
     logger.info(f"Iteration 0. Starting node: {starting_nodes}")
-    system_message = f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections': trainedWith data_1. You can request new nodes. To do so write [name of the requested node], for example [data_1]. You can ask for more than one instance this way. For example  [data_1, data_2]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you have enough information, write \"BREAK\". Use this class level ontology to orientate yourself: {str(ontology_structure)} This is your starting node: {starting_nodes}. Return only JSON Syntax without prefix."
+    system_message = f"You are given a starting node, which is part of an ontology. Your job is to traverse the ontology to gather enough information to answer given questions. Every node is connected to other nodes. You can find the connections under  \"'Connections':\" in the form of  \"'Connections': <name of the edge> <name of the connected node>. For example  'Connections': trainedWith data_1. You can request new nodes. To do so write [name of the requested node], for example [data_1]. You can ask for more than one instance this way. For example  [data_1, data_2]. As long as you search for new information, only use this syntax, don't explain yourself. Use the exact name of the instance and don't use the edge. Your job is to gather enough information to answer given questions. To do so, traverse trough the ontology. If you have enough information, write \"BREAK\". Use this class level ontology to orientate yourself: {str(ontology_structure)}. Return only JSON Syntax without prefix."
+    previous_conversation = [
+        {"role": "assistant", "content": "What is the starting node for the user query?"},
+        {"role": "user",
+         "content": f"This is the starting node: {starting_nodes}. Write Break if you have enough information to answer the query or request new nodes."}
+    ]
     gpt_response, history = gpt_request_with_history(user_message=user_query, system_message=system_message,
+                                                     previous_conversation=previous_conversation,
                                                      sleep_time=sleep_time)
     loop_count = 0
     while loop_count < 20 and "BREAK" not in gpt_response:
@@ -185,5 +196,5 @@ def create_rag_instance_graph(rag_dict, question_id, question):
 if __name__ == '__main__':
     owl = Ontology()
     owl.deserialize("research/ontology/ontology.json")
-    information_retriever_with_graph(user_query="What data types do the attributes of the data set from September 2024 have?",
+    information_retriever_with_graph(user_query="How many entries does the niryo dataset from september have?",
                                      ontology=owl)

@@ -72,10 +72,12 @@
       "node_class_id": "TestCase",
       "class_connections": [
         [
-          "Task"
+          "Task",
+          "Dataset"
         ],
         [
-          "implementedBy"
+          "implementedBy",
+          "basedOn"
         ]
       ],
       "explanation": "A screw is given to a roboter arm. The roboter arm has to lift the screw and place it in a given place on a given angle. It is saved in the form of rows"
@@ -152,7 +154,7 @@
         [
           "Dataset",
           "Task",
-          "Insight",
+          "GlobalInsight",
           "Attribute"
         ],
         [
@@ -202,7 +204,7 @@
       "connections": [
         [
           "model_a23b",
-          "attribute_Schrauben_id"
+          "attribute_schrauben_id"
         ],
         [
           "explains",
@@ -247,7 +249,7 @@
       "connections": [
         [
           "model_xT77",
-          "attribute_Schrauben_id"
+          "attribute_schrauben_id"
         ],
         [
           "explains",
@@ -292,7 +294,52 @@
       "connections": [
         [
           "model_qdk1",
-          "attribute_Schrauben_id"
+          "attribute_schrauben_id"
+        ],
+        [
+          "explains",
+          "basedOn"
+        ]
+      ],
+      "shap_value": 0
+    },
+    {
+      "node_id": "Insight_5_1",
+      "node_class": "GlobalInsight",
+      "connections": [
+        [
+          "model_T3ZT",
+          "attribute_klammertyp"
+        ],
+        [
+          "explains",
+          "basedOn"
+        ]
+      ],
+      "shap_value": 0.9
+    },
+    {
+      "node_id": "Insight_5_2",
+      "node_class": "GlobalInsight",
+      "connections": [
+        [
+          "model_T3ZT",
+          "attribute_laenge"
+        ],
+        [
+          "explains",
+          "basedOn"
+        ]
+      ],
+      "shap_value": 0.4
+    },
+    {
+      "node_id": "Insight_5_3",
+      "node_class": "GlobalInsight",
+      "connections": [
+        [
+          "model_T3ZT",
+          "attribute_schrauben_id"
         ],
         [
           "explains",
@@ -318,31 +365,42 @@
           "achievedBy"
         ]
       ],
-      "usecase": "This Task is part of a non-critical research experiment to demonstrate the capabilities of a training robot."
+      "usecase": "This Task is part of a non-critical research experiment to demonstrate the capabilities of a training robot. A Robot has to place different screws into different holes, placed at different angles."
+    },
+    {
+      "node_id": "ScrewPicking",
+      "node_class": "Task",
+      "connections": [
+        [
+          "model_T3ZT"
+        ],
+        [
+          "achievedBy"
+        ]
+      ],
+      "usecase": "This Task is part of a non-critical research experiment to demonstrate the capabilities of a training robot. A Robot has to pick up screws from different positions."
     },
     {
       "node_id": "attribute_test_durchgang",
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024"
         ],
         [
-          "usedBy",
           "partOf"
         ]
       ],
       "datatype": "ID",
       "valueDistribtion": "No Distribution because it is an ID",
+      "explanation": "There are 3 test rounds. Each test round includes every combination of screws and clams.",
       "attributeName": "Test Durchgang"
     },
     {
-      "node_id": "attribute_Schrauben_id",
+      "node_id": "attribute_schrauben_id",
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -350,7 +408,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -358,16 +415,16 @@
           "usedToTrain"
         ]
       ],
-      "datatype": "Enum",
-      "valueDistribtion": "530, 540, 550, 560, 570",
+      "datatype": "Integer/ Enum",
+      "uniqueValues": "20",
+      "mostCommonValues": "530 (72; 5.0%), 540 (72; 5.0%), 550 (72; 5.0%), 560 (72; 5.0%), 570 (72; 5.0%), 630 (72; 5.0%), 640 (72; 5.0%), 650 (72; 5.0%), 660 (72; 5.0%), 670 (72; 5.0%)",
       "attributeName": "Schrauben ID"
     },
     {
-      "node_id": "attribute_Schraubentyp",
+      "node_id": "attribute_schraubentyp",
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -375,7 +432,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -383,8 +439,9 @@
           "usedToTrain"
         ]
       ],
-      "datatype": "Enum",
-      "valueDistribtion": "Sechskant, Zylinder",
+      "datatype": "String/ Enum",
+      "uniqueValues": "2",
+      "mostCommonValues": "Sechskant (720; 50.0%), Zylinder (720; 50.0%)",
       "attributeName": "Schraubentyp"
     },
     {
@@ -392,7 +449,6 @@
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -400,7 +456,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -408,17 +463,21 @@
           "usedToTrain"
         ]
       ],
-      "datatype": "Numeric",
-      "valueDistribtion": "8-24.65",
-      "attributeName": "Kopfbreite in MM",
-      "valueAverage": "14.06"
+      "datatype": "Number (double)",
+      "uniqueValues": "6",
+      "minimum": "8.0",
+      "maximum": "17.0",
+      "median": "11.5",
+      "mean": "11.9375",
+      "standardDeviation": "3.147892176736456",
+      "mostCommonValues": "10 (360; 25.0%), 13 (360; 25.0%), 8 (180; 12.5%), 8.5 (180; 12.5%), 16 (180; 12.5%), 17 (180; 12.5%)",
+      "attributeName": "Kopfbreite in MM"
     },
     {
-      "node_id": "attribuite_Kopfdicke",
+      "node_id": "attribute_kopfdicke",
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -426,7 +485,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -434,8 +492,14 @@
           "usedToTrain"
         ]
       ],
-      "datatype": "Numeric",
-      "valueDistribtion": "3.5-10",
+      "datatype": "Number (double)",
+      "uniqueValues": "8",
+      "minimum": "3.5",
+      "maximum": "10.0",
+      "median": "5.65",
+      "mean": "6.024999999999977",
+      "standardDeviation": "1.9974097194149494",
+      "mostCommonValues": "3.5 (180; 12.5%), 4 (180; 12.5%), 5 (180; 12.5%), 5.3 (180; 12.5%), 6 (180; 12.5%), 6.4 (180; 12.5%), 8 (180; 12.5%), 10 (180; 12.5%)",
       "attributeName": "Kopfdicke in MM"
     },
     {
@@ -443,7 +507,6 @@
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -451,7 +514,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -460,7 +522,13 @@
         ]
       ],
       "datatype": "Numeric",
-      "valueDistribtion": "30-70",
+      "uniqueValues": "5",
+      "minimum": "30.0",
+      "maximum": "70.0",
+      "median": "50.0",
+      "mean": "50.0",
+      "standardDeviation": "14.147048646503352",
+      "mostCommonValues": "30 (288; 20.0%), 40 (288; 20.0%), 50 (288; 20.0%), 60 (288; 20.0%), 70 (288; 20.0%)",
       "attributeName": "Laenge in MM"
     },
     {
@@ -468,7 +536,6 @@
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -476,7 +543,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -484,8 +550,14 @@
           "usedToTrain"
         ]
       ],
-      "datatype": "Numeric",
-      "valueDistribtion": "5.1-52.7",
+      "datatype": "Number (double)",
+      "uniqueValues": "38",
+      "minimum": "5.1",
+      "maximum": "52.7",
+      "median": "16.2",
+      "mean": "20.464999999999932",
+      "standardDeviation": "12.82784269849875",
+      "mostCommonValues": "10.2 (72; 5.0%), 11 (72; 5.0%), 5.1 (36; 2.5%), 5.6 (36; 2.5%), 6.4 (36; 2.5%), 7.1 (36; 2.5%), 7.5 (36; 2.5%), 7.6 (36; 2.5%), 8.6 (36; 2.5%), 8.7 (36; 2.5%)",
       "attributeName": "Gewicht (g)"
     },
     {
@@ -493,7 +565,6 @@
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -501,7 +572,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -509,8 +579,14 @@
           "usedToTrain"
         ]
       ],
-      "datatype": "Numeric",
-      "valueDistribtion": "5-10",
+      "datatype": "Number (double)",
+      "uniqueValues": "4",
+      "minimum": "5.0",
+      "maximum": "10.0",
+      "median": "7.0",
+      "mean": "7.25",
+      "standardDeviation": "1.9209535505662128",
+      "mostCommonValues": "5 (360; 25.0%), 6 (360; 25.0%), 8 (360; 25.0%), 10 (360; 25.0%)",
       "attributeName": "Durchmesser (mm)"
     },
     {
@@ -518,7 +594,6 @@
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -526,7 +601,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -535,7 +609,8 @@
         ]
       ],
       "datatype": "ENUM",
-      "valueDistribtion": "Nein, JA",
+      "uniqueValues": "2",
+      "valueDistribtion": "Nein (900; 62.5%), Ja (540; 37.5%)",
       "attributeName": "Beschichtung"
     },
     {
@@ -543,7 +618,6 @@
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -551,7 +625,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -560,7 +633,8 @@
         ]
       ],
       "datatype": "ENUM",
-      "valueDistribtion": "Silicon, Einkerbung, Standard",
+      "uniqueValues": "3",
+      "mostCommonValues": "Einkerbung (480; 33.33%), Silicon (480; 33.33%), Standard (480; 33.33%)",
       "attributeName": "Klammer-Typ"
     },
     {
@@ -568,7 +642,6 @@
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -576,7 +649,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -584,8 +656,14 @@
           "usedToTrain"
         ]
       ],
-      "datatype": "Numeric",
-      "valueDistribtion": "0, 30, 60, 90",
+      "datatype": "Number (double)",
+      "uniqueValues": "4",
+      "minimum": "0.0",
+      "maximum": "90.0",
+      "median": "45.0",
+      "mean": "45.0",
+      "standardDeviation": "33.552671919114644",
+      "mostCommonValues": "0 (360; 25.0%), 30 (360; 25.0%), 60 (360; 25.0%), 90 (360; 25.0%)",
       "attributeName": "Winkel (in Grad)"
     },
     {
@@ -593,7 +671,6 @@
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
           "niryo_dataset_september_2024",
           "model_a23b",
           "model_xT77",
@@ -601,7 +678,6 @@
           "model_qdk1"
         ],
         [
-          "usedBy",
           "partOf",
           "usedToTrain",
           "usedToTrain",
@@ -610,52 +686,267 @@
         ]
       ],
       "datatype": "ENUM/ Label",
-      "valueDistribtion": "True, False",
+      "uniqueValues": "2",
+      "mostCommonValues": "Ja (1010; 70.14%), Nein (430; 29.86%)",
       "attributeName": "Erfolgreich (Ja/Nein)",
       "information": "The target variable was filled by manual observation of the result by the experimenter."
     },
     {
-      "node_id": "attribute_laenge",
+      "node_id": "attribute_test_durchgang_okt24",
       "node_class": "Attribute",
       "connections": [
         [
-          "preprocessing_niryo",
-          "niryo_dataset_september_2024",
-          "model_a23b",
-          "model_xT77",
-          "model_p1b3",
-          "model_qdk1"
+          "niryo_dataset_oktober_2024"
         ],
         [
-          "usedBy",
+          "partOf"
+        ]
+      ],
+      "datatype": "ID",
+      "valueDistribtion": "No Distribution because it is an ID",
+      "explanation": "There are 4 test rounds. Each test round includes every combination of screws and clamps.",
+      "attributeName": "Test Durchgang"
+    },
+    {
+      "node_id": "attribute_schrauben_id_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
           "partOf",
-          "usedToTrain",
-          "usedToTrain",
-          "usedToTrain",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "Integer/ Enum",
+      "uniqueValues": "30",
+      "mostCommonValues": "530 (50; 3.5%), 540 (50; 3.5%), 550 (50; 3.5%), 560 (50; 3.5%), 570 (50; 3.5%), 630 (50; 3.5%), 640 (50; 3.5%), 650 (50; 3.5%), 660 (50; 3.5%), 670 (50; 3.5%)",
+      "attributeName": "Schrauben ID"
+    },
+    {
+      "node_id": "attribute_schraubentyp_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "String/ Enum",
+      "uniqueValues": "3",
+      "mostCommonValues": "Sechskant (800; 45.0%), Zylinder (600; 33.0%), Kreuz (400; 22.0%)",
+      "attributeName": "Schraubentyp"
+    },
+    {
+      "node_id": "attribute_kopfbreite_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "Number (double)",
+      "uniqueValues": "8",
+      "minimum": "7.0",
+      "maximum": "19.0",
+      "median": "12.0",
+      "mean": "12.345",
+      "standardDeviation": "3.567",
+      "mostCommonValues": "9 (280; 18.0%), 12 (280; 18.0%), 15 (200; 13.0%), 10 (200; 13.0%), 8 (200; 13.0%), 16 (200; 13.0%), 19 (140; 9.0%)",
+      "attributeName": "Kopfbreite in MM"
+    },
+    {
+      "node_id": "attribute_kopfdicke_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "Number (double)",
+      "uniqueValues": "9",
+      "minimum": "3.0",
+      "maximum": "11.0",
+      "median": "5.7",
+      "mean": "6.215",
+      "standardDeviation": "2.034",
+      "mostCommonValues": "3.0 (150; 10.0%), 4.0 (150; 10.0%), 5.0 (150; 10.0%), 6.0 (150; 10.0%), 7.0 (150; 10.0%), 8.0 (150; 10.0%), 9.0 (150; 10.0%), 10.0 (150; 10.0%), 11.0 (150; 10.0%)",
+      "attributeName": "Kopfdicke in MM"
+    },
+    {
+      "node_id": "attribute_laenge_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
           "usedToTrain"
         ]
       ],
       "datatype": "Numeric",
-      "valueDistribtion": "30-70",
+      "uniqueValues": "6",
+      "minimum": "25.0",
+      "maximum": "75.0",
+      "median": "45.0",
+      "mean": "47.5",
+      "standardDeviation": "15.2",
+      "mostCommonValues": "25 (250; 18.0%), 35 (250; 18.0%), 45 (250; 18.0%), 55 (250; 18.0%), 65 (250; 18.0%), 75 (250; 18.0%)",
       "attributeName": "Laenge in MM"
+    },
+    {
+      "node_id": "attribute_gewicht_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "Number (double)",
+      "uniqueValues": "40",
+      "minimum": "5.0",
+      "maximum": "55.0",
+      "median": "18.0",
+      "mean": "22.3",
+      "standardDeviation": "13.2",
+      "mostCommonValues": "10.0 (50; 3.5%), 11.0 (50; 3.5%), 12.0 (50; 3.5%), 13.0 (50; 3.5%), 14.0 (50; 3.5%), 15.0 (50; 3.5%), 16.0 (50; 3.5%), 17.0 (50; 3.5%), 18.0 (50; 3.5%)",
+      "attributeName": "Gewicht (g)"
+    },
+    {
+      "node_id": "attribute_durchmesser_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "Number (double)",
+      "uniqueValues": "5",
+      "minimum": "4.0",
+      "maximum": "12.0",
+      "median": "6.5",
+      "mean": "7.4",
+      "standardDeviation": "2.1",
+      "mostCommonValues": "4.0 (300; 20.0%), 6.0 (300; 20.0%), 8.0 (300; 20.0%), 10.0 (300; 20.0%), 12.0 (300; 20.0%)",
+      "attributeName": "Durchmesser (mm)"
+    },
+    {
+      "node_id": "attribute_beschichtung_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "ENUM",
+      "uniqueValues": "3",
+      "valueDistribtion": "Nein (800; 57.0%), Ja (600; 43.0%)",
+      "attributeName": "Beschichtung"
+    },
+    {
+      "node_id": "attribute_klammertyp_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "ENUM",
+      "uniqueValues": "4",
+      "mostCommonValues": "Einkerbung (400; 25.0%), Silicon (400; 25.0%), Standard (400; 25.0%), Kunststoff (400; 25.0%)",
+      "attributeName": "Klammer-Typ"
+    },
+    {
+      "node_id": "attribute_winkel_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "Number (double)",
+      "uniqueValues": "5",
+      "minimum": "0.0",
+      "maximum": "120.0",
+      "median": "60.0",
+      "mean": "60.0",
+      "standardDeviation": "40.0",
+      "mostCommonValues": "0 (240; 20.0%), 30 (240; 20.0%), 60 (240; 20.0%), 90 (240; 20.0%), 120 (240; 20.0%)",
+      "attributeName": "Winkel (in Grad)"
+    },
+    {
+      "node_id": "attribute_label_okt24",
+      "node_class": "Attribute",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
+        ],
+        [
+          "partOf",
+          "usedToTrain"
+        ]
+      ],
+      "datatype": "ENUM/ Label",
+      "uniqueValues": "3",
+      "mostCommonValues": "Ja (950; 67.0%), Nein (450; 32.0%), Unsicher (100; 1.0%)",
+      "attributeName": "Erfolgreich (Ja/Nein)",
+      "information": "The target variable was filled by manual observation of the result by the experimenter."
     },
     {
       "node_id": "Niryo",
       "node_class": "Robotarm",
       "connections": [
         [
-          "model_a23b",
-          "model_xT77",
-          "model_p1b3",
-          "model_qdk1",
-          "niryo_dataset_september_2024"
+          "niryo_dataset_oktober_2024",
+          "model_T3ZT"
         ],
         [
-          "usedBy",
-          "usedBy",
-          "usedBy",
-          "usedBy",
-          "usedBy"
+          "partOf",
+          "usedToTrain"
         ]
       ]
     },
@@ -1401,6 +1692,102 @@
       "type": "Zylinder",
       "coating": false
     },
+        {
+      "node_id": "screw_W070",
+      "node_class": "Screw",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024"
+        ],
+        [
+          "usedIn"
+        ]
+      ],
+      "length": 72,
+      "width": 14.0,
+      "thickness": 10.0,
+      "weight": 50.7,
+      "diameter": 9.0,
+      "type": "Quadrat",
+      "coating": true
+    },
+        {
+      "node_id": "screw_W080",
+      "node_class": "Screw",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024"
+        ],
+        [
+          "usedIn"
+        ]
+      ],
+      "length": 55,
+      "width": 8.0,
+      "thickness": 3.0,
+      "weight": 33.7,
+      "diameter": 5.0,
+      "type": "Circle",
+      "coating": false
+    },
+    {
+      "node_id": "model_T3ZT",
+      "node_class": "Model",
+      "training_information": "A split validation was used.",
+      "connections": [
+        [
+          "niryo_dataset_oktober_2024",
+          "ScrewPicking",
+          "Insight_5_1",
+          "Insight_5_2",
+          "Insight_5_3",
+          "attribute_schrauben_id_okt24",
+          "attribute_schraubentyp_okt24",
+          "attribute_kopfbreite_okt24",
+          "attribute_kopfdicke_okt24",
+          "attribute_laenge_okt24",
+          "attribute_gewicht_okt24",
+          "attribute_durchmesser_okt24",
+          "attribute_beschichtung_okt24",
+          "attribute_klammertyp_okt24",
+          "attribute_winkel_okt24",
+          "attribute_label_okt24"
+        ],
+        [
+          "trainedWith",
+          "achieves",
+          "isExplainedBy",
+          "isExplainedBy",
+          "isExplainedBy",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used",
+          "used"
+        ]
+      ],
+      "algorithm": "DecisionTree",
+      "accuracy": 0.8,
+      "giniIndex": 0.032,
+      "precision": {
+        "Class 0": 0.8,
+        "Class 1": 0.81
+      },
+      "recall": {
+        "Class 0": 0.8,
+        "Class 1": 0.81
+      },
+      "f1Score": {
+        "Class 0": 0.79,
+        "Class 1": 0.8
+      }
+    },
     {
       "node_id": "model_a23b",
       "node_class": "Model",
@@ -1412,10 +1799,10 @@
           "Insight_1_1",
           "Insight_1_2",
           "Insight_1_3",
-          "attribute_Schrauben_id",
-          "attribute_Schraubentyp",
+          "attribute_schrauben_id",
+          "attribute_schraubentyp",
           "attribute_kopfbreite",
-          "attribute_Kopfdicke",
+          "attribute_kopfdicke",
           "attribute_laenge",
           "attribute_gewicht",
           "attribute_durchmesser",
@@ -1537,30 +1924,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
-        ]
-      ],
-      "angle": 0.0,
-      "success": true
-    },
-    {
-      "node_id": "row_1",
-      "node_class": "TestCase",
-      "connections": [
-        [
-          "screw_530",
-          "Niryo",
-          "Silicon_gripper"
-        ],
-        [
-          "usedScrew",
-          "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -1573,12 +1944,34 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
+        ]
+      ],
+      "angle": 0.0,
+      "success": true
+    },
+    {
+      "node_id": "row_3",
+      "node_class": "TestCase",
+      "connections": [
+        [
+          "screw_530",
+          "Niryo",
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
+        ],
+        [
+          "usedScrew",
+          "usedRobot",
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -1591,12 +1984,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -1609,12 +2004,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -1627,12 +2024,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -1645,12 +2044,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -1663,12 +2064,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -1681,12 +2084,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -1699,12 +2104,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -1717,12 +2124,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -1735,12 +2144,14 @@
         [
           "screw_530",
           "Niryo",
-          "Silicon_gripper"
+          "Silicon_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -1753,12 +2164,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -1771,12 +2184,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -1789,12 +2204,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 0.0,
@@ -1807,12 +2224,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -1825,12 +2244,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -1843,12 +2264,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 30.0,
@@ -1861,12 +2284,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -1879,12 +2304,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -1897,12 +2324,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 60.0,
@@ -1915,12 +2344,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -1933,12 +2364,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -1951,12 +2384,14 @@
         [
           "screw_530",
           "Niryo",
-          "Einkerbung_gripper"
+          "Einkerbung_gripper",
+          "niryo_dataset_september_2024"
         ],
         [
           "usedScrew",
           "usedRobot",
-          "usedGripper"
+          "usedGripper",
+          "basedOn"
         ]
       ],
       "angle": 90.0,
@@ -1969,14 +2404,14 @@
       "node_class": "Dataset",
       "domain": "Niryo Robot",
       "locationOfDataRecording": "Ravensburg Weingarten University, Baden-Wuerttemberg",
-      "dateOfRecording": "Recorded in Juli 2025",
+      "dateOfRecording": "Recorded in September 2024",
       "connections": [
         [
           "attribute_test_durchgang",
-          "attribute_Schrauben_id",
-          "attribute_Schraubentyp",
+          "attribute_schrauben_id",
+          "attribute_schraubentyp",
           "attribute_kopfbreite",
-          "attribuite_Kopfdicke",
+          "attribute_kopfdicke",
           "attribute_laenge",
           "attribute_gewicht",
           "attribute_durchmesser",
@@ -2010,16 +2445,57 @@
       ]
     },
     {
+      "node_id": "niryo_dataset_oktober_2024",
+      "amountOfRows": 1800,
+      "amountOfAttributes": 12,
+      "node_class": "Dataset",
+      "domain": "Niryo Robot",
+      "locationOfDataRecording": "Ravensburg Weingarten University, Baden-Wuerttemberg",
+      "dateOfRecording": "Recorded in Oktober 2024",
+      "connections": [
+        [
+          "attribute_test_durchgang_okt24",
+          "attribute_schrauben_id_okt24",
+          "attribute_schraubentyp_okt24",
+          "attribute_kopfbreite_okt24",
+          "attribute_kopfdicke_okt24",
+          "attribute_laenge_okt24",
+          "attribute_gewicht_okt24",
+          "attribute_durchmesser_okt24",
+          "attribute_beschichtung_okt24",
+          "attribute_klammertyp_okt24",
+          "attribute_winkel_okt24",
+          "attribute_label_okt24",
+          "model_T3ZT"
+        ],
+        [
+          "has",
+          "has",
+          "has",
+          "has",
+          "has",
+          "has",
+          "has",
+          "has",
+          "has",
+          "has",
+          "has",
+          "has",
+          "usedBy"
+        ]
+      ]
+    },
+    {
       "node_id": "preprocessing_niryo_model_a23b",
       "normalization": "There was no normalization.",
       "node_class": "Preprocessing",
       "connections": [
         [
           "attribute_test_durchgang",
-          "attribute_Schrauben_id",
-          "attribute_Schraubentyp",
+          "attribute_schrauben_id",
+          "attribute_schraubentyp",
           "attribute_kopfbreite",
-          "attribuite_Kopfdicke",
+          "attribute_kopfdicke",
           "attribute_laenge",
           "attribute_gewicht",
           "attribute_durchmesser",
@@ -2054,19 +2530,19 @@
       "node_class": "Preprocessing",
       "connections": [
         [
-          "attribute_test_durchgang",
-          "attribute_Schrauben_id",
-          "attribute_Schraubentyp",
-          "attribute_kopfbreite",
-          "attribuite_Kopfdicke",
-          "attribute_laenge",
-          "attribute_gewicht",
-          "attribute_durchmesser",
-          "attribute_beschichtung",
-          "attribute_klammertyp",
-          "attribute_winkel",
-          "attribute_label",
-          "niryo_dataset_september_2024",
+          "attribute_test_durchgang_okt24",
+          "attribute_schrauben_id_okt24",
+          "attribute_schraubentyp_okt24",
+          "attribute_kopfbreite_okt24",
+          "attribute_kopfdicke_okt24",
+          "attribute_laenge_okt24",
+          "attribute_gewicht_okt24",
+          "attribute_durchmesser_okt24",
+          "attribute_beschichtung_okt24",
+          "attribute_klammertyp_okt24",
+          "attribute_winkel_okt24",
+          "attribute_label_okt24",
+          "niryo_dataset_oktober_2024",
           "model_xT77"
         ],
         [
