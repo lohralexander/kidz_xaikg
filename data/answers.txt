@@ -10,13 +10,13 @@ The algorithm used was the Decision Tree
 The following parameters were used:- criterion: “gini” (used to measure the quality of a split)- splitter: “best” (used to choose the best split at each node)- max_depth: None (the tree grows until all leaves are pure or until all leaves contain less than min_samples_split samples)- min_samples_split: 2 (minimum number of samples required to split an internal node)- min_samples_leaf: 1 (minimum number of samples required to form a leaf node)- max_features: None (all features are taken into account)- random_state: 42 (used to ensure reproducibility)- max_leaf_nodes: None (unlimited number of leaf nodes)- min_impurity_decrease: 0.0 (no minimum threshold for splitting based on impurity decrease)
 No normalization was carried out.
 No outlier detection was carried out.
-The accuracy was 93.4%.
+The accuracy was 93.4%, the precision of Class 0 is 0.95, of Class 1 is 0.96.
 The performance is sufficient for the selected case, as no critical decisions are made with the model. It is used for illustrative purposes and is not used in any operational system. If such a model were to be used in an operational system, the quality might not be sufficient.
 The model can only be used in a certain range of screw sizes. In addition, no general statements can be made about the behavior of other robot types. Finally, the model has been created for a very specific sequence of movements whose generalizability has not been tested.
 The model was trained with 2,126 entries
 Yes, a cross-validation was carried out
 The data was collected in a real-world experiment using a Niryo robot and commercially available screws. They consist of categorical values, e.g. the screw type and numerical values, e.g. the screw length or the screw weight. The target variable is a binomial attribute that represents success with True or False.
-No data was withheld.
+No data rows were withheld. The attribute attribute_test_durchgang was not used.
 The attribute Klammer-Typ has the greatest influence.
 The following attributes were used: Schraubentyp, Kopfbreite (mm), Kopfdicke, Länge (mm), Gewicht (g), Durchmesser (mm), Beschichtung, Klammer-Typ, Winkel (in Grad).
 Model a23b is used to predict whether a Niryo robotic arm is capable of grasping specific screws and placing them into designated holes. It is based on a decision tree. To predict whether the screw will be successfully placed, the model uses various characteristics of the screw to be placed as input and generates a binary output.
