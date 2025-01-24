@@ -87,7 +87,8 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
 
 
 def execute_query(query, ontology):
-    pattern = r"(?<=\[|,)([^,\]]+)(?=,|\])"
+    pattern = r"(?<=\[|,|\s)([^,\]\s]+)(?=,|\]|\s)"
+    # pattern = r"(?<=\[|,)([^,\]]+)(?=,|\])"
     # pattern = r"\['?([^'\]]+)'?\]"
     # pattern = "\[([A - Za - z0 - 9._] * (?:, [A-Za-z0-9._] *){0, 2})\]"
     matches = re.findall(pattern, query)
