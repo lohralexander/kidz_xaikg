@@ -1,7 +1,6 @@
 import hashlib
 import statistics
 
-from connectors.gptconnector import *
 from rag import *
 from research import owl
 from research.questionnaire import Questionnaire
@@ -18,6 +17,7 @@ def work_through_the_questionnaire(ontology: owl.Ontology, questionnaire: Questi
     gpt_answers = {}
     for index, question in enumerate(questionnaire.get_questions().values(), start=1):
         gpt_response = gpt_request(user_message=question,
+                                   system_message="First give a precise and short answer and then explain it in detail",
                                    retrieved_information=information_retriever(ontology=ontology, user_query=question))
         gpt_answers.update({index: gpt_response})
     return gpt_answers
@@ -77,7 +77,6 @@ def create_result_file(questionnaire: Questionnaire, gpt_answers, score_list, qu
 
 
 def create_overview_file(path_list, quality_measures, alternate_cycles, run_id):
-
     file_path = f"results/overview_measurements_{run_id}.html"
     with open(file_path, 'w') as file:
         # Write the HTML header

@@ -1,0 +1,329 @@
+What do different features contribute?
+Show me what the system would predict on [another instance].
+What was the result when other people used the system?
+What should be changed about the system?
+Is feature X used or not used for the predictions?
+How often does the system make mistakes?
+What is the system's overall logic?
+How to change this feature to get a different prediction?
+What are the biases of the data?
+What features does the system consider?
+Does this model use this feature X?
+What features of this instance lead to the system's prediction?
+What is the highest feature one can have to still get the same prediction?
+Why did you ignore that data?
+What algorithm is being used?
+Why are instance A and instance B given the same prediction?
+What does using this feature achieve?
+How precise are the predictions?
+How will the system improve over time?
+Give me the reason for this prediction.
+How did you arrive at this number?
+How were the ground-truth produced?
+What are the most predictive rules?
+What kind of data does the system learn from?
+What is the definition of ML terminology?
+What type of output does the system give?
+What is the minimum value of feature one must have to still get this prediction?
+What will the system adapt over time?
+How is the output used for other system component(s)?
+What will the system change over time?
+How were the ground truth given?
+What are the drawbacks of this dataset?
+Where did you get this data from?
+What are the conditions for the same prediction?
+What do you mean by ML terminology?
+What is the scope of the system's capability?Can it do [A]?
+How should I interpret this result in terms of bias?
+What kind of instance gets this prediction?
+What kind of instance gets a different prediction?
+How will the accuracy/precision/recall improve?
+Why does it not use this feature?
+How did you get this result?
+What is the weakness of the data?
+Why are instances A and B given different predictions?
+Why is this instance predicted P instead of Q?
+Which algorithm does X use?
+How will the system adapt over time?
+What are the conditions that must be met to guarantee this result?
+What is the reason for adaptation?
+Where did the data come from?
+How does the system weigh different features?
+How does it weigh different features?
+How will the system performance improve over time?
+What will cause the system to learn?
+Why do you use this feature?
+How were the labels produced?
+What are the top rules it uses?
+How were the labels generated?
+What is the lowest feature one can have to still get the same prediction?
+What is the importance of each feature?
+How accurate are the predictions?
+What does the system use to make predictions?
+In what conditions will this prediction be different?
+What are the weights of the parameters?
+Where is the system not effective?
+How is not label A?
+What is the scope of its capability?
+Which feature is given importance?
+What does this output represent?
+What characteristic of this data must be present or absent?
+How can I best utilize the output of the system?
+What is the reason for this prediction?
+How should this Instance change to get a different prediction?
+Which feature is the model using?
+What kind of mistakes is the system likely to make?
+What is the justification for using that rule?
+How are the predictions made?
+What are the top features it uses?
+What are the weaknesses of the system?
+What kind of output does the system give?
+How are the weights of the parameters set?
+What would the system predict if this feature of the instance changes to A?
+Give me the reason why the system will improve over time.
+What would the system predict if this instance changes to A?
+Which instance type gets this prediction?
+Under what conditions will this prediction not change?
+What kind of algorithm is used?
+What was type of data used?
+What is the sample size?
+How is label A not applied for this instance?
+What kind of data is the system not using?
+How should this feature change for this instance to get a different prediction?
+How is the current instance given a particular prediction?
+Why will the system change over time?
+Under which circumstances will the model be wrong?
+How will the prediction change over time?
+What data is the model NOT using?
+Why are instance A and B predicted differently?
+What will the system do with new data?
+What data is the system not using?
+In what situations is the system likely to be correct?
+How reliable are the predictions?
+Is the system's performance good enough for [A]?
+Tell me how the system improves over time.
+Why will the result improve over time?
+Are the predictions accurate?
+How would the system predict on [another instance]?
+How does feature X impact its predictions?
+What are the required features for this prediction?
+How do you set the parameter values?
+What is the interpretation of this result?
+What are the rules that make this prediction?
+When is the system likely to be wrong?
+Give me the features that need to be present or absent to deliver this prediction
+How come this instance was given this prediction?
+How to improve the model training?
+How are the parameters set?
+How is this instance given this prediction?
+What are the results of other people using the system?
+Why do instances A and B get different predictions?
+Why does the model make this choice?
+How many instances are there like this?
+What will the system change in the future?
+How high do feature values have to be to still be predicted the same thing?
+What/where is the data from?
+How does it know to apply this rule?
+What are the reasons for incorrect classification?
+What are the necessary conditions for this result?
+How was this prediction made?
+Which parts of the system improve over time?
+How much is feature X used for the predictions?
+What is the reason given for this prediction?
+Is there performance data published for this model?
+Why is this data used?
+What is the reason that the system will improve over time?
+How does the system learn to change?
+How is this prediction made?
+What are the limitations of the data?
+How come this instance was given this class?
+How will this system improve over time?
+What are the necessary features required for this result?
+What is the confidence on the prediction?
+How was this instance given this prediction?
+What will be the change in this system after some time?
+When is an instance predicted differently?
+For a given prediction, what is the highest value of feature one can have?
+Please describe the conditions under which this prediction might be incorrect.
+Give me an overall explanation of the system.
+How do you determine these parameters?
+Give me the top rules
+How does the system improve itself?
+How were the labels made?
+How much data was used to make this prediction?
+Why did they make that prediction about this instance?
+Why did the model not use this data?
+What is the scope of change permitted to still get the same prediction?
+What features did it use?
+What are the flaws in the data?
+How is feature X used for your prediction?
+Why is A predicted A but B predicted B?
+Which field is the reason for the prediction?
+Why did it give this prediction?
+How much experience with this type of data does the system have?
+Why is A predicted to produce X but B to produce Y?
+Why did you chose not to use this rule?
+How to improve the model?
+What will happen to the system in the future?
+What was the data used to create these labels?
+What makes this instance different from the others?
+How A is not the result for this instance?
+What sort of constraints are there on the data?
+How was this instance given this value/category?
+What must I do to improve the system?
+What is the purpose of using this feature?
+Give me an example of the system drifting.
+Which item gets this prediction?
+How is this result achieved?
+What rules does it use to make this prediction?
+Give me the reason for using this data.
+How is feature X used for predictions?
+How were the labels created?
+How is the output used by other component(s)?
+What are the rules that generated this prediction?
+What would the system predict for [a different instance]?
+How to improve the system?
+Is feature X used to make the predictions?
+When is the system incorrect?
+Which factors are included in the reasoning process?
+What was the data skew like?
+Which attributes are used by the model?
+Which features does it take into account?
+Why did the system give this prediction?
+Give me the highest feature that would give me this prediction.
+Why does it not use this data?
+What are the reasons for the same prediction of A and B?
+Which attributes does the model use?
+Why does it use this feature?
+How accurate is this prediction?
+How does the system become better over time?
+What is the reliability of this result?
+In which way were the ground-truth created?
+Which data type is the model trained on?
+What does ML terminology mean?
+How will the model change over time?
+What is the output used for?
+What will happen to the system over time?
+What is the source of the data?
+What kind of data does it learn from?
+Show me the scope of [the model's] work.
+What is the type of instance getting this result?
+Which instances would get a different result?
+Why did you ignore this feature?
+What is the system's overall reasoning?
+Why are A and B predicted differently?
+Why is this instance P rather than Q?
+How do other system components use the output?
+How does the system learn to adapt?
+From which kind of data does the system learn?
+What are the necessary features present or absent to guarantee this prediction?
+Which features lead to the prediction?
+Why will the system adapt over time?
+How does the model prioritize features?
+What features are related to the prediction?
+Where did the labels come from?
+What are the most salient rules that it uses?
+What is the smallest feature one can have to still get the same result?
+What percentage of predictions are correct?
+How does the system make predictions?
+How often does it get the wrong prediction?
+What are the limitations of the system?
+How is this instance not predicted A?
+What was the source of the ground-truth?
+Why Q is not predicted but P?
+What does the system output mean?
+What would be best to use the output for?
+What should I change in this instance to get a different prediction?
+How to best avoid the mistakes made by the system.
+What feature has the largest possible value for which one can still receive the same result?
+Which features are considered by the model?
+Why does it use this rule?
+How often is the system correct?
+How can I make best use of this output?
+Give me the list/names of top features.
+Why the result for this instance is P instead of Q?
+How often does the system get it wrong?
+What is the kind of output?
+What are the most important rules?
+What would the prediction of the class change to if a data point had A value of this attribute?
+Why will the system improve over time?
+For this prediction what is/are the highest value(s) of feature(s) which always leads to this prediction?
+What is the confidence score of this prediction.
+What would happen if this instance changes to A?
+What kind of instance gets a different result?
+How are these instances the same?
+What kind of algorithm is this?
+How many items are considered in this result?
+What needs to change for this prediction to be different?
+What is the precision of the prediction?
+Why will the model change over time?
+In what situations is the system likely to be incorrect?
+How will the system drift over time?
+Which field of this instance led to this prediction?
+Why does this instance receive P as a prediction instead of Q?
+How will the system change over time?
+What data isn't being used by the model?
+How accurate is the system?
+When is the system likely to be correct?
+How sure are you about this prediction?
+Do you consider the system's performance as good enough for [A]?
+How accurate is the prediction?
+Can this system do [A]?
+What should be the value of this feature in order to change the prediction
+What will the system improve over time?
+Where is the system likely to be valid?
+What should I do with the output?
+Why prediction P is the result for this instance?
+Why do you give different prediction for A and B?
+Which features are most used?
+How many items are used to make this prediction?
+Why is input X important to this prediction?
+Why Q is not the result for this instance?
+What does feature X impact regarding predictions?
+Why is this instance not a Q but a P?
+How does input X impact the model?
+How should this feature change for this instance to get a different result?
+How much lower can the value of the feature be than this one and still give the same prediction?
+What rules does it use?
+What kind of data is not used?
+Why is this instance given this prediction?
+What are the parameters of this model?
+Which factors lead to this result?
+Give me the results from other users.
+Which kind of data is not being used?
+How much data like this is the system trained on?
+What use is the output of this system?
+What is the highest feature value one can have to still get the same prediction?
+What kind of errors are likely to happen?
+If the feature of the instance changes to A  what will the system predict?
+How much does this system know?
+What data element was used to make this prediction?
+What causes the system to give this prediction?
+Why does it use this data?
+What could go wrong?
+Which factors limit the data?
+How can I modify this instance to get a different result?
+What is the nature of this output?
+Summarize some of the types of errors that might be made by this system.
+Under what conditions will the prediction be true?
+Why is this feature not used?
+How satisfied are you with the system's performance for [A]?
+Which feature of this object led to this prediction?
+If the value of this feature changes to A  what will the system predict?
+At what feature level does this prediction happen?
+What is the range of change allowed before the prediction changes?
+What would be the new prediction if this instance changes to A?
+How many did they sample?
+Why this instance has class P but Q does not?
+Why is not label Q?
+Why P is predicted instead of Q?
+What are the weaknesses of the data?
+Why does it not use this rule?
+Which part of the data lead to the prediction?
+What are the important properties of this instance that led to the prediction?
+What characteristics of this instance led you to this prediction?
+What biases does the data have?
+What should I be aware of while using this system?
+Give me the reason for this prediction.
+How should the instance be changed to get a different (better or worse) prediction?
+Why do A and B have the same label?

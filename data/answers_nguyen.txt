@@ -1,0 +1,33 @@
+The parameters are manually configured to balance tree depth, split quality, and reproducibility.
+It has the greatest influence, determining screw compatibility with the gripper arm.
+The decision tree assigns importance based on the reduction in impurity at each split.
+It uses a decision tree to classify screws as "successful" or "unsuccessful."
+Yes, Klammer-Typ is used for predictions.
+No, attribute_test_durchgang is not used.
+Klammer-Typ, Kopfbreite, Kopfdicke, Länge, Gewicht, Durchmesser, and Winkel.
+Rules based on feature splits such as gripper type and screw dimensions.
+Schraubentyp, Kopfbreite, Kopfdicke, Länge, Gewicht, Durchmesser, Beschichtung, Klammer-Typ, Winkel.
+Predicts screw placement success using screw properties and gripper compatibility.
+A decision tree algorithm is used.
+Rules derived from feature thresholds that split data into successful/unsuccessful classifications.
+Model a23b is trained on 2,126 entries.
+Labels were manually assigned based on experiment outcomes.
+Limited to screws with fixed dimensions and a specific test setup.
+The attribute attribute_test_durchgang is not used.
+The sample size consists of 2,126 entries.
+The data was collected at Ravensburg Weingarten University.
+It learns from categorical and numerical data about screws and their outcomes.
+Ensure input features match training data and fall within its value ranges.
+It means the screw placement was predicted to be successful.
+It is limited to a specific screw size range and robotic sequence.
+The model provides Boolean output: Success or Fail.
+The accuracy is 93.4%, with precision for Class 0 at 0.95 and Class 1 at 0.96.
+The error rate is approximately 6.6%.
+Correct within the tested screw dimensions; incorrect outside the tested range or with untested setups.
+Yes, it suffices for research purposes but not for operational systems.
+It is limited to specific screw sizes, robot setups, and lacks generalizability.
+Predicting success for screws outside tested dimensions or configurations.
+Add data covering wider screw dimensions and test setups, and explore additional robot types.
+Drift is unlikely; improvement requires broader datasets and new test setups.
+It is an identifier and does not provide meaningful input for predictions.
+Screw length directly impacts gripper compatibility and placement success.
