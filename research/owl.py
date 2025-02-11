@@ -126,7 +126,7 @@ class Ontology:
 
     def get_node_structure(self, node):
         node_structure = {"Node Instance ID": node.get_node_id(), "Explanation": node.get_explanation(),
-                          "Connected Instances": ", ".join([f"{edge} {connection}" for connection, edge in
+                          "Connected Instances": ", ".join([f"{edge} {connection} (Node Class {self.get_node(connection).get_node_class_id()})" for connection, edge in
                                                     zip(node.get_node_connections()[0],
                                                         node.get_node_connections()[1])])}
         annotation_list = []

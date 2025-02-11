@@ -1733,7 +1733,7 @@
     {
       "node_id": "model_T3ZT",
       "node_class": "Model",
-      "training_information": "A split validation was used.",
+      "training_information": "The Model was trained with SKLearn DecisionTreeClassifier in Python. Only the default parameters were used. A split validation was used.",
       "connections": [
         [
           "niryo_dataset_oktober_2024",
@@ -1791,7 +1791,7 @@
     {
       "node_id": "model_a23b",
       "node_class": "Model",
-      "training_information": "A cross validation was used.",
+      "training_information": "The Model was trained with SKLearn DecisionTreeClassifier in Python. Only the default parameters were used. A cross validation was used.",
       "connections": [
         [
           "niryo_dataset_september_2024",
@@ -1860,6 +1860,7 @@
     {
       "node_id": "model_xT77",
       "node_class": "Model",
+      "training_information": "The Model was trained with SKLearn MLPClassifier in Python. Only the default parameters were used. A cross validation was used.",
       "connections": [
         [
           "niryo_dataset_september_2024",
@@ -1881,6 +1882,7 @@
     },
     {
       "node_id": "model_p1b3",
+      "training_information": "The Model was trained with SKLearn GaussianNB in Python. Only the default parameters were used. A cross validation was used.",
       "node_class": "Model",
       "connections": [
         [
@@ -1903,6 +1905,7 @@
     },
     {
       "node_id": "model_qdk1",
+      "training_information": "The Model was trained with SKLearn DecisionTreeClassifier in Python. Only the default parameters were used. A cross validation was used.",
       "node_class": "Model",
       "connections": [
         [

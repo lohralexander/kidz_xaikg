@@ -1,1 +1,1 @@
-Which algorithm is used most frequently (how often) for the task of model a23b?
+How much data like this is model a23b trained on?

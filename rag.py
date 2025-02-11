@@ -23,7 +23,7 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
                                    previous_conversation=previous_conversation,
                                    sleep_time=sleep_time
                                    )
-        if gpt_response is not "[]":
+        if gpt_response != "[]":
             no_class_found = False
         else:
             find_class_iterations += 1
