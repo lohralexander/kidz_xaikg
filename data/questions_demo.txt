@@ -1,1 +1,1 @@
-How much data like this is model a23b trained on?
+The model "a23b" was trained on the "niryo_dataset_september_2024

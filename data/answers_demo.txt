@@ -1,1 +1,1 @@
-The Klammer-Typ attribute describes the type of gripper arm used to grip the screws. There are silicone, notch and standard.
+The model "a23b" was trained on the "niryo_dataset_september_2024
