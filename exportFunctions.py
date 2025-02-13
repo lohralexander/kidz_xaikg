@@ -259,7 +259,7 @@ from rdflib import Graph
 def upload_ontology():
     # GraphDB Configuration
     GRAPHDB_URL = "http://localhost:7200"  # Change if needed
-    REPOSITORY = "PrototypTest"  # Replace with your repo name
+    REPOSITORY = "partnermeeting"  # Replace with your repo name
     SPARQL_UPDATE_URL = f"{GRAPHDB_URL}/repositories/{REPOSITORY}/statements"
 
     # OWL File Path
@@ -295,30 +295,30 @@ def upload_ontology():
 
 
 if __name__ == '__main__':
-    # # Load dataset
-    # data = load_iris()
-    # df = pd.DataFrame(data.data, columns=data.feature_names)
-    # X_train, X_test, y_train, y_test = train_test_split(df, data.target, test_size=0.2, random_state=42)
-    #
-    # # Train model
-    # model = DecisionTreeClassifier()
-    # model.fit(X_train, y_train)
-    #
-    # # Define metadata for ontology
-    # model_id = "model_iris_dt"
-    # dataset_id = "iris_dataset"
-    # task_id = "classification_task"
-    # output_file = "./research/ontology/ontologyTest.json"
-    #
-    # # Add dataset to ontology
-    # add_dataset_metadata_from_dataframe(dataset_id, df, "Iris Dataset", "Unknown Location", "2024", [model_id],
-    #                                     output_file)
-    #
-    # # Add model to ontology
-    # sklearn_model_to_ontology(model, model_id, dataset_id, task_id, df.columns.tolist(), X_test, y_test, output_file)
-    #
-    # # Example Usage
-    # convert_json_to_owl("research/ontology/ontology.json", "output.owl")
+    # Load dataset
+    data = load_iris()
+    df = pd.DataFrame(data.data, columns=data.feature_names)
+    X_train, X_test, y_train, y_test = train_test_split(df, data.target, test_size=0.2, random_state=42)
+
+    # Train model
+    model = DecisionTreeClassifier()
+    model.fit(X_train, y_train)
+
+    # Define metadata for ontology
+    model_id = "model_iris_pm"
+    dataset_id = "iris_dataset"
+    task_id = "classification_task"
+    output_file = "./research/ontology/ontologyTest.json"
+
+    # Add dataset to ontology
+    add_dataset_metadata_from_dataframe(dataset_id, df, "Iris Dataset", "Unknown Location", "2024", [model_id],
+                                        output_file)
+
+    # Add model to ontology
+    sklearn_model_to_ontology(model, model_id, dataset_id, task_id, df.columns.tolist(), X_test, y_test, output_file)
+
+    # Example Usage
+    convert_json_to_owl("research/ontology/ontologyTest.json", "output.owl")
 
     # Run the Upload
     upload_ontology()

@@ -1,7 +1,7 @@
 import hashlib
 import statistics
 
-from rag import *
+from ldrag.rag import *
 from research import owl
 from research.questionnaire import Questionnaire
 

@@ -1,8 +1,5 @@
 import time
 
-from config import Config, logger
-
-
 def gpt_request(user_message, system_message=None, previous_conversation=None, retrieved_information=None,
                 model="gpt-4o-2024-11-20",
                 sleep_time=0, seed=42, temperature=0):

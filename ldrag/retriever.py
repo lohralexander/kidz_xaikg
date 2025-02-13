@@ -1,8 +1,15 @@
+import logging
+import os
 import re
 import uuid
 
-from connectors.gptconnector import *
-from research.owl import *
+from pyvis.network import Network
+
+from gptconnector import *
+from ontology import *
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 def information_retriever(ontology: Ontology, user_query: str, previous_conversation=None, sleep_time=0):
@@ -28,6 +35,7 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
         else:
             find_class_iterations += 1
 
+    # Todo Besseres Errorhandling implementieren
     found_node_class_list = re.findall(r'\w+', gpt_response)
     logger.info(f"Found node classes: {found_node_class_list}")
 
@@ -88,9 +96,6 @@ def information_retriever_with_graph(ontology: Ontology, user_query: str, previo
 
 def execute_query(query, ontology):
     pattern = r"(?<=\[|,|\s)([^,\]\s]+)(?=,|\]|\s)"
-    # pattern = r"(?<=\[|,)([^,\]]+)(?=,|\])"
-    # pattern = r"\['?([^'\]]+)'?\]"
-    # pattern = "\[([A - Za - z0 - 9._] * (?:, [A-Za-z0-9._] *){0, 2})\]"
     matches = re.findall(pattern, query)
     return list(ontology.get_nodes(matches).values())
 
