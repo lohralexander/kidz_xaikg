@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, render_template, session
 
 from config import logger
 from ldrag.gptconnector import gpt_request_with_history
-from ldrag.rag import information_retriever_with_graph
+from ldrag.retriever import information_retriever_with_graph
 from research.owl import Ontology
 
 app = Flask(__name__)
